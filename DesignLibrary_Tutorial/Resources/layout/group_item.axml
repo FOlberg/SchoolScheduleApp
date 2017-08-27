@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/groupItemLayout">
+    <TextView
+        android:id="@+id/Index"
+        android:visibility="visible"
+        android:text="12"
+        android:textStyle="normal"
+        android:textSize="34dp"
+        android:layout_marginLeft="@dimen/parent_margin"
+        android:layout_marginRight="@dimen/parent_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true" />
+    <TextView
+        android:id="@+id/groupRoom"
+        android:visibility="invisible"
+        android:text="12"
+        android:layout_margin="@dimen/parent_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:padding="10dp"
+        android:background="#E91E63" />
+    <TextView
+        android:id="@+id/groupClass"
+        android:visibility="invisible"
+        android:text="12"
+        android:layout_margin="@dimen/parent_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/groupRoom"
+        android:padding="10dp" />
+    <ImageView
+        android:visibility="visible"
+        android:src="@drawable/chevron_down"
+        android:layout_width="25dp"
+        android:tint="#a9a9a9"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_height="25dp"
+        android:layout_marginRight="@dimen/parent_margin"
+        android:scaleType="fitXY"
+        android:clickable="true"
+        android:id="@+id/imageView1" 
+        android:background="?selectableItemBackgroundBorderless"/>
+</RelativeLayout>
