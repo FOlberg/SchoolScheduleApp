@@ -12,10 +12,12 @@ using Android.Support.V7.App;
 using Android.Support.Design.Widget;
 using Newtonsoft.Json;
 using DesignLibrary_Tutorial.Fragments;
+using DesignLibrary_Tutorial.Handler;
+using Android.Content;
 
-namespace DesignLibrary_Tutorial
+namespace DesignLibrary_Tutorial.Activities
 {
-    [Activity(Label = "DesignLibrary_Tutorial", MainLauncher = true, Icon = "@drawable/icon", Theme = "@style/Theme.DesignDemo")]
+    [Activity(Label = "@string/app_name", Icon = "@drawable/icon", Theme = "@style/Theme.DesignDemo")]
     public class MainActivity : AppCompatActivity
     {
         private DrawerLayout mDrawerLayout;
@@ -36,6 +38,7 @@ namespace DesignLibrary_Tutorial
             ab.SetDisplayHomeAsUpEnabled(true);
 
             mDrawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            InitHandler();
 
             NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             if (navigationView != null)
@@ -117,7 +120,21 @@ namespace DesignLibrary_Tutorial
                 .Commit();
         }
 
-        
+        private void InitHandler()
+        {
+            Android.Content.ISharedPreferences preferences = Application.GetSharedPreferences("Dashboard", FileCreationMode.Private);
+            MessageHandler msgHandler;
+            string dataSource = preferences.GetString("MsgHandler", string.Empty);
+            if (dataSource == string.Empty)
+            {
+                msgHandler = new MessageHandler();
+                preferences.Edit().PutString("MsgHandler", JsonConvert.SerializeObject(msgHandler)).Apply();
+            }
+            else
+            {
+                msgHandler = JsonConvert.DeserializeObject<MessageHandler>(dataSource);
+            }
+        }
     }
 }
 

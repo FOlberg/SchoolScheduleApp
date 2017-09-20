@@ -21,7 +21,7 @@ using Android.Graphics.Drawables;
 
 namespace DesignLibrary_Tutorial.Activities
 {
-    [Activity(Label = "Week", Theme = "@style/Theme.DesignDemo")]
+    [Activity(Label = "Plan", Theme = "@style/Theme.DesignDemo")]
     public class TimetableWeekActivity : AppCompatActivity
     {
         DataHandler mDataHandler;
@@ -33,36 +33,28 @@ namespace DesignLibrary_Tutorial.Activities
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            try
-            {
-                base.OnCreate(savedInstanceState);
-                SetContentView(Resource.Layout.Activity_Week);
+            base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.Activity_Week);
 
-                SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBarW);
-                SetSupportActionBar(toolBar);
+            SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBarW);
+            SetSupportActionBar(toolBar);
 
-                SupportActionBar ab = SupportActionBar;
-                ab.SetDisplayHomeAsUpEnabled(true);
-                ab.SetHomeButtonEnabled(true);
+            SupportActionBar ab = SupportActionBar;
+            ab.SetDisplayHomeAsUpEnabled(true);
+            ab.SetHomeButtonEnabled(true);
 
-                mTabs = FindViewById<TabLayout>(Resource.Id.tabLayoutW);
+            mTabs = FindViewById<TabLayout>(Resource.Id.tabLayoutW);
 
-                ViewPager viewPager = FindViewById<ViewPager>(Resource.Id.viewPagerW);
+            ViewPager viewPager = FindViewById<ViewPager>(Resource.Id.viewPagerW);
 
-                SetUpViewPager(viewPager);
-                viewPager.PageSelected += ViewPager_PageSelected;
+            SetUpViewPager(viewPager);
+            viewPager.PageSelected += ViewPager_PageSelected;
 
-                mTabs.SetupWithViewPager(viewPager);
+            mTabs.SetupWithViewPager(viewPager);
 
-                mFab = FindViewById<FloatingActionButton>(Resource.Id.fabW);
+            mFab = FindViewById<FloatingActionButton>(Resource.Id.fabW);
 
-                mFab.Click += Fab_Click;
-            }
-            catch (Exception e)
-            {
-                var m = e.Message;
-            }
-
+            mFab.Click += Fab_Click;
         }
 
         private void ViewPager_PageSelected(object sender, ViewPager.PageSelectedEventArgs e)
@@ -76,16 +68,6 @@ namespace DesignLibrary_Tutorial.Activities
             {
                 mFab.SetImageDrawable(GetDrawable(Resource.Drawable.ic_arrow_forward));
             }
-        }
-
-        private void GetDataHandler()
-        {
-            string HandlerSource = Application.Context.GetSharedPreferences("DataHandler", FileCreationMode.Private).GetString("mData", null);
-            if (HandlerSource != null)
-            {
-                mDataHandler = JsonConvert.DeserializeObject<DataHandler>(HandlerSource);
-            }
-            else throw new System.Exception("DataHandler NullException");
         }
 
         public static int GetDay()
@@ -161,7 +143,7 @@ namespace DesignLibrary_Tutorial.Activities
 
         private void SetUpViewPager(ViewPager viewPager)
         {
-            GetDataHandler();
+            mDataHandler = DataHandler.GetDataHandler();
             mAdapter = new TabAdapter(SupportFragmentManager);
             for (int i = 0; i < 5; i++)
             {

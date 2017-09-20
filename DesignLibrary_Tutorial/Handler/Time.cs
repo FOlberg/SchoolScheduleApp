@@ -12,6 +12,8 @@ namespace AppTestProzesse.Header
         DateTimeFormatInfo dfi;
         public DateTime today { get; set; }
         Calendar cal;
+        public static readonly string[] HourName = { "1.", "2.", "3.", "4.", "5.", "6.", "MP", "7.", "8.", "9.", "10." };
+        public static readonly string[] HourIndex = { "1", "2", "3", "4", "5", "6", "MP", "7", "8", "9", "10" };
 
         public TimeHandler()
         {
@@ -37,32 +39,45 @@ namespace AppTestProzesse.Header
             today = date;
         }
         
+        public static int GetCurrentWeek()
+        {
+            var calendar = DateTimeFormatInfo.CurrentInfo.Calendar;
+            return calendar.GetWeekOfYear(System.DateTime.UtcNow, DateTimeFormatInfo.CurrentInfo.CalendarWeekRule, DateTimeFormatInfo.CurrentInfo.FirstDayOfWeek);
+        }
+
         public int GetWeekOfYear()
         {
-            return cal.GetWeekOfYear(today, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+            return cal.GetWeekOfYear(System.DateTime.UtcNow, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
         }
 
         public int GetNextWeek()
         {
-            return cal.GetWeekOfYear(today.AddDays(7), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+            return cal.GetWeekOfYear(System.DateTime.UtcNow.AddDays(7), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
         }
+
+        public int GetNextWeek(bool early)
+        {
+            return cal.GetWeekOfYear(System.DateTime.UtcNow.AddDays(14), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+        }
+
         public int GetWeekIndex(int week)
         {
             if (week == 0) return GetWeekOfYear();
-            return GetNextWeek();
+            if (week == 1) return GetNextWeek();
+            return GetNextWeek(true);
         }
 
         public void ChangeToMonday(ref DateTime d)
         {
-            while(d.DayOfWeek != DayOfWeek.Monday)
+            while(d.Date.DayOfWeek != DayOfWeek.Monday)
             {
-                d.Subtract(TimeSpan.FromDays(1));
+                d = d.AddDays(-1);
             }
         }
 
         public DateTime GetMonday(int week)
         {
-            DateTime t = new DateTime();
+            DateTime t = DateTime.Now.Date;
             if (week == 1)
             {
                 t = t.AddDays(7);        

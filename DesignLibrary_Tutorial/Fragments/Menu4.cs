@@ -32,6 +32,15 @@ namespace DesignLibrary_Tutorial.Fragments
         {
             base.OnViewCreated(view, savedInstanceState);
             this.Activity.Title = "Menu4";
+
+            Button btnTest = View.FindViewById<Button>(Resource.Id.button1);
+            btnTest.Click += BtnTest_Click;
+        }
+
+        private void BtnTest_Click(object sender, EventArgs e)
+        {
+            Intent iActivity = new Intent(Activity, typeof(Activities.TimetableWeekActivity));
+            StartActivity(iActivity);
         }
     }
 }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <group android:checkableBehavior="single">
+  <group android:checkableBehavior="single"
+         android:id="@+id/menu_top">
     <item
         android:id="@+id/nav_menu1"
-        android:icon="@drawable/ic_dashboard"
+        android:icon="@drawable/ic_view_list"
         android:title="Dashboard" />
     <item
         android:id="@+id/nav_menu2"
@@ -12,23 +13,15 @@
         android:title="Wochenansicht" />
     <item
         android:id="@+id/nav_menu3"
-        android:icon="@drawable/ic_headset"
+        android:icon="@drawable/ic_calendar_multi"
         android:title="Alle Pläne" />
-    <item
-        android:id="@+id/nav_menu4"
-        android:icon="@drawable/ic_forum"
-        android:title="Einstellungen" />
   </group>
-
-  <item android:title="Sub items">
-    <menu>
-      <item
-          android:icon="@drawable/ic_dashboard"
-          android:title="Sub item 1" />
-      <item
-          android:icon="@drawable/ic_forum"
-          android:title="Sub item 2" />
-    </menu>
-  </item>
-
+  <group
+    android:checkableBehavior="single"
+    android:id="@+id/menu_bottom">
+    <item
+      android:id="@+id/nav_menu4"
+      android:icon="@drawable/ic_settings"
+      android:title="Einstellungen" />
+  </group>
 </menu>

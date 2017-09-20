@@ -33,64 +33,38 @@ namespace DesignLibrary_Tutorial.Activities
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-            try
+            base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.Activity_Setup);
+
+            SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBarT);
+            SetSupportActionBar(toolBar);
+
+            SupportActionBar ab = SupportActionBar;
+            ab.SetDisplayHomeAsUpEnabled(true);
+            ab.SetHomeButtonEnabled(true);
+
+            // Create your application here
+            mListView = FindViewById<ListView>(Resource.Id.listView);
+
+            //Loading mData
+            mDataHandler = DataHandler.GetDataHandler();
+
+            mItems = new List<string>();
+            foreach (var s in mDataHandler.GetClasses())
             {
-                base.OnCreate(savedInstanceState);
-                SetContentView(Resource.Layout.Activity_Setup);
-
-                SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBarT);
-                SetSupportActionBar(toolBar);
-
-                SupportActionBar ab = SupportActionBar;
-                ab.SetDisplayHomeAsUpEnabled(true);
-                ab.SetHomeButtonEnabled(true);
-
-
-                // Create your application here
-                mListView = FindViewById<ListView>(Resource.Id.listView);
-                mDataHandler = new DataHandler();
-
-                //Loading mData
-                preferences = Application.GetSharedPreferences("DataHandler", FileCreationMode.Private);
-                if (preferences.GetString("mData", string.Empty) == string.Empty)
-                {
-                    editor = preferences.Edit();
-                    editor.PutString("mData", JsonConvert.SerializeObject(mDataHandler));
-                    editor.Apply();
-                }
-
-                mItems = new List<string>();
-                foreach (var s in mDataHandler.GetClasses())
-                {
-                    mItems.Add(s);
-                }
-
-                ArrayAdapter<string> adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, mItems);
-                mListView.Adapter = adapter;
-
-                mListView.ItemClick += MListView_ItemClick;
+                mItems.Add(s);
             }
-            catch (Exception e)
-            {
-                var m = e.Message;
-            }
-        }
 
-        private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+            ArrayAdapter<string> adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, mItems);
+            mListView.Adapter = adapter;
 
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            throw new NotImplementedException();
+            mListView.ItemClick += MListView_ItemClick;
         }
 
         private void MListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             //Toast.MakeText(this, e.Position + "c", ToastLength.Short).Show();
+
             preferences = Application.GetSharedPreferences("TableSetup", FileCreationMode.Private);
             editor = preferences.Edit();
             editor.PutInt("classIndex", e.Position);

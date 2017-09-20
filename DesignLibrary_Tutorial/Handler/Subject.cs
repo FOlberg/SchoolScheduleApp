@@ -11,6 +11,8 @@ namespace AppTestProzesse.Header
         public Hours Number { get; set; }
         public string Describtion { get; set; }
 
+        public Event() { }
+
         public Event(Days d, Hours h, Hours n, string de = "")
         {
             Day = d;
@@ -27,6 +29,8 @@ namespace AppTestProzesse.Header
         public string newRoom { get; set; }
         public string remarks { get; set; }
         public Tuple<string, string> transfer { get; set; }
+
+        public SubChange() { }
 
         public SubChange(string type, string newSubject, string newRoom, string remarks = "")
         {
@@ -52,10 +56,10 @@ namespace AppTestProzesse.Header
         public bool omitted { get; set; }
         public Event ev { get; set; }
         public SubChange change { get; set; }
+        public Subject() { }
 
         public Subject(string name, string room, bool omitted = false)
         {
-            this.ev = ev;
             this.name = name;
             this.room = room;
             this.omitted = omitted;
@@ -63,7 +67,6 @@ namespace AppTestProzesse.Header
         }
         public Subject(string name, string room, SubChange change, bool omitted = false)
         {
-            this.ev = ev;
             this.name = name;
             this.room = room;
             this.omitted = omitted;
@@ -73,77 +76,58 @@ namespace AppTestProzesse.Header
 
     public class Day
     {
-        Days day;
+        Days mDay;
         public Subject[][] list = new Subject[11][];
+
+        public Day() { }
 
         public Day(Days d)
         {
-            day = d;
+            mDay = d;
         }
 
-        public void addLesson(Hours h, Subject[] arr)
+        public void AddLesson(Hours h, Subject[] arr)
         {
             list[(int)h] = arr;
         }
 
-        public Subject[] getSubjectList(Hours h)
+        public Subject[] GetSubjectList(Hours h)
         {
             return list[(int)h];
-        }
-
-        public string GetOutput()
-        {
-            string temp = "";
-            for (int i = 0; i < list.Length; i++)
-            {
-                temp += "-------" + (Hours)i + "-------" + System.Environment.NewLine;
-                if (list[i] != null)
-                {
-                    for (int j = 0; j < list[i].Length; j++)
-                    {
-                        if (list[i][j].ev != null && j == 0) temp += "Event: " + list[i][j].ev.Hour + " - " + list[i][j].ev.Number + ": " + list[i][j].ev.Describtion + System.Environment.NewLine; //Event is called only once
-                        else if (list[i][j].ev == null)
-                        {
-                            temp += list[i][j].name + " (" + list[i][j].room + ")";
-                            if (list[i][j].omitted) temp += " Entfall!";
-                            temp += System.Environment.NewLine;
-                        }
-                    }
-                }
-            }
-            return temp;
         }
     }
 
     public class Week
     {
         public DateTime tMon; //Time of Monday in that Week
-        public string m_class { get; set; }
+        public string mClass { get; set; }
         public Day[] week = new Day[5];
-        public List<Event> events { get; }
+        public List<Event> mEvents { get; }
+
+        public Week() { }
 
         public Week(DateTime monday, string className)
         {
             tMon = monday;
-            m_class = className;
-            events = new List<Event>();
+            mClass = className;
+            mEvents = new List<Event>();
             for (int i = 0; i < 5; i++)
             {
                 week[i] = new Day((Days)i);
             }
         }
 
-        public void addEvent(Event ev)
+        public void AddEvent(Event ev)
         {
-            events.Add(ev);
+            mEvents.Add(ev);
         }
 
-        public void addLesson(Days d, Hours h, Subject[] arr)
+        public void AddLesson(Days d, Hours h, Subject[] arr)
         {
             bool added = false;
-            if (events.Count > 0) //Exception for events with a description greater than 1 lines 
+            if (mEvents.Count > 0) //Exception for events with a description greater than 1 lines 
             {
-                foreach (var ev in events)
+                foreach (var ev in mEvents)
                 {
                     if (ev.Day == d && ev.Hour <= h && ev.Number >= h)
                     {
@@ -152,26 +136,26 @@ namespace AppTestProzesse.Header
                             subj.ev = ev;
                             ev.Describtion += subj.name + " ";
                         }
-                        week[(int)d].addLesson(h, arr);
+                        week[(int)d].AddLesson(h, arr);
                         added = true;
                         break;
                     }
                 }
             }
-            if (!added) week[(int)d].addLesson(h, arr);
+            if (!added) week[(int)d].AddLesson(h, arr);
         }
 
         public void LinkEventsToSubjects() //Not necessary anymore!
         {
-            if (events.Count > 0) //Exception for events with a description greater than 1 lines 
+            if (mEvents.Count > 0) //Exception for events with a description greater than 1 lines 
             {
-                foreach (var ev in events)
+                foreach (var ev in mEvents)
                 {
                     for (Hours h = ev.Hour; h < ev.Number; h++)
                     {
-                        if (week[(int)ev.Day].getSubjectList(h) != null)
+                        if (week[(int)ev.Day].GetSubjectList(h) != null)
                         {
-                            foreach (var subj in week[(int)ev.Day].getSubjectList(h))
+                            foreach (var subj in week[(int)ev.Day].GetSubjectList(h))
                             {
                                 subj.ev = ev;
                                 ev.Describtion += subj.name + " ";
@@ -180,17 +164,6 @@ namespace AppTestProzesse.Header
                     }
                 }
             }
-        }
-
-        public string GetAll()
-        {
-            string temp = "";
-            for (int i = 0; i < week.Length; i++)
-            {
-                temp += System.Environment.NewLine + (Days)i + System.Environment.NewLine;
-                temp += week[i].GetOutput();
-            }
-            return temp;
         }
     }
 
@@ -211,20 +184,20 @@ namespace AppTestProzesse.Header
                 throw new Exception("Timetable: Both weeks are null");
             else if (w2 == null || w1 == null)
             {
-                if (w2 == null) init(w1, null, date, false);
-                else init(w2, null, date, false);
+                if (w2 == null) InitTimetable(w1, null, date, false);
+                else InitTimetable(w2, null, date, false);
                 //Log Message
             }
-            else if (w1.m_class != w2.m_class)
+            else if (w1.mClass != w2.mClass)
                 throw new Exception("Timetable: Classes don't match!");
             else
-                init(w1, w2, date, true);
+                InitTimetable(w1, w2, date, true);
         }
 
-        private void init(Week w1, Week w2, DateTime date, bool both)
+        private void InitTimetable(Week w1, Week w2, DateTime date, bool both)
         {
             //Variables
-            mClassIndex = w1.m_class;
+            mClassIndex = w1.mClass;
 
             //Time
             if (date.Month >= 8) sem = Semester.winter_semester;
@@ -265,7 +238,7 @@ namespace AppTestProzesse.Header
                     }
                     else
                     {
-                        foreach (var ev in w1.events)
+                        foreach (var ev in w1.mEvents)
                         {
                             if (ev.Day == (Days)day && ev.Hour <= (Hours)hour && ev.Number >= (Hours)hour)
                             {
@@ -280,10 +253,10 @@ namespace AppTestProzesse.Header
             }
         }
 
-        public void update(Week w)
+        public void Update(Week w)
         {
             int day = 0, hour = 0;
-            if (isLeaking() && w != null)
+            if (IsLeaking() && w != null)
             {
                 for (int i = leaks.Count - 1; i >= 0; i--)
                 {
@@ -310,7 +283,7 @@ namespace AppTestProzesse.Header
                     else if (hour == (int)Hours.MP)
                     {
                         bool isEvent = false;
-                        foreach (var ev in w.events)
+                        foreach (var ev in w.mEvents)
                         {
                             if (ev.Day == (Days)day && ev.Hour <= (Hours)hour && ev.Number >= (Hours)hour)
                             {
@@ -326,7 +299,7 @@ namespace AppTestProzesse.Header
             }
         }
 
-        public bool isLeaking()
+        public bool IsLeaking()
         {
             return leaks.Count > 0;
         }

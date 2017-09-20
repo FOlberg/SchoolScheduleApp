@@ -1,4 +1,5 @@
 ﻿<resources>
   <color name="window_background">#FFF5F5F5</color>
+  <color name="splash_background">#37474F</color>
   <color name="disabled_group">#616161</color>
 </resources>

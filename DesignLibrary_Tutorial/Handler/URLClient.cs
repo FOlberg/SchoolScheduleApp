@@ -1,12 +1,14 @@
 ﻿using System.Net;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace AppTestProzesse.Header
 {
     public class URLClient
     {
         private WebClient webClient;
-
+        [JsonProperty]
+        public int early = 0;
         public static string[] classes;
 
         public URLClient()
@@ -37,23 +39,41 @@ namespace AppTestProzesse.Header
 
         public string GetRawCode(string[] urlParts, int week, int classIndex)
         {
-            string url = LinkURL(urlParts, week, classIndex + 1);
+            CheckEarly(urlParts);
+            string url = LinkURL(urlParts, week + early, classIndex + 1);
             if (url.Length == 0)
                 return null;
-            string source;
-            try
+            string source = GetRawCode(url);
+            if (source == null)
             {
-                source = webClient.DownloadString(url);
-            }
-            catch (System.Net.WebException e)
-            {
-                if (e.Message.Contains("Remote"))
-                {
-                    //pop-up
-                }
-                return null;
+                early = 1;
             }
             return source;
+        }
+
+        public string GetRawCode(string[] urlParts, int week)
+        {
+            CheckEarly(urlParts);
+            string url = LinkURL(urlParts, week + early);
+            if (url.Length == 0)
+                return null;
+            string source = GetRawCode(url);
+            if (source == null)
+            {
+                early = 1;
+            }
+            return source;
+        }
+
+        private void CheckEarly(string[] urlParts)
+        {
+            if (early == 1)
+            {
+                if (GetRawCode(LinkURL(urlParts, TimeHandler.GetCurrentWeek(), 1)) != null)
+                {
+                    early = 0;
+                }
+            }
         }
 
         public static string GetRawCodeFile( string path )
@@ -92,8 +112,20 @@ namespace AppTestProzesse.Header
                 }
                 else errc++;
             }
-            string[][] arr = { dNames.ToArray(), dSource.ToArray() };
-            return arr;
+            if(dNames.Count > 0)
+            {
+                return new string[][] { dNames.ToArray(), dSource.ToArray() };
+            }
+            return null;
+        }
+
+        public string LinkURL(string[] urlParts, int week)
+        {
+            if (urlParts.Length == 2)
+            {
+                return urlParts[0] + week + urlParts[1];
+            }
+            return "";
         }
 
         public string LinkURL(string[] urlParts, int week, int classIndex)

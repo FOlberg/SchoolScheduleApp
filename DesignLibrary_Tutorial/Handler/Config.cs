@@ -84,5 +84,9 @@ namespace AppTestProzesse.Header
             return mCfgList[configIndex].mClassName;
         }
 
+        public bool IsEmpty()
+        {
+            return mCfgList.Count == 0;
+        }
     }
 }

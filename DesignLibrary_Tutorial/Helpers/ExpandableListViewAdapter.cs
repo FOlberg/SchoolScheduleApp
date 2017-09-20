@@ -97,7 +97,7 @@ namespace DesignLibrary_Tutorial.Helpers
                 indicatorIcon.SetImageResource(Resource.Drawable.chevron_up);
             else
                 indicatorIcon.SetImageResource(Resource.Drawable.chevron_down);
-            txtIndex.Text = ((Hours)groupPosition).ToString();
+            txtIndex.Text = TimeHandler.HourName[groupPosition];
             if (tParent.mSelected != -1)
             {
                 txtRoom.Text = tParent.mChildren[tParent.mSelected].Item1;
@@ -137,7 +137,7 @@ namespace DesignLibrary_Tutorial.Helpers
                 groupPosition = (int)((ImageView)sender).GetTag(Resource.Id.TAG_IMGVIEW_ID);
 
             }
-            catch(System.Exception ev)
+            catch(System.Exception)
             {
                 //Add Exception to logger
             }
@@ -150,6 +150,11 @@ namespace DesignLibrary_Tutorial.Helpers
         public override bool IsChildSelectable(int groupPosition, int childPosition)
         {
             return true;
+        }
+
+        private void GetCostumColor()
+        {
+
         }
     }
 }

@@ -28,18 +28,11 @@ namespace DesignLibrary_Tutorial.Fragments
 
         public override void OnCreate(Bundle savedInstanceState)
         {
-            try
-            {
-                base.OnCreate(savedInstanceState);
-                day = TimetableWeekActivity.GetDay();
-                Array.Fill<int>(selected, -1);
-                LoadSharedPreferences();
-                //Do not handle events here! like button click etc -> because OnCreate will be called before OnCreatedView
-            }
-            catch (Exception e)
-            {
-                var b = e.Data;
-            }
+            base.OnCreate(savedInstanceState);
+            day = TimetableWeekActivity.GetDay();
+            Array.Fill<int>(selected, -1);
+            LoadSharedPreferences();
+            //Do not handle events here! like button click etc -> because OnCreate will be called before OnCreatedView
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -66,7 +59,7 @@ namespace DesignLibrary_Tutorial.Fragments
             if (mExpandableListView.GetItemAtPosition(e.Position).GetType() == typeof(Java.Lang.Integer)) //If clicked Item equals type of group
             {
                 int groupPosition = GetGroupPosition(e.Position);
-                if(mAdapter.mParentList[groupPosition].mSelected != -1)
+                if (mAdapter.mParentList[groupPosition].mSelected != -1)
                 {
                     mAdapter.mParentList[groupPosition].mEditMode = true;
                     mAdapter.NotifyDataSetChanged();
@@ -75,7 +68,7 @@ namespace DesignLibrary_Tutorial.Fragments
             }
         }
 
-        private int GetGroupPosition( int position )
+        private int GetGroupPosition(int position)
         {
             int children = 0;
             for (int i = 0; i < position; i++)
@@ -98,7 +91,6 @@ namespace DesignLibrary_Tutorial.Fragments
 
         public override void OnDestroy()
         {
-            //mDataHandler.mConfig.AddDayCfg(mDataHandler.GetClassName(classIndex), day, selected);
             preferences = Application.Context.GetSharedPreferences("TableSetup", FileCreationMode.Private);
             editor = preferences.Edit();
             editor.PutString("table" + day, JsonConvert.SerializeObject(selected));
@@ -112,16 +104,18 @@ namespace DesignLibrary_Tutorial.Fragments
             mAdapter.mParentList[e.GroupPosition].mSelected = e.ChildPosition;
             selected[e.GroupPosition] = e.ChildPosition;
 
-            if (e.GroupPosition < 10 && mAdapter.mParentList[e.GroupPosition + 1].mChildren.Length > e.ChildPosition 
+            if (e.GroupPosition < 10 && mAdapter.mParentList[e.GroupPosition + 1].mChildren.Length > e.ChildPosition
                 && mAdapter.mParentList[e.GroupPosition].mChildren[e.ChildPosition].Item1 == mAdapter.mParentList[e.GroupPosition + 1].mChildren[e.ChildPosition].Item1
                 && mAdapter.mParentList[e.GroupPosition].mChildren[e.ChildPosition].Item2 == mAdapter.mParentList[e.GroupPosition + 1].mChildren[e.ChildPosition].Item2)
             {
+                selected[e.GroupPosition + 1] = e.ChildPosition;
                 mAdapter.mParentList[e.GroupPosition + 1].mSelected = e.ChildPosition;
             }
-            else if (e.GroupPosition > 0 && mAdapter.mParentList[e.GroupPosition - 1].mChildren.Length > e.ChildPosition 
+            else if (e.GroupPosition > 0 && mAdapter.mParentList[e.GroupPosition - 1].mChildren.Length > e.ChildPosition
                 && mAdapter.mParentList[e.GroupPosition].mChildren[e.ChildPosition].Item1 == mAdapter.mParentList[e.GroupPosition - 1].mChildren[e.ChildPosition].Item1
                 && mAdapter.mParentList[e.GroupPosition].mChildren[e.ChildPosition].Item2 == mAdapter.mParentList[e.GroupPosition - 1].mChildren[e.ChildPosition].Item2)
             {
+                selected[e.GroupPosition - 1] = e.ChildPosition;
                 mAdapter.mParentList[e.GroupPosition - 1].mSelected = e.ChildPosition;
             }
 
@@ -155,8 +149,7 @@ namespace DesignLibrary_Tutorial.Fragments
             classIndex = preferences.GetInt("classIndex", -1);
             //loadCfg = preferences.GetBoolean("LoadConfig", false);
 
-            string ei = mDataHandler.mConfig.GetClassName(), zw = mDataHandler.GetClassName(classIndex);
-            if (mDataHandler.mConfig.GetClassName() == mDataHandler.GetClassName(classIndex))
+            if (classIndex > -1 && mDataHandler.mConfig.GetClassName() == mDataHandler.GetClassName(classIndex))
             {
                 selected = mDataHandler.mConfig.GetTableConf()[day];
             }
@@ -175,6 +168,7 @@ namespace DesignLibrary_Tutorial.Fragments
                     }
                 }
             }
+            Activity.Title = mDataHandler.GetClassName(classIndex);
         }
     }
 }

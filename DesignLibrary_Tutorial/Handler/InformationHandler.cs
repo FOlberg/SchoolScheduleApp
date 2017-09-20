@@ -83,7 +83,11 @@ namespace AppTestProzesse.Header
                     case XmlNodeType.Text:
                         if (readTableRow && reader.Value != "")
                         {
-                            tempChanges[regPosition] = reader.Value;
+                            if(reader.Value == "---")
+                            {
+                                tempChanges[regPosition] = string.Empty;
+                            }
+                            else tempChanges[regPosition] = reader.Value;
                             regPosition++;
                         }
                         break;
@@ -137,37 +141,16 @@ namespace AppTestProzesse.Header
                         break;
                 }
             }
-            //return tempOut;
-            /*foreach (var t  in registeredChanges)
-            {
-                tempOut += t.Item1 + ": ";
-                foreach(var hours in t.Item2)
-                {
-                    tempOut += hours + ", ";
-                }
-                tempOut += "Klasse: " + t.Item3;
-                tempOut += "; Stunde: " + t.Item4.name + " in " + t.Item4.room;
-                tempOut += "; Jetzt: " + t.Item4.change.newSubject + " in " + t.Item4.change.newRoom;
-                tempOut += "; Grund: " + t.Item4.change.type;
-                if(t.Item4.change.transfer != null)
-                {
-                    tempOut += "; Verlagerung von " + t.Item4.change.transfer.Item1 + " nach " + t.Item4.change.transfer.Item2;
-                }
-                tempOut += "; Bemerkungen: " + t.Item4.change.remarks + System.Environment.NewLine;
-            }
-            return tempOut;
-
-            //returns list*/
             return registeredChanges;
         }
 
-        public void applyChanges(Week w, List<Tuple<Days, Hours[], string, Subject>> changes) //needs tests
+        public void ApplyChanges(Week w, List<Tuple<Days, Hours[], string, Subject>> changes) //needs tests
         {
             if (changes.Count > 0)
             {
                 foreach(var change in changes)
                 {
-                    if(change.Item3.Contains(w.m_class)) //same class || Changes on 05.08.17!
+                    if(change.Item3.Contains(w.mClass)) //same class || Changes on 05.08.17!
                     {
                         foreach(var hour in change.Item2)
                         {
@@ -253,9 +236,9 @@ namespace AppTestProzesse.Header
                                 rowspan = int.Parse(reader.GetAttribute("rowspan"));
                             }
 
-                            if (week.events.Count > 0) //Events
+                            if (week.mEvents.Count > 0) //Events
                             {
-                                foreach (Event ev in week.events)
+                                foreach (Event ev in week.mEvents)
                                 {
                                     if (ev.Day == (Days)(day % 5) && ev.Hour < row && ev.Number >= row)
                                     {
@@ -271,7 +254,7 @@ namespace AppTestProzesse.Header
 
                                 if (lesson.Count > 0)
                                 {
-                                    week.addLesson((Days)(day % 5), row, lesson.ToArray());
+                                    week.AddLesson((Days)(day % 5), row, lesson.ToArray());
                                     lesson.Clear();
                                 }
                                 day++;
@@ -289,9 +272,9 @@ namespace AppTestProzesse.Header
                                 }
                             }
 
-                            if (week.events.Count > 0)
+                            if (week.mEvents.Count > 0)
                             {
-                                foreach (Event ev in week.events)
+                                foreach (Event ev in week.mEvents)
                                 {
                                     if (ev.Day == (Days)(day % 5) && ev.Hour < row && ev.Number >= row && lesson.Count > 0)
                                     {
@@ -348,9 +331,9 @@ namespace AppTestProzesse.Header
                         if (rowspan > 2 && rowspan % 2 == 0) //Adding Events
                         {
                             bool con = false;
-                            if (week.events.Count > 0) //Exception for events with a description greater than 1 lines 
+                            if (week.mEvents.Count > 0) //Exception for events with a description greater than 1 lines 
                             {
-                                foreach (Event ev in week.events)
+                                foreach (Event ev in week.mEvents)
                                 {
                                     if (ev.Day == (Days)(day % 5) && ev.Hour <= row && ev.Number >= row) //old vers.(didn't work): ev.Day == (Days)((day - eventDayCount) % 5)
                                     {
@@ -361,7 +344,7 @@ namespace AppTestProzesse.Header
                             }
                             if (con) continue;
                             t += reader.Value;
-                            week.addEvent(new Event((Days)(day % 5), row, (rowspan / 2) - 1 + row)); //CHECK!
+                            week.AddEvent(new Event((Days)(day % 5), row, (rowspan / 2) - 1 + row)); //CHECK!
                             /*t += eventSpace.ToArray()[eventSpace.Count - 1].Day + " "
                                 + eventSpace.ToArray()[eventSpace.Count - 1].Hour + " "
                                 + eventSpace.ToArray()[eventSpace.Count - 1].Number + " " + count
