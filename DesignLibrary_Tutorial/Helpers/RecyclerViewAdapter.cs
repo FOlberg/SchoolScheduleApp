@@ -18,13 +18,13 @@ namespace DesignLibrary_Tutorial.Helpers
         }
         public override int GetHashCode()
         {
-            return mTime.GetHashCode();
+            return mTime.GetHashCode() + mCardList.GetHashCode();
         }
 
         public override bool Equals(object obj)
         {
             Card card = obj as Card;
-            return GetHashCode() == card.GetHashCode();
+            return card == null ? false : GetHashCode() == card.GetHashCode();
         }
     }
 
@@ -36,6 +36,16 @@ namespace DesignLibrary_Tutorial.Helpers
         {
             mSubject = subject;
             h = hours;
+        }
+        public override int GetHashCode()
+        {
+            return mSubject.GetHashCode() + h.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            CardList cardList = obj as CardList;
+            return cardList == null ? false : GetHashCode() == cardList.GetHashCode();
         }
     }
 

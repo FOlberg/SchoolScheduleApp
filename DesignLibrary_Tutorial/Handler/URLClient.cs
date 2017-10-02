@@ -40,7 +40,7 @@ namespace AppTestProzesse.Header
         public string GetRawCode(string[] urlParts, int week, int classIndex)
         {
             CheckEarly(urlParts);
-            string url = LinkURL(urlParts, week + early, classIndex + 1);
+            string url = LinkURL(urlParts, week + early, classIndex + 1); //string url = LinkURL(urlParts, week + early, classIndex + 1);
             if (url.Length == 0)
                 return null;
             string source = GetRawCode(url);
@@ -96,7 +96,6 @@ namespace AppTestProzesse.Header
 
         public string[][] GetAllClasses(int week) //Unfinished
         {
-            //Header.Time t = new Header.Time();
             List<string> dNames = new List<string>();
             List<string> dSource = new List<string>();
             string p1 = "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/";

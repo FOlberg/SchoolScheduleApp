@@ -7,9 +7,9 @@ using System.Threading;
 using SwipeRefresh = Android.Support.V4.Widget.SwipeRefreshLayout;
 using System;
 using DesignLibrary_Tutorial.Handler;
-using Newtonsoft.Json;
+using DesignLibrary_Tutorial.Background;
 using Android.Content;
-using System.ComponentModel;
+using Android.Widget;
 
 namespace DesignLibrary_Tutorial.Fragments
 {
@@ -19,23 +19,20 @@ namespace DesignLibrary_Tutorial.Fragments
         RecyclerViewAdapter mRecyclerViewAdapter;
         SwipeRefresh mSwipeRefresh;
         MessageHandler mMsgHandler;
-        BackgroundWorker mBackgroundWorker;
+        AlarmReceiver mAlarmReceiver;
+        LinearLayout mLinearLayout;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            mMsgHandler = GetMsgHandler();
-            mBackgroundWorker = new BackgroundWorker();
+            mMsgHandler = MessageHandler.GetMsgHandler();
             mMsgHandler.OnDataChanged += MUpdater_OnDataChanged;
+            mAlarmReceiver = new AlarmReceiver();
+            mAlarmReceiver.SetAlarm(Activity);
+            Activity.RegisterReceiver(mAlarmReceiver, new IntentFilter());
 
             // Create your fragment here
             //Do not handle events here! like button click etc -> because OnCreate will be called before OnCreatedView
-        }
-
-        private MessageHandler GetMsgHandler()
-        {
-            string source = Activity.Application.GetSharedPreferences("Dashboard", FileCreationMode.Private).GetString("MsgHandler", string.Empty);
-            return JsonConvert.DeserializeObject<MessageHandler>(source);
         }
 
         private void MUpdater_OnDataChanged(object sender, EventArgs e)
@@ -59,20 +56,45 @@ namespace DesignLibrary_Tutorial.Fragments
             mRecyclerView = Activity.FindViewById<RecyclerView>(Resource.Id.RecyclerView);
             mRecyclerView.SetLayoutManager(new LinearLayoutManager(view.Context));
 
+            mLinearLayout = Activity.FindViewById<LinearLayout>(Resource.Id.LinLayout);
+
             mRecyclerViewAdapter = FillAdapter();
             mRecyclerView.SetAdapter(mRecyclerViewAdapter);
             mRecyclerView.SetItemAnimator(new DefaultItemAnimator());
+            if (mRecyclerViewAdapter.mList.Count == 0)
+            {
+                mLinearLayout.Visibility = ViewStates.Visible;
+                mRecyclerView.Visibility = ViewStates.Gone;
+            }
+            else
+            {
+                mLinearLayout.Visibility = ViewStates.Gone;
+                mRecyclerView.Visibility = ViewStates.Visible;
+            }
         }
 
         private void MSwipeRefresh_Refresh(object sender, System.EventArgs e)
         {
-            UpdateList();
+            UpdateList();         
             mMsgHandler.mDataHandler.DeleteOutdatedDataAsync();
+            //MessageHandler.SaveMsgHandler(mMsgHandler);
         }
 
         private async void UpdateList()
         {
             await mMsgHandler.UpdateAsync();
+            mRecyclerViewAdapter.mList = mMsgHandler.mList;
+            mRecyclerView.SwapAdapter(mRecyclerViewAdapter, false);
+            if (mRecyclerViewAdapter.mList.Count == 0)
+            {
+                mLinearLayout.Visibility = ViewStates.Visible;
+                mRecyclerView.Visibility = ViewStates.Gone;
+            }
+            else
+            {
+                mLinearLayout.Visibility = ViewStates.Gone;
+                mRecyclerView.Visibility = ViewStates.Visible;
+            }
             mSwipeRefresh.Refreshing = false;
         }
 

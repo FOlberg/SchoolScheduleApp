@@ -79,6 +79,11 @@ namespace DesignLibrary_Tutorial.Activities
             if (requestCode == 1 && resultCode == Result.Ok)
             {
                 Finish();
+                if (Intent.GetBooleanExtra("StartMain", false))
+                {
+                    StartActivity(new Intent(this, typeof(Activities.MainActivity)));
+                }
+                
             }
         }
 

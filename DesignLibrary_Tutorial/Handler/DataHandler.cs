@@ -66,6 +66,10 @@ namespace AppTestProzesse.Header
             if (mSource[classNameIndex, week] == null || newDload)
             {
                 mSource[classNameIndex, week] = mClientURL.GetRawCode(urlpartsA, mTimeHandler.GetWeekIndex(week), classNameIndex);
+                if (mSource[classNameIndex, week] == null)
+                {
+                    mSource[classNameIndex, week] = mClientURL.GetRawCode(urlpartsA, mTimeHandler.GetWeekIndex(week), classNameIndex);
+                }
             }
             Week w = mInfoHandler.ClassSourceToWeek(mSource[classNameIndex, week], mClassNames[classNameIndex], mondayDate);
             mWeekStack[classNameIndex, week] = w;
@@ -191,6 +195,10 @@ namespace AppTestProzesse.Header
                 mClientURL.early = 1;
                 source = mClientURL.GetAllClasses(mTimeHandler.GetNextWeek());  
             }
+            if (source == null)
+            {
+                source = mClientURL.GetAllClasses(mTimeHandler.GetNextWeek() + 1);
+            }
 
             if (source != null)
             {
@@ -205,6 +213,7 @@ namespace AppTestProzesse.Header
 
             }
             else
+                //log
                 throw new Exception("TimeException: At the moment is no information online!");
         }
 

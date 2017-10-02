@@ -109,6 +109,8 @@
     <Compile Include="Activities\Splash.cs" />
     <Compile Include="Activities\TimetableWeekActivity.cs" />
     <Compile Include="Activities\TimetableSetupActivity.cs" />
+    <Compile Include="Background\AutoStart.cs" />
+    <Compile Include="Background\BackgroundService.cs" />
     <Compile Include="Fragments\TabFragment.cs" />
     <Compile Include="Fragments\Menu1.cs" />
     <Compile Include="Fragments\Menu4.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Handler\Subject.cs" />
     <Compile Include="Handler\Time.cs" />
     <Compile Include="Handler\URLClient.cs" />
+    <Compile Include="Background\AlarmReceiver.cs" />
     <Compile Include="Helpers\ExpandableListViewAdapter.cs" />
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Helpers\Parent.cs" />
@@ -448,6 +451,21 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xhdpi\ic_cal_alert.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\ic_smile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-mdpi\ic_smile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_smile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_smile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_smile.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

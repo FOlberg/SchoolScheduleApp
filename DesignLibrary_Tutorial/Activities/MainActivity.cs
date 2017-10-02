@@ -128,7 +128,8 @@ namespace DesignLibrary_Tutorial.Activities
             if (dataSource == string.Empty)
             {
                 msgHandler = new MessageHandler();
-                preferences.Edit().PutString("MsgHandler", JsonConvert.SerializeObject(msgHandler)).Apply();
+                string s = JsonConvert.SerializeObject(msgHandler);
+                preferences.Edit().PutString("MsgHandler", s).Apply();
             }
             else
             {

@@ -146,11 +146,11 @@ namespace AppTestProzesse.Header
 
         public void ApplyChanges(Week w, List<Tuple<Days, Hours[], string, Subject>> changes) //needs tests
         {
-            if (changes.Count > 0)
+            if (changes != null && changes.Count > 0 && w != null)
             {
                 foreach(var change in changes)
                 {
-                    if(change.Item3.Contains(w.mClass)) //same class || Changes on 05.08.17!
+                    if(change.Item3 != null && change.Item3.Contains(w.mClass)) //same class || Changes on 05.08.17!
                     {
                         foreach(var hour in change.Item2)
                         {
@@ -193,6 +193,7 @@ namespace AppTestProzesse.Header
         {
             if (source == null)
                 return null;
+            //to log
 
             Hours row = Hours.MP;
             string colspan = "";

@@ -2,5 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="DesignLibrary_Tutorial.DesignLibrary_Tutorial" android:versionCode="1" android:versionName="1.0" android:installLocation="internalOnly">
 	<uses-sdk android:minSdkVersion="19" android:targetSdkVersion="25" />
 	<uses-permission android:name="android.permission.INTERNET" />
-	<application android:label="DesignLibrary_Tutorial"></application>
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+	<application android:label="DesignLibrary_Tutorial">
+    <receiver android:name="AlarmReceiver"></receiver>
+    <receiver android:name=".AutoStart">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+      </intent-filter>
+    </receiver>
+    <service android:enabled="true" android:name=".BackgroundService" />
+	</application>
+  <receiver android:name="AlarmReceiver"></receiver>
 </manifest>
