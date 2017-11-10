@@ -152,9 +152,14 @@ namespace DesignLibrary_Tutorial.Helpers
             return true;
         }
 
-        private void GetCostumColor()
+        public int[] GetSelectedItems()
         {
-
+            int[] selected = new int[mParentList.Count];
+            for (int i = 0; i < mParentList.Count; i++)
+            {
+                selected[i] = mParentList[i].mSelected;
+            }
+            return selected;
         }
     }
 }

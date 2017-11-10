@@ -5,15 +5,17 @@
     android:layout_height="192dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
     <ImageView
-        android:id="@+id/imgViewHeader"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:id="@+id/navHeader"
+        android:layout_marginTop="5dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/Icon"
+        android:layout_gravity="center" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:text="Vertretungsplan"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="#000"
         android:layout_gravity="bottom|center" />
 </FrameLayout>

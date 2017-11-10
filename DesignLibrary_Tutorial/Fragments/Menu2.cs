@@ -21,7 +21,7 @@ namespace DesignLibrary_Tutorial.Fragments
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             base.OnViewCreated(view, savedInstanceState);
-            this.Activity.Title = "Menu2";
+            this.Activity.Title = "Wochenansicht";
         }
     }
 }

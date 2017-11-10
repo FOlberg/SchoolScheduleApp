@@ -56,11 +56,19 @@ namespace DesignLibrary_Tutorial.Helpers
         public RecyclerViewAdapter(List<Card> list)
         {
             mList = list;
-            for (int i = mList.Count - 1; i >= 0; i--)
+            SortOutData();
+        }
+
+        public void SortOutData()
+        {
+            if ( mList != null )
             {
-                if (mList[i].mTime.Date < DateTime.Now.Date)
+                for (int i = mList.Count - 1; i >= 0; i--)
                 {
-                    mList.RemoveAt(i);
+                    if (mList[i].mTime.Date < DateTime.Now.Date)
+                    {
+                        mList.RemoveAt(i);
+                    }
                 }
             }
         }
@@ -74,7 +82,8 @@ namespace DesignLibrary_Tutorial.Helpers
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             CardViewHolder viewHolder = holder as CardViewHolder;
-            viewHolder.mTextView.Text = mList[position].mTime.DayOfWeek.ToString();
+            var culture = new System.Globalization.CultureInfo("de-DE");
+            viewHolder.mTextView.Text = culture.DateTimeFormat.GetDayName(mList[position].mTime.DayOfWeek);
             viewHolder.mDateText.Text = GetDisplayedDay(mList[position].mTime);
             viewHolder.mCardRV.SetAdapter(new CardListAdapter(mList[position].mCardList));
         }

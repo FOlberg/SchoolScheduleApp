@@ -3,4 +3,5 @@
   <color name="splash_background">#37474F</color>
   <color name="disabled_group">#616161</color>
   <color name="background_grey">#a9a9a9</color>
+  <color name="explist_itemstroke">#667B1FA2</color>
 </resources>

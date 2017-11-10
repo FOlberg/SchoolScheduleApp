@@ -35,18 +35,39 @@ namespace AppTestProzesse.Header
         [JsonProperty]
         List<cTimetable> mCfgList;
         public int mConfigSel;
+        public int updateSequence;
+        public bool vibration;
+
+        public string[] urlA = new string[] { "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/", "/c/c", ".htm" };
+        public string[] urlB = new string[] { "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/", "/w/w00000.htm" };
+
         public event EventHandler OnConfigChanged;
 
         public Config()
         {
             mCfgList = new List<cTimetable>();
+            updateSequence = 120;
+            vibration = false;
         }
+
+        /* Temp*/
+        public List<cTimetable> GetMList()
+        {
+            return mCfgList;
+        }
+
+        public void SaveList(List<cTimetable> list)
+        {
+            mCfgList = list;
+        }
+        /* Test END*/
 
         public void AddTableConf(string className, int[][] table)
         {
             if (mCfgList.Count <= mConfigSel) //Add new 
             {
                 mCfgList.Add(new cTimetable(className, table));
+                mConfigSel = mCfgList.Count - 1;
             }
             else if (mCfgList.Count > 0 && mCfgList[mConfigSel].mClassName == className)
             {

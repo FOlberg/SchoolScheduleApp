@@ -1,18 +1,20 @@
-﻿using Android.Content;
+﻿using Android.App;
+using Android.Content;
+using Android.Util;
 using Android.Widget;
 using DesignLibrary_Tutorial.Helpers;
 
 namespace DesignLibrary_Tutorial.Background
 {
     [BroadcastReceiver]
+    [IntentFilter(new[] { Intent.ActionBootCompleted })]
     public class AutoStart : BroadcastReceiver
     {
-        AlarmReceiver alarm = new AlarmReceiver();
         public override void OnReceive(Context context, Intent intent)
         {
-            Toast.MakeText(context, "Received intent! AutoStart", ToastLength.Short).Show();
-            if (intent.Action.Equals("android.intent.action.BOOT_COMPLETED"))
+            if (intent.Action == Intent.ActionBootCompleted || intent.Action.Equals("android.intent.action.BOOT_COMPLETED"))
             {
+                AlarmReceiver alarm = new AlarmReceiver();
                 alarm.SetAlarm(context);
             }
         }

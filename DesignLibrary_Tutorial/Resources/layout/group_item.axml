@@ -25,7 +25,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:padding="10dp"
-        android:background="#E91E63" />
+        android:background="@drawable/stroke" />
     <TextView
         android:id="@+id/groupClass"
         android:visibility="invisible"
@@ -47,6 +47,6 @@
         android:layout_marginRight="@dimen/parent_margin"
         android:scaleType="fitXY"
         android:clickable="true"
-        android:id="@+id/imageView1" 
-        android:background="?selectableItemBackgroundBorderless"/>
+        android:id="@+id/imageView1"
+        android:background="?selectableItemBackgroundBorderless" />
 </RelativeLayout>

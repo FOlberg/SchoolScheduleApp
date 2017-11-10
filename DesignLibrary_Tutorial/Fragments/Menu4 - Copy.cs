@@ -13,7 +13,7 @@ using Android.Widget;
 
 namespace DesignLibrary_Tutorial.Fragments
 {
-    public class Menu3 : Android.Support.V4.App.Fragment
+    public class Menu4Copy : Android.Support.V4.App.Fragment
     {
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -25,13 +25,22 @@ namespace DesignLibrary_Tutorial.Fragments
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // Use this to return your custom view for this Fragment
-            return inflater.Inflate(Resource.Layout.menu3, container, false);
+            return inflater.Inflate(Resource.Layout.menu4, container, false);
         }
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             base.OnViewCreated(view, savedInstanceState);
-            this.Activity.Title = "Alle Pläne";
+            this.Activity.Title = "Menu4";
+
+            Button btnTest = View.FindViewById<Button>(Resource.Id.button1);
+            btnTest.Click += BtnTest_Click;
+        }
+
+        private void BtnTest_Click(object sender, EventArgs e)
+        {
+            Intent iActivity = new Intent(Activity, typeof(Activities.TimetableWeekActivity));
+            StartActivity(iActivity);
         }
     }
 }

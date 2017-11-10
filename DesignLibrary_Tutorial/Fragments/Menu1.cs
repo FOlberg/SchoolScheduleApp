@@ -49,7 +49,7 @@ namespace DesignLibrary_Tutorial.Fragments
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             base.OnViewCreated(view, savedInstanceState);
-            Activity.Title = mMsgHandler.GetCurrentClass();
+            Activity.Title = "Klasse " + mMsgHandler.GetCurrentClass();
             mSwipeRefresh = Activity.FindViewById<SwipeRefresh>(Resource.Id.SwipeRefresh);
             mSwipeRefresh.Refresh += MSwipeRefresh_Refresh;
 
@@ -76,7 +76,7 @@ namespace DesignLibrary_Tutorial.Fragments
         private void MSwipeRefresh_Refresh(object sender, System.EventArgs e)
         {
             UpdateList();         
-            mMsgHandler.mDataHandler.DeleteOutdatedDataAsync();
+            //mMsgHandler.DeleteOutdatedDataAsync();
             //MessageHandler.SaveMsgHandler(mMsgHandler);
         }
 
@@ -84,6 +84,7 @@ namespace DesignLibrary_Tutorial.Fragments
         {
             await mMsgHandler.UpdateAsync();
             mRecyclerViewAdapter.mList = mMsgHandler.mList;
+            mRecyclerViewAdapter.SortOutData();
             mRecyclerView.SwapAdapter(mRecyclerViewAdapter, false);
             if (mRecyclerViewAdapter.mList.Count == 0)
             {

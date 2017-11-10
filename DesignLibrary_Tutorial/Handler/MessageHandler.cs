@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using AppTestProzesse.Header;
 using DesignLibrary_Tutorial.Helpers;
 using Newtonsoft.Json;
@@ -19,21 +13,20 @@ namespace DesignLibrary_Tutorial.Handler
     public class MessageHandler
     {
         Week[] mWeek;
-        //[JsonProperty]
-        List<LData> testList;
-        //[JsonProperty]
-        List<LData> testListo;
-        public DataHandler mDataHandler;
+        List<LData> mMsgListOld;
+        DataHandler mDataHandler;
         public List<Card> mList;
+        [JsonProperty]
+        List<LData> mMsgList; 
         public event EventHandler OnDataChanged;
 
         [JsonConstructor]
-        public MessageHandler(DataHandler dataHandler, List<Card> list)
+        public MessageHandler(List<Card> list, List<LData> msgList)
         {
-            mDataHandler = dataHandler;
+            mDataHandler = DataHandler.GetDataHandler();
             mList = list;
-            testList = new List<LData>();
-            testListo = new List<LData>();
+            mMsgList = msgList;
+            mMsgListOld = new List<LData>();
             mWeek = new Week[2];
             DeleteOutdatedData();
         }
@@ -42,11 +35,11 @@ namespace DesignLibrary_Tutorial.Handler
         {
             mDataHandler = DataHandler.GetDataHandler();
             mWeek = new Week[2];
-            testList = new List<LData>();
-            testListo = new List<LData>();
+            mMsgList = new List<LData>();
+            mMsgListOld = new List<LData>();
             mWeek[0] = mDataHandler.GetDetailedWeek(0);
             mWeek[1] = mDataHandler.GetDetailedWeek(1);
-            mList = Process();
+            mList = DataToList();
             DeleteOutdatedData();
         }
 
@@ -65,9 +58,9 @@ namespace DesignLibrary_Tutorial.Handler
             mDataHandler.LoadCfg();
             mWeek[0] = mDataHandler.GetDetailedWeek(0, true);
             mWeek[1] = mDataHandler.GetDetailedWeek(1, true);
-            mList = Process();
-            SaveMsgHandler(this);
+            mList = DataToList();
             Check();
+            SaveMsgHandler(this);
         }
 
         private void DeleteOutdatedData()
@@ -80,19 +73,33 @@ namespace DesignLibrary_Tutorial.Handler
                     {
                         mList.RemoveAt(i);
                     }
+                    //else
+                    //{
+                    //    for (int j = mList[i].mCardList.Count - 1; j >= 0; j--)
+                    //    {
+                    //        if (mDataHandler.mConfig.GetTableConf()[(int)mList[i].mTime.Date.DayOfWeek - 1 % 7][(int)mList[i].mCardList[j].h[0]] == -1)
+                    //        {
+                    //            mList[i].mCardList.RemoveAt(j);
+                    //        }
+                    //    }
+                    //    if (mList[i].mCardList.Count < 1)
+                    //    {
+                    //        mList.RemoveAt(i);
+                    //    }
+                    //}
                 }
             }
         }
 
-        public List<Card> Process()
+        public List<Card> DataToList()
         {
             List<Card> tList = new List<Card>();
             int[][] config = mDataHandler.mConfig.GetTableConf();
 
-            if (testList != null)
+            if (mMsgList != null)
             {
-                testListo = testList;
-                testList.Clear();
+                mMsgListOld = mMsgList;
+                mMsgList = new List<LData>();
             }
 
             for (int wp = 0; mWeek != null && wp < mWeek.Length; wp++)
@@ -104,10 +111,10 @@ namespace DesignLibrary_Tutorial.Handler
                         List<CardList> tCardList = new List<CardList>();
                         for (int hour = 0; hour < 11; hour++)
                         {
-                            if (config[day][hour] != -1)
+                            if (config[day][hour] != -1 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour].Length >= config[day][hour])
                             {
-                                if (mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour].Length >= config[day][hour])
-                                {
+                                //if (mWeek[wp].week[day].list[hour] != null && (mWeek[wp].week[day].list[hour].Length >= config[day][hour])
+                                //{
                                     Subject temp = mWeek[wp].week[day].list[hour][config[day][hour]];
                                     if (temp.omitted || temp.change != null || temp.ev != null)
                                     {
@@ -132,7 +139,7 @@ namespace DesignLibrary_Tutorial.Handler
                                             }
                                         }
                                     }
-                                }
+                                //}
                             }
                             else if (mWeek[wp].mEvents.Count > 0 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour][0].ev != null)
                             {
@@ -145,7 +152,7 @@ namespace DesignLibrary_Tutorial.Handler
                             tList.Add(new Card(tCardList, mWeek[wp].tMon.AddDays(day)));
                             foreach (var item in tCardList)
                             {
-                                testList.Add(new LData(mWeek[wp].tMon.AddDays(day).Date, item));
+                                mMsgList.Add(new LData(mWeek[wp].tMon.AddDays(day).Date, item));
                             }
                         }
                     }
@@ -154,20 +161,66 @@ namespace DesignLibrary_Tutorial.Handler
             return tList;
         }
 
+        public void DeleteOutdatedDataAsync()
+        {
+            mDataHandler.DeleteOutdatedDataAsync();
+        }
+
+        //test
+        public class MessageArgs : EventArgs
+        {
+            private string msg;
+            public MessageArgs(string message)
+            {
+                msg = message;
+            }
+            public string Message
+            {
+                get { return msg; }
+            } 
+        }
+
         private void Check()
         {
-            OnDataChanged(this, new EventArgs());
-            if (testListo == testList)
+            if (mMsgListOld != mMsgList)
             {
-                var list = testList.Except(testListo).ToList();
+                //New Messages
+                var list = ExceptLData(mMsgList, mMsgListOld);//mMsgList.Where(i => !mMsgListOld.Contains(i)).ToList();//mMsgList.Except(mMsgListOld).ToList();
                 if (list.Count > 0)
                 {
                     //list are new messages that will be displayed in refresh or as notification
-                    bool b = true;
-                    OnDataChanged(this, new EventArgs());
+                    OnDataChanged(list, new MessageArgs((mMsgListOld.Count == 0).ToString()));
                 }
-                //if its the other way -> only views have to be deleted
+
+                //Delete outdated Messages
+                var outdatedData = ExceptLData(mMsgListOld, mMsgList);
+                foreach (var outdatedItem in outdatedData)
+                {
+                    mMsgListOld.Remove(outdatedItem);
+                }
             }
+        }
+
+        public List<LData> ExceptLData(List<LData> a, List<LData> b)
+        {
+            List<LData> output = new List<LData>();
+            foreach (var aItem in a)
+            {
+                bool exists = false;
+                foreach (var bItem in b)
+                {
+                    if (aItem.Equals(bItem))
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists)
+                {
+                    output.Add(aItem);
+                }
+            }
+            return output;
         }
 
         public string GetCurrentClass()
@@ -189,16 +242,18 @@ namespace DesignLibrary_Tutorial.Handler
 
         public static void SaveMsgHandler(MessageHandler messageHandler)
         {
+            var e = Application.Context.GetSharedPreferences("Dashboard", FileCreationMode.Private).Edit();
             try
             {
-                if (messageHandler.GetType() == typeof(MessageHandler))
-                {
-                    Application.Context.GetSharedPreferences("Dashboard", FileCreationMode.Private).Edit().PutString("MsgHandler", JsonConvert.SerializeObject(messageHandler)).Apply();
-                }
+                string s = JsonConvert.SerializeObject(messageHandler);
+                e.PutString("MsgHandler", s).Apply();
 
             }
-            catch (Exception) { }
-            //log
+            catch (Exception ex)
+            {
+                //log
+                var m = ex.Message;
+            }
         }
     }
 
@@ -211,6 +266,44 @@ namespace DesignLibrary_Tutorial.Handler
         {
             date = dateTime;
             item = cardList;
+        }
+        public override bool Equals(object obj)
+        {
+            //Ensures exceptions
+            LData ob;
+            try
+            {
+                ob = (LData)obj;
+            } catch(Exception)
+            {
+                ob = new LData();
+                return false;
+            }
+            
+            bool a = date.Date == ob.date.Date;
+            bool b2 = item.h[0] == ob.item.h[0] && item.h[1] == ob.item.h[1];
+            bool b1 = item.mSubject.name == ob.item.mSubject.name;
+            bool b3 = item.mSubject.room == ob.item.mSubject.room;
+            bool b4 = item.mSubject.omitted == ob.item.mSubject.omitted;
+            return a && b2 && b1 && b3 && b4;
+
+            //Extension in Future if problems are appeareing
+            //bool b5 = item.mSubject.ev == ob.item.mSubject.ev;
+            //if (!b5 && item.mSubject.ev != null)
+            //{
+            //    bool b7 = item.mSubject.ev.Describtion == ob.item.mSubject.ev.Describtion;
+            //    bool b8 = item.mSubject.ev.Hour == ob.item.mSubject.ev.Hour;
+            //    b5 = b7 && b8;
+            //}
+            //bool b9 = item.mSubject.change == ob.item.mSubject.change;
+            //if (!b9 && item.mSubject.change != null)
+            //{
+            //    bool b10 = item.mSubject.change.newRoom == ob.item.mSubject.change.newRoom;
+            //    bool b11 = item.mSubject.change.newSubject == ob.item.mSubject.change.newSubject;
+            //    b9 = b10 && b11;
+            //}
+            
+            //return a && b2 && b1 && b3 && b4 && b5 && b9;
         }
     }
 }

@@ -14,15 +14,12 @@ namespace AppTestProzesse.Header
     {
         public Config mConfig;
         string[,] mSource;
-        string[] urlpartsA = new string[] { "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/", "/c/c", ".htm" };
-        string[] urlpartsB = new string[] { "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/", "/w/w00000.htm" };
 
         [JsonProperty]
         string[] mClassNames;
         [JsonProperty]
         URLClient mClientURL; //Handler ? Save? -> What is faster initializing or deserializing
         TimeHandler mTimeHandler; // -""-
-        JsonHandler mJsonHandler; // -""-
         InformationHandler mInfoHandler; // -""-
         [JsonProperty]
         Week[,] mWeekStack;
@@ -33,7 +30,6 @@ namespace AppTestProzesse.Header
         {
             mClientURL = new URLClient();
             mTimeHandler = new TimeHandler();
-            mJsonHandler = new JsonHandler();
             mInfoHandler = new InformationHandler();
             mTimetables = new List<Timetable>();
             LoadCfg();
@@ -49,7 +45,7 @@ namespace AppTestProzesse.Header
         public Week GetWeek(int classNameIndex, int week, bool newDload = false)
         {
             //Maybe Dictionary check depending on update peroid in settings
-            DateTime mondayDate = mTimeHandler.GetMonday(week);
+            DateTime mondayDate = TimeHandler.GetMonday(week);
             if (mWeekStack == null)
             {
                 mWeekStack = new Week[mClassNames.Length, 2];
@@ -65,11 +61,15 @@ namespace AppTestProzesse.Header
             }
             if (mSource[classNameIndex, week] == null || newDload)
             {
-                mSource[classNameIndex, week] = mClientURL.GetRawCode(urlpartsA, mTimeHandler.GetWeekIndex(week), classNameIndex);
+                mSource[classNameIndex, week] = mClientURL.GetRawCode(mConfig.urlA, mTimeHandler.GetWeekIndex(week), classNameIndex);
                 if (mSource[classNameIndex, week] == null)
                 {
-                    mSource[classNameIndex, week] = mClientURL.GetRawCode(urlpartsA, mTimeHandler.GetWeekIndex(week), classNameIndex);
+                    mSource[classNameIndex, week] = mClientURL.GetRawCode(mConfig.urlA, mTimeHandler.GetWeekIndex(week), classNameIndex);
                 }
+            }
+            if (mClientURL.early == 1)
+            {
+                mondayDate = mondayDate.AddDays(7);
             }
             Week w = mInfoHandler.ClassSourceToWeek(mSource[classNameIndex, week], mClassNames[classNameIndex], mondayDate);
             mWeekStack[classNameIndex, week] = w;
@@ -82,7 +82,7 @@ namespace AppTestProzesse.Header
             {
                 if (mWeekStack != null)
                 {
-                    DateTime[] date = new DateTime[] { mTimeHandler.GetMonday(0), mTimeHandler.GetMonday(1) };
+                    DateTime[] date = new DateTime[] { TimeHandler.GetMonday(0), TimeHandler.GetMonday(1) };
                     for (int i = 0; i < mWeekStack.Length; i++)
                     {
                         for (int j = 0; j < 2; j++)
@@ -103,7 +103,7 @@ namespace AppTestProzesse.Header
         public Week GetDetailedWeek(int week, bool newDload = false)
         {
             Week w = GetWeek(GetClassIndex(mConfig.GetClassName()), week, newDload);
-            string source = mClientURL.GetRawCode(urlpartsB, mTimeHandler.GetWeekIndex(week));
+            string source = mClientURL.GetRawCode(mConfig.urlB, mTimeHandler.GetWeekIndex(week));
             mInfoHandler.ApplyChanges(w, mInfoHandler.GetDetailedInfo(source));
             return w;
         }
@@ -133,16 +133,16 @@ namespace AppTestProzesse.Header
                     }
                 }
             }
-            if (mJsonHandler.FileExists("Data", "Timetable" + mClassNames[classIndex], "json")) //Saved Files
+            if (JsonHandler.FileExists("Data", "Timetable" + mClassNames[classIndex], "json")) //Saved Files
             {
-                mTimetables.Add(CheckTimetable(mJsonHandler.GetTimetable("Data", "Timetable" + mClassNames[classIndex], "json", mTimeHandler.GetSemester()), classIndex));
+                mTimetables.Add(CheckTimetable(JsonHandler.GetTimetable("Data", "Timetable" + mClassNames[classIndex], "json", mTimeHandler.GetSemester()), classIndex));
                 return mTimetables[mTimetables.Count - 1];
             }
 
             //or create new Timetable
             Timetable table = new Timetable(GetWeek(classIndex, 0), GetWeek(classIndex, 1), System.DateTime.UtcNow);
             mTimetables.Add(table);
-            mJsonHandler.saveObjects<Timetable, Semester>(mTimeHandler.GetSemester(), table, "Data", "Timetable" + mClassNames[classIndex] + ".json");
+            JsonHandler.saveObjects<Timetable, Semester>(mTimeHandler.GetSemester(), table, "Data", "Timetable" + mClassNames[classIndex] + ".json");
             return table;
         }
 
@@ -153,7 +153,7 @@ namespace AppTestProzesse.Header
             if (!table.IsLeaking())
                 return table;
             table.Update(GetWeek(classIndex, 1)); //Which week?
-            mJsonHandler.saveObjects<Timetable, Semester>(mTimeHandler.GetSemester(), table, "Data", "Timetable" + mClassNames[classIndex] + ".json");
+            JsonHandler.saveObjects<Timetable, Semester>(mTimeHandler.GetSemester(), table, "Data", "Timetable" + mClassNames[classIndex] + ".json");
             return table;
         }
 
@@ -177,7 +177,7 @@ namespace AppTestProzesse.Header
             //Loads or get Data by WebClient/Json
             if (JsonHandler.countFiles("Data", "classes", "json") > 0)
             {
-                string[] temp = mJsonHandler.GetObjects<string[], Semester>("Data", "classes", "json", out Semester sem);
+                string[] temp = JsonHandler.GetObjects<string[], Semester>("Data", "classes", "json", out Semester sem);
                 if (sem == mTimeHandler.GetSemester())
                 {
                     mClassNames = temp;
@@ -209,7 +209,7 @@ namespace AppTestProzesse.Header
                     mSource[i, 0] = source[1][i];
                 }
                 mClassNames = source[0];
-                mJsonHandler.saveObjects<string[], Semester>(mTimeHandler.GetSemester(), mClassNames, "Data", "classes.json");
+                JsonHandler.saveObjects<string[], Semester>(mTimeHandler.GetSemester(), mClassNames, "Data", "classes.json");
 
             }
             else
@@ -219,9 +219,9 @@ namespace AppTestProzesse.Header
 
         public void LoadCfg()
         {
-            if (mJsonHandler.FileExists("Data", "Config", "json"))
+            if (JsonHandler.FileExists("Data", "Config", "json"))
             {
-                mConfig = mJsonHandler.GetObject<Config>("Data", "Config", "json");
+                mConfig = JsonHandler.GetObject<Config>("Data", "Config", "json");
             }
             else if (mConfig == null)
             {
@@ -230,9 +230,19 @@ namespace AppTestProzesse.Header
             mConfig.OnConfigChanged += MConfig_OnConfigChanged;
         }
 
+        public static Config GetConfig()
+        {
+            return JsonHandler.GetObject<Config>("Data", "Config", "json");
+        }
+
+        public static void SaveConfig(Config config)
+        {
+            JsonHandler.saveObject<Config>(config, "Data", "Config.json");
+        }
+
         private void MConfig_OnConfigChanged(object sender, EventArgs e)
         {
-            mJsonHandler.saveObject<Config>(mConfig, "Data", "Config.json");
+            JsonHandler.saveObject<Config>(mConfig, "Data", "Config.json");
         }
 
         public static DataHandler GetDataHandler()

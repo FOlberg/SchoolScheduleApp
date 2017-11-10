@@ -67,7 +67,7 @@ namespace AppTestProzesse.Header
             return GetNextWeek(true);
         }
 
-        public void ChangeToMonday(ref DateTime d)
+        public static void ChangeToMonday(ref DateTime d)
         {
             while(d.Date.DayOfWeek != DayOfWeek.Monday)
             {
@@ -75,7 +75,7 @@ namespace AppTestProzesse.Header
             }
         }
 
-        public DateTime GetMonday(int week)
+        public static DateTime GetMonday(int week)
         {
             DateTime t = DateTime.Now.Date;
             if (week == 1)

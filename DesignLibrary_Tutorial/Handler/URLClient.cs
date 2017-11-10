@@ -40,7 +40,7 @@ namespace AppTestProzesse.Header
         public string GetRawCode(string[] urlParts, int week, int classIndex)
         {
             CheckEarly(urlParts);
-            string url = LinkURL(urlParts, week + early, classIndex + 1); //string url = LinkURL(urlParts, week + early, classIndex + 1);
+            string url = LinkURL(urlParts, week + early, classIndex + 1);
             if (url.Length == 0)
                 return null;
             string source = GetRawCode(url);

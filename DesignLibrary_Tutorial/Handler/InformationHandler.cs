@@ -83,7 +83,7 @@ namespace AppTestProzesse.Header
                     case XmlNodeType.Text:
                         if (readTableRow && reader.Value != "")
                         {
-                            if(reader.Value == "---")
+                            if (reader.Value == "---")
                             {
                                 tempChanges[regPosition] = string.Empty;
                             }
@@ -100,13 +100,13 @@ namespace AppTestProzesse.Header
 
                             //Hour
                             if (tempChanges[2].Length < 3)
-                                hours.Add(stringToHour(tempChanges[2]));
+                                hours.Add(StringToHour(tempChanges[2]));
                             else
                             {
                                 string hString = tempChanges[2].Replace(" ", "");
                                 if (hString.Contains("-"))
                                 {
-                                    for (int i = (int)stringToHour(hString.Substring(0, hString.IndexOf("-"))); i <= (int)stringToHour(hString.Substring(hString.IndexOf("-") + 1)); i++)
+                                    for (int i = (int)StringToHour(hString.Substring(0, hString.IndexOf("-"))); i <= (int)StringToHour(hString.Substring(hString.IndexOf("-") + 1)); i++)
                                     {
                                         hours.Add((Hours)i);
                                     }
@@ -115,7 +115,7 @@ namespace AppTestProzesse.Header
                                 {
                                     for (int i = int.Parse(hString.Substring(0, hString.IndexOf(","))); i <= int.Parse(hString.Substring(hString.LastIndexOf(","))) + 1; i++)
                                     {
-                                        hours.Add(stringToHour(i.ToString()));
+                                        hours.Add(StringToHour(i.ToString()));
                                     }
                                 }
                             }
@@ -148,24 +148,24 @@ namespace AppTestProzesse.Header
         {
             if (changes != null && changes.Count > 0 && w != null)
             {
-                foreach(var change in changes)
+                foreach (var change in changes)
                 {
-                    if(change.Item3 != null && change.Item3.Contains(w.mClass)) //same class || Changes on 05.08.17!
+                    if (change.Item3 != null && change.Item3.Contains(w.mClass)) //same class || Changes on 05.08.17!
                     {
-                        foreach(var hour in change.Item2)
+                        foreach (var hour in change.Item2)
                         {
-                            if(w.week[(int)change.Item1].list[(int)hour] != null) //checks if lessons are available
+                            if (w.week[(int)change.Item1].list[(int)hour] != null) //checks if lessons are available
                             {
-                                foreach(var subject in w.week[(int)change.Item1].list[(int)hour])
+                                foreach (var subject in w.week[(int)change.Item1].list[(int)hour])
                                 {
-                                    if(subject.name == change.Item4.name && (
+                                    if (subject.name == change.Item4.name && (
                                         (change.Item4.room.Contains(subject.room) || change.Item4.change.newRoom.Contains(subject.room)) ||
-                                        (subject.room.Contains(",") && (change.Item4.room.Contains(subject.room.Substring(0, subject.room.IndexOf(","))) || change.Item4.change.newRoom.Contains(subject.room.Substring(0, subject.room.IndexOf(","))))) )) //checks if information matches | Ex: if weeks room is already set to newRoom
+                                        (subject.room.Contains(",") && (change.Item4.room.Contains(subject.room.Substring(0, subject.room.IndexOf(","))) || change.Item4.change.newRoom.Contains(subject.room.Substring(0, subject.room.IndexOf(","))))))) //checks if information matches | Ex: if weeks room is already set to newRoom
                                     {
                                         subject.change = change.Item4.change; //adds new changes to original subject instance
-                                        if(subject.ev != null)
+                                        if (subject.ev != null)
                                         {
-                                            if(!subject.ev.Describtion.Contains(subject.change.remarks)) //Needs to be checked
+                                            if (!subject.ev.Describtion.Contains(subject.change.remarks)) //Needs to be checked
                                             {
                                                 subject.ev.Describtion += " " + subject.change.remarks;
                                             }
@@ -173,13 +173,13 @@ namespace AppTestProzesse.Header
                                     }
                                 }
                             }
-                        }  
+                        }
                     }
                 }
             }
         }
 
-        private Hours stringToHour(string source)
+        private Hours StringToHour(string source)
         {
             if (source == "MP" || source == "Mittagspause") //INFO NEEDED
                 return Hours.MP;
@@ -201,7 +201,7 @@ namespace AppTestProzesse.Header
             bool[] strike = new bool[2]; //0 = prev, 1 = current
             int colspanValue = 0, day = 0, rowspan = -1;
 
-            string t = "";
+            //string t = "";
 
             Queue<string> elements = new Queue<string>();
             Queue<string> endtags = new Queue<string>();
@@ -288,7 +288,7 @@ namespace AppTestProzesse.Header
 
                         if (reader.Name == "strike")
                         {
-                            strike[0] = true;                  
+                            strike[0] = true;
                         }
                         else elements.Enqueue(reader.Name);
 
@@ -344,7 +344,7 @@ namespace AppTestProzesse.Header
                                 }
                             }
                             if (con) continue;
-                            t += reader.Value;
+                            //t += reader.Value;
                             week.AddEvent(new Event((Days)(day % 5), row, (rowspan / 2) - 1 + row)); //CHECK!
                             /*t += eventSpace.ToArray()[eventSpace.Count - 1].Day + " "
                                 + eventSpace.ToArray()[eventSpace.Count - 1].Hour + " "
@@ -356,6 +356,10 @@ namespace AppTestProzesse.Header
                     case XmlNodeType.EndElement:
                         if (reader.Name == "strike")
                         {
+                            if (lessonsStack.Count != 1) //It must be only one object inside -> else there appeared blank spaces with "strike" -> incorrect
+                            {
+                                strike[0] = false;
+                            }
                             strike[1] = strike[0];
                             strike[0] = false;
                         }
@@ -386,7 +390,7 @@ namespace AppTestProzesse.Header
             {
                 if (temp[0] == temp[1])
                 {
-                    lesson.Add(new Subject(temp[0].Replace("\n", "").Replace(".",""), "N.A.", strike[1]));
+                    lesson.Add(new Subject(temp[0].Replace("\n", "").Replace(".", ""), "N.A.", strike[1]));
                 }
                 else lesson.Add(new Subject(temp[1].Replace("\n", "").Replace(".", ""), temp[0].Replace("\n", "").Replace(".", ""), strike[1]));
                 strike[1] = strike[0];

@@ -1,46 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
+﻿using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
-using Android.Widget;
+using Android.Support.V7.Preferences;
+using AppTestProzesse.Header;
 
 namespace DesignLibrary_Tutorial.Fragments
 {
-    public class Menu4 : Android.Support.V4.App.Fragment
+    public class Menu4 : Android.Support.V7.Preferences.PreferenceFragmentCompat
     {
-        public override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
+        ListPreference syncIntPreference;
+        Preference schedulePreference;
+        Preference vibrationPreference;
 
-            // Create your fragment here
-        }
-
-        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        public override void OnCreatePreferences(Bundle savedInstanceState, string rootKey)
         {
-            // Use this to return your custom view for this Fragment
-            return inflater.Inflate(Resource.Layout.menu4, container, false);
+            // Load the Preferences from the XML file
+            AddPreferencesFromResource(Resource.Layout.App_Preferences);
+
+            var config = DataHandler.GetConfig();
+
+            //Change Schedule Pref.
+            schedulePreference = FindPreference("ChangeSchedule");
+            schedulePreference.Intent = new Intent(Activity, typeof(DesignLibrary_Tutorial.Activities.TimetableWeekActivity));
+            schedulePreference.Summary = "Ausgewählte Klasse: " + config.GetClassName();
+
+            //Update Sequence Pref.
+            syncIntPreference = (ListPreference) FindPreference("SyncIntervall_preference");
+            syncIntPreference.SetDefaultValue(config.updateSequence);
+            syncIntPreference.PreferenceChange += SyncIntPreference_PreferenceChange;
+
+            //Vibration Pref.
+            vibrationPreference = FindPreference("vibration_preference");
+            vibrationPreference.SetDefaultValue(config.vibration);
+            vibrationPreference.PreferenceChange += VibrationPreference_PreferenceChange;
         }
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             base.OnViewCreated(view, savedInstanceState);
-            this.Activity.Title = "Menu4";
-
-            Button btnTest = View.FindViewById<Button>(Resource.Id.button1);
-            btnTest.Click += BtnTest_Click;
+            Activity.Title = "Einstellungen";
         }
 
-        private void BtnTest_Click(object sender, EventArgs e)
+        private void VibrationPreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
         {
-            Intent iActivity = new Intent(Activity, typeof(Activities.TimetableWeekActivity));
-            StartActivity(iActivity);
+            var config = DataHandler.GetConfig();
+            config.vibration = (bool) e.NewValue;
+            DataHandler.SaveConfig(config);
+        }
+
+        private void SyncIntPreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
+        {
+            var config = DataHandler.GetConfig();
+            int.TryParse(e.NewValue.ToString().Replace("{", "").Replace("}", ""), out int newValue);
+            //log
+            if (newValue > 0 && newValue != config.updateSequence)
+            {
+                Background.AlarmReceiver.mOldSequence = config.updateSequence;
+                config.updateSequence = newValue;
+                DataHandler.SaveConfig(config);
+            }  
         }
     }
 }

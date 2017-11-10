@@ -6,14 +6,11 @@ namespace AppTestProzesse.Header
     public class JsonHandler
     {
         public static string codepath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-        JsonSerializer serializer;
-        static int count;
 
         public JsonHandler()
         {
             codepath = System.Reflection.Assembly.GetExecutingAssembly().Location;//System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
             codepath = System.IO.Path.GetDirectoryName(codepath);
-            serializer = new JsonSerializer();
         }
 
         public static int countFiles(string folder, string filename, string format)
@@ -21,21 +18,20 @@ namespace AppTestProzesse.Header
             if(folder.Length > 0) folder = "/" + folder;
             if(Directory.Exists(codepath + folder))
             {
-                count = Directory.GetFiles(codepath + folder, filename + "*." + format, SearchOption.TopDirectoryOnly).Length;
-                return count;
+                return Directory.GetFiles(codepath + folder, filename + "*." + format, SearchOption.TopDirectoryOnly).Length;
             }
             return -1;
         }
 
 
-        public void saveObject<T>(T obj, string folder, string filename)
+        public static void saveObject<T>(T obj, string folder, string filename)
         {
             CheckFolder(folder);
             if (folder.Length > 0) folder = "/" + folder;
             File.WriteAllText(codepath + folder + "/" + filename, JsonConvert.SerializeObject(obj));
         }
 
-        public void saveObjects<T>(string[] info, T obj, string folder, string filename)
+        public static void saveObjects<T>(string[] info, T obj, string folder, string filename)
         {
             CheckFolder(folder);
             if (folder.Length > 0) folder = "/" + folder;
@@ -44,7 +40,7 @@ namespace AppTestProzesse.Header
             File.WriteAllText(codepath + folder + "/" + filename, source);
         }
 
-        public void saveObjects<T, U>(U objTop, T obj, string folder, string filename)
+        public static void saveObjects<T, U>(U objTop, T obj, string folder, string filename)
         {
             CheckFolder(folder);
             if (folder.Length > 0) folder = "/" + folder;
@@ -53,7 +49,7 @@ namespace AppTestProzesse.Header
             File.WriteAllText(codepath + folder + "/" + filename, source);
         }
 
-        public T GetObject<T>(string folder, string filename, string format)
+        public static T GetObject<T>(string folder, string filename, string format)
         {
             if (folder.Length > 0) folder = "/" + folder;
             if (File.Exists(codepath + folder + "/" + filename + "." + format))
@@ -63,7 +59,7 @@ namespace AppTestProzesse.Header
             return default(T);
         }
 
-        public T GetObjects<T>(string folder, string filename, string format, out string[] fileInfo)
+        public static T GetObjects<T>(string folder, string filename, string format, out string[] fileInfo)
         {
             if (folder.Length > 0) folder = "/" + folder;
             if (File.Exists(codepath + folder + "/" + filename + "." + format))
@@ -76,7 +72,7 @@ namespace AppTestProzesse.Header
             return default(T);
         }
 
-        public T GetObjects<T, U>(string folder, string filename, string format, out U objTop)
+        public static T GetObjects<T, U>(string folder, string filename, string format, out U objTop)
         {
             if (folder.Length > 0) folder = "/" + folder;
             if (File.Exists(codepath + folder + "/" + filename + "." + format))
@@ -89,7 +85,7 @@ namespace AppTestProzesse.Header
             return default(T);
         }
 
-        public Timetable GetTimetable(string folder, string filename, string format, Semester sem)
+        public static Timetable GetTimetable(string folder, string filename, string format, Semester sem)
         {
             if (folder.Length > 0) folder = "/" + folder;
             if (File.Exists(codepath + folder + "/" + filename + "." + format))
@@ -103,7 +99,7 @@ namespace AppTestProzesse.Header
             return null;
         }
 
-        private void CheckFolder(string name)
+        private static void CheckFolder(string name)
         {
             if(!Directory.Exists(codepath + "/" + name))
             {
@@ -111,7 +107,7 @@ namespace AppTestProzesse.Header
             }
         }
 
-        public bool FileExists(string folder, string filename, string format)
+        public static bool FileExists(string folder, string filename, string format)
         {
             try
             {

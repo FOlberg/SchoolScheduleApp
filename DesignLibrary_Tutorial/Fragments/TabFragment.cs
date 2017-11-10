@@ -93,7 +93,7 @@ namespace DesignLibrary_Tutorial.Fragments
         {
             preferences = Application.Context.GetSharedPreferences("TableSetup", FileCreationMode.Private);
             editor = preferences.Edit();
-            editor.PutString("table" + day, JsonConvert.SerializeObject(selected));
+            editor.PutString("table" + day, JsonConvert.SerializeObject(mAdapter.GetSelectedItems()));
             editor.Apply();
 
             base.OnDestroy();
