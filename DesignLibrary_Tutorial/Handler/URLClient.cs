@@ -1,6 +1,10 @@
 ﻿using System.Net;
+using System.Web;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Text;
+using System.IO;
+using System.IO.Compression;
 
 namespace AppTestProzesse.Header
 {
@@ -14,11 +18,13 @@ namespace AppTestProzesse.Header
         public URLClient()
         {
             webClient = new WebClient();
+            webClient.Encoding = Encoding.GetEncoding(1252);
         }
         ~URLClient() { }
 
         public string GetRawCode(string url)
         {
+            webClient.Encoding = Encoding.GetEncoding(1252);
             if (url.Length == 0)
                 return null;
             string source;
@@ -34,7 +40,7 @@ namespace AppTestProzesse.Header
                 }
                 return null;
             }
-            return source;
+            return source;//.HttpUtility.HtmlDecode(source);
         }
 
         public string GetRawCode(string[] urlParts, int week, int classIndex)

@@ -30,40 +30,43 @@ namespace AppTestProzesse.Header
         }
     }
 
+    public class Settings
+    {
+        public bool vibration;
+        public bool priority;
+        public int updateSequence;
+
+        public Settings()
+        {
+            vibration = false;
+            updateSequence = 120;
+            priority = false;
+        }
+    }
+
     public class Config
     {
         [JsonProperty]
         List<cTimetable> mCfgList;
         public int mConfigSel;
-        public int updateSequence;
-        public bool vibration;
+        public Settings mSettings;
 
         public string[] urlA = new string[] { "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/", "/c/c", ".htm" };
         public string[] urlB = new string[] { "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/", "/w/w00000.htm" };
 
-        public event EventHandler OnConfigChanged;
-
         public Config()
         {
             mCfgList = new List<cTimetable>();
-            updateSequence = 120;
-            vibration = false;
+            mSettings = new Settings();
         }
-
-        /* Temp*/
-        public List<cTimetable> GetMList()
-        {
-            return mCfgList;
-        }
-
-        public void SaveList(List<cTimetable> list)
-        {
-            mCfgList = list;
-        }
-        /* Test END*/
 
         public void AddTableConf(string className, int[][] table)
         {
+            if (mCfgList.Count > 30)
+            {
+                //log
+                throw new Exception("Configurtaion File Overflow");
+            }
             if (mCfgList.Count <= mConfigSel) //Add new 
             {
                 mCfgList.Add(new cTimetable(className, table));
@@ -75,10 +78,18 @@ namespace AppTestProzesse.Header
             }
             else
             {
+                for (int i = 0; i < mCfgList.Count; i++)
+                {
+                    if (mCfgList[i].mClassName == className)
+                    {
+                        mCfgList[i].mTimetable = table;
+                        mConfigSel = i;
+                        return;
+                    }
+                }
                 mCfgList.Add(new cTimetable(className, table));
                 mConfigSel = mCfgList.Count - 1;
             }
-            OnConfigChanged(this, new EventArgs());
         }
 
         public int[][] GetTableConf()
@@ -108,6 +119,11 @@ namespace AppTestProzesse.Header
         public bool IsEmpty()
         {
             return mCfgList.Count == 0;
+        }
+
+        public int GetConfigCount()
+        {
+            return mCfgList.Count;
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using Android.OS;
 using Android.Views;
-using Android.Support.V4.Widget;
 using SupportFragment = Android.Support.V4.App.Fragment;
 using SupportFragmentManager = Android.Support.V4.App.FragmentManager;
 using SupportToolbar = Android.Support.V7.Widget.Toolbar;
@@ -10,21 +9,18 @@ using Android.Support.V7.App;
 using Android.Support.Design.Widget;
 using Android.Support.V4.View;
 using Android.Support.V4.App;
-using Android.Widget;
 using System.Collections.Generic;
 using Java.Lang;
 using Android.Content;
 using DesignLibrary_Tutorial.Fragments;
 using AppTestProzesse.Header;
 using Newtonsoft.Json;
-using Android.Graphics.Drawables;
 
 namespace DesignLibrary_Tutorial.Activities
 {
     [Activity(Label = "Plan", Theme = "@style/Theme.DesignDemo")]
     public class TimetableWeekActivity : AppCompatActivity
     {
-        DataHandler mDataHandler;
         TabLayout mTabs;
         TabAdapter mAdapter;
         FloatingActionButton mFab;
@@ -61,7 +57,6 @@ namespace DesignLibrary_Tutorial.Activities
         {
             if (e.Position == 4)
             {
-                //mFab.SetImageIcon(Icon.CreateWithResource(this, Resource.Drawable.ic_done));
                 mFab.SetImageDrawable(GetDrawable(Resource.Drawable.ic_done));
             }
             else
@@ -99,7 +94,6 @@ namespace DesignLibrary_Tutorial.Activities
             int classIndex = preferences.GetInt("classIndex", -1);
 
             //Destroy Fragments
-            //mAdapter.Fragments.Clear();
             for (int i = mAdapter.Fragments.Count - 1; i >= 0; i--)
             {
                 mAdapter.Fragments[i].OnDestroy();
@@ -118,12 +112,10 @@ namespace DesignLibrary_Tutorial.Activities
             editor.Apply();
 
             //Update mDataHandler
-            mDataHandler.mConfig.AddTableConf(mDataHandler.GetClassName(classIndex), tempSel);
-            preferences = Application.Context.GetSharedPreferences("DataHandler", FileCreationMode.Private);
-            editor = preferences.Edit();
-
-            editor.PutString("mData", JsonConvert.SerializeObject(mDataHandler));
-            editor.Apply();
+            var data = DataHandler.GetDataHandler();
+            var config = DataHandler.GetConfig();
+            config.AddTableConf(data.GetClassName(classIndex), tempSel);
+            DataHandler.SaveConfig(config);
 
             SetResult(Result.Ok);
             Finish();
@@ -143,7 +135,7 @@ namespace DesignLibrary_Tutorial.Activities
 
         private void SetUpViewPager(ViewPager viewPager)
         {
-            mDataHandler = DataHandler.GetDataHandler();
+            //mDataHandler = DataHandler.GetDataHandler();
             mAdapter = new TabAdapter(SupportFragmentManager);
             for (int i = 0; i < 5; i++)
             {

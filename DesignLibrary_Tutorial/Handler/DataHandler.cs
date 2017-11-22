@@ -12,7 +12,7 @@ namespace AppTestProzesse.Header
 {
     public class DataHandler
     {
-        public Config mConfig;
+        //public Config mConfig;
         string[,] mSource;
 
         [JsonProperty]
@@ -32,7 +32,7 @@ namespace AppTestProzesse.Header
             mTimeHandler = new TimeHandler();
             mInfoHandler = new InformationHandler();
             mTimetables = new List<Timetable>();
-            LoadCfg();
+            //LoadCfg();
             GetClassData();
         }
 
@@ -46,6 +46,7 @@ namespace AppTestProzesse.Header
         {
             //Maybe Dictionary check depending on update peroid in settings
             DateTime mondayDate = TimeHandler.GetMonday(week);
+            var config = GetConfig();
             if (mWeekStack == null)
             {
                 mWeekStack = new Week[mClassNames.Length, 2];
@@ -61,10 +62,10 @@ namespace AppTestProzesse.Header
             }
             if (mSource[classNameIndex, week] == null || newDload)
             {
-                mSource[classNameIndex, week] = mClientURL.GetRawCode(mConfig.urlA, mTimeHandler.GetWeekIndex(week), classNameIndex);
+                mSource[classNameIndex, week] = mClientURL.GetRawCode(config.urlA, mTimeHandler.GetWeekIndex(week), classNameIndex);
                 if (mSource[classNameIndex, week] == null)
                 {
-                    mSource[classNameIndex, week] = mClientURL.GetRawCode(mConfig.urlA, mTimeHandler.GetWeekIndex(week), classNameIndex);
+                    mSource[classNameIndex, week] = mClientURL.GetRawCode(config.urlA, mTimeHandler.GetWeekIndex(week), classNameIndex);
                 }
             }
             if (mClientURL.early == 1)
@@ -102,8 +103,9 @@ namespace AppTestProzesse.Header
 
         public Week GetDetailedWeek(int week, bool newDload = false)
         {
-            Week w = GetWeek(GetClassIndex(mConfig.GetClassName()), week, newDload);
-            string source = mClientURL.GetRawCode(mConfig.urlB, mTimeHandler.GetWeekIndex(week));
+            var config = GetConfig();
+            Week w = GetWeek(GetClassIndex(config.GetClassName()), week, newDload);
+            string source = mClientURL.GetRawCode(config.urlB, mTimeHandler.GetWeekIndex(week));
             mInfoHandler.ApplyChanges(w, mInfoHandler.GetDetailedInfo(source));
             return w;
         }
@@ -217,22 +219,28 @@ namespace AppTestProzesse.Header
                 throw new Exception("TimeException: At the moment is no information online!");
         }
 
-        public void LoadCfg()
-        {
-            if (JsonHandler.FileExists("Data", "Config", "json"))
-            {
-                mConfig = JsonHandler.GetObject<Config>("Data", "Config", "json");
-            }
-            else if (mConfig == null)
-            {
-                mConfig = new Config();
-            }
-            mConfig.OnConfigChanged += MConfig_OnConfigChanged;
-        }
+        //public void LoadCfg()
+        //{
+        //    if (JsonHandler.FileExists("Data", "Config", "json"))
+        //    {
+        //        mConfig = JsonHandler.GetObject<Config>("Data", "Config", "json");
+        //    }
+        //    else if (mConfig == null)
+        //    {
+        //        mConfig = new Config();
+        //    }
+        //    mConfig.OnConfigChanged += MConfig_OnConfigChanged;
+        //}
 
         public static Config GetConfig()
         {
-            return JsonHandler.GetObject<Config>("Data", "Config", "json");
+            if (JsonHandler.FileExists("Data", "Config", "json"))
+            {
+                return JsonHandler.GetObject<Config>("Data", "Config", "json");
+            }
+            var config = new Config();
+            SaveConfig(config);
+            return config;
         }
 
         public static void SaveConfig(Config config)
@@ -240,10 +248,10 @@ namespace AppTestProzesse.Header
             JsonHandler.saveObject<Config>(config, "Data", "Config.json");
         }
 
-        private void MConfig_OnConfigChanged(object sender, EventArgs e)
-        {
-            JsonHandler.saveObject<Config>(mConfig, "Data", "Config.json");
-        }
+        //private void MConfig_OnConfigChanged(object sender, EventArgs e)
+        //{
+        //    JsonHandler.saveObject<Config>(mConfig, "Data", "Config.json");
+        //}
 
         public static DataHandler GetDataHandler()
         {
@@ -252,7 +260,12 @@ namespace AppTestProzesse.Header
             {
                 return JsonConvert.DeserializeObject<DataHandler>(HandlerSource);
             }
-            else throw new System.Exception("DataHandler NullException");
+            //preferences = Application.Context.GetSharedPreferences("DataHandler", FileCreationMode.Private);
+            var dataHandler = new DataHandler();
+            var editor = Application.Context.GetSharedPreferences("DataHandler", FileCreationMode.Private).Edit();
+            editor.PutString("mData", JsonConvert.SerializeObject(dataHandler));
+            editor.Apply();
+            return dataHandler;
         }
     }
 }

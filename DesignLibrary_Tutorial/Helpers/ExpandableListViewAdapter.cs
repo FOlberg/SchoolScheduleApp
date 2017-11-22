@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Graphics;
 using Android.Views;
 using Android.Widget;
-using Java.Lang;
 using AppTestProzesse.Header;
 using DesignLibrary_Tutorial.Helpers;
 

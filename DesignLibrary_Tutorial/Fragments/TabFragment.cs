@@ -136,34 +136,38 @@ namespace DesignLibrary_Tutorial.Fragments
 
         private void LoadSharedPreferences()
         {
-            string HandlerSource = Application.Context.GetSharedPreferences("DataHandler", FileCreationMode.Private).GetString("mData", null);
-            if (HandlerSource != null)
-            {
-                mDataHandler = JsonConvert.DeserializeObject<DataHandler>(HandlerSource); //Problem
-            }
-            else throw new System.Exception("DataHandler NullException");
-
+            mDataHandler = DataHandler.GetDataHandler();
             preferences = Application.Context.GetSharedPreferences("TableSetup", FileCreationMode.Private);
             editor = preferences.Edit();
 
             classIndex = preferences.GetInt("classIndex", -1);
             //loadCfg = preferences.GetBoolean("LoadConfig", false);
-
-            if (classIndex > -1 && mDataHandler.mConfig.GetClassName() == mDataHandler.GetClassName(classIndex))
+            var config = DataHandler.GetConfig();
+            if (classIndex > -1 && config.GetClassName() == mDataHandler.GetClassName(classIndex))
             {
-                selected = mDataHandler.mConfig.GetTableConf()[day];
+                selected = config.GetTableConf()[day];
             }
-
             else if (classIndex == -1)
             {
                 for (int i = 0; i < mDataHandler.GetClasses().Length; i++)
                 {
-                    if (mDataHandler.GetClasses()[i] == mDataHandler.mConfig.GetClassName())
+                    if (mDataHandler.GetClasses()[i] == config.GetClassName())
                     {
-                        selected = mDataHandler.mConfig.GetTableConf()[day];
+                        selected = config.GetTableConf()[day];
                         classIndex = i;
                         editor.PutInt("classIndex", i);
                         editor.Apply();
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < config.GetConfigCount(); i++)
+                {
+                    if (config.GetClassName(i) == mDataHandler.GetClasses()[classIndex])
+                    {
+                        selected = config.GetTableConf(i)[day];
                         break;
                     }
                 }

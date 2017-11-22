@@ -1,4 +1,4 @@
-﻿using Android.App;
+﻿    using Android.App;
 using Android.Content;
 using Android.Support.V4.App;
 using DesignLibrary_Tutorial.Activities;
@@ -16,9 +16,10 @@ namespace DesignLibrary_Tutorial.Background
     [Service]
     public class BackgroundService : IntentService
     {
-        private Android.OS.Handler mHandler;
+        //private Android.OS.Handler mHandler;
         private MessageHandler mMsgHandler;
         private static readonly int ButtonClickNotificationId = 1000;
+        private const int VIBRATION_ITV = 500;
 
 
         protected override void OnHandleIntent(Intent intent)
@@ -30,7 +31,7 @@ namespace DesignLibrary_Tutorial.Background
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
-            mHandler = new Android.OS.Handler();
+            //mHandler = new Android.OS.Handler();
             mMsgHandler = MessageHandler.GetMsgHandler();
             mMsgHandler.OnDataChanged += MMsgHandler_OnDataChanged;
             return base.OnStartCommand(intent, flags, startId);
@@ -91,14 +92,19 @@ namespace DesignLibrary_Tutorial.Background
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .SetAutoCancel(true)                    // Dismiss from the notif. area when clicked
                     .SetContentIntent(resultPendingIntent)  // Start 2nd activity whenca the intent is clicked.
-                    .SetContentTitle("Vertretungsplan")      // Set its title
-                    .SetLights(Color.DarkRed, 1500, 1500)
-                    .SetColor(Color.DarkRed)
-                    .SetContentText(GetTextLine(messages[0])); // The message to display.
+                    .SetContentTitle(GetSingleHeadline(messages[0]))      // Set its title
+                    .SetLights(Color.Indigo, 1500, 1500)
+                    .SetColor(Color.Indigo)
+                    .SetContentText(GetSingleSubTextLine(messages[0])); // The message to display.
 
-                if (config.vibration)
+                if (config.mSettings.priority) //Priority must be above vibration
                 {
-                    builder.SetVibrate(new long[] { 1000, 1000});
+                    builder.SetVibrate(new long[0]);
+                    builder.SetPriority((int)NotificationPriority.High);
+                }
+                if (config.mSettings.vibration)
+                {
+                    builder.SetVibrate(new long[] { VIBRATION_ITV, VIBRATION_ITV });
                 }
 
                 if (messages[0].item.mSubject.omitted)
@@ -120,13 +126,18 @@ namespace DesignLibrary_Tutorial.Background
                     .SetAutoCancel(true)
                     .SetSmallIcon(Resource.Drawable.ic_calendar_multi)
                     .SetContentIntent(resultPendingIntent)
-                    .SetLights(Color.DarkRed, 1500, 1500)
-                    .SetColor(Color.DarkRed)
-                    .SetContentTitle(messages.Count + " neue Nachrichten");
+                    .SetLights(Color.Indigo, 1500, 1500)
+                    .SetColor(Color.Indigo)
+                    .SetContentTitle(messages.Count + " neue Änderungen");
 
-                if (config.vibration)
+                if (config.mSettings.priority) //Priority must be above vibration
                 {
-                    builder.SetVibrate(new long[] { 1000, 1000 });
+                    builder.SetVibrate(new long[0]);
+                    builder.SetPriority((int)NotificationPriority.High);
+                }
+                if (config.mSettings.vibration)
+                {
+                    builder.SetVibrate(new long[] { VIBRATION_ITV, VIBRATION_ITV });
                 }
 
                 //Adding Content Text
@@ -141,11 +152,11 @@ namespace DesignLibrary_Tutorial.Background
                 string contentText;
                 if (subjects.Count > 1)
                 {
-                    contentText = "Betroffen sind: ";
+                    contentText = "Betroffen sind ";
                 }
                 else
                 {
-                    contentText = "Betroffen ist: ";
+                    contentText = "Betroffen ist ";
                 }
                 for (int i = 0; i < subjects.Count - 1; i++)
                 {
@@ -165,18 +176,18 @@ namespace DesignLibrary_Tutorial.Background
                 Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
                 for (int i = 0; i < messages.Count; i++)
                 {
-                    inboxStyle.AddLine(GetTextLine(messages[i]));
+                    inboxStyle.AddLine(GetSubTextLine(messages[i]));
                 }
 
                 builder.SetStyle(inboxStyle);
 
                 NotificationManager notificationManager =
-                    (NotificationManager)GetSystemService(Context.NotificationService);
+                    (NotificationManager)GetSystemService(NotificationService);
                 notificationManager.Notify(ButtonClickNotificationId, builder.Build());
             }
         }
 
-        private string GetTextLine(LData data)
+        private string GetSubTextLine(LData data)
         {
             string line =
                 GetDisplayedDay(data.date) + " " +
@@ -197,7 +208,7 @@ namespace DesignLibrary_Tutorial.Background
                 {
                     line += ": Neues Fach ist " + data.item.mSubject.change.newSubject;
                 }
-                if (data.item.mSubject.change.newRoom != null && data.item.mSubject.change.newRoom != data.item.mSubject.room) //!data.item.mSubject.change.newRoom.Contains("-") && 
+                if (data.item.mSubject.change.newRoom != null && !data.item.mSubject.change.newRoom.Contains(data.item.mSubject.room)) //!data.item.mSubject.change.newRoom.Contains("-") && 
                 {
                     line += " in Raum " + data.item.mSubject.change.newRoom;
                 }
@@ -205,7 +216,44 @@ namespace DesignLibrary_Tutorial.Background
             return line;
         }
 
-        private string GetDisplayedDay(DateTime date)
+        private string GetSingleSubTextLine(LData data)
+        {
+            string line =
+                GetDisplayedDay(data.date, true) + " " +
+                GetDisplayedHour(data.item.h) + " Stunde";
+            if (data.item.mSubject.change != null)
+            {
+                if (data.item.mSubject.change.newSubject != null && !data.item.mSubject.change.newSubject.Contains(data.item.mSubject.name))
+                {
+                    line += ": Neues Fach ist " + data.item.mSubject.change.newSubject;
+                }
+                if (data.item.mSubject.change.newRoom != null && !data.item.mSubject.change.newRoom.Contains(data.item.mSubject.room))
+                {
+                    line += " in Raum " + data.item.mSubject.change.newRoom;
+                }
+            }
+            return line;
+        }
+
+        private string GetSingleHeadline(LData data)
+        {
+            if (data.item.mSubject.ev != null)
+            {
+                return data.item.mSubject.ev.Describtion;
+            }
+            if (data.item.mSubject.omitted)
+            {
+                return data.item.mSubject.name + " Entfall";
+            }
+            if (data.item.mSubject.change != null)
+            {
+                return data.item.mSubject.name + " " +
+                    data.item.mSubject.change.type;
+            }
+            return string.Empty;
+        }
+
+        private string GetDisplayedDay(DateTime date, bool singleLine = false)
         {
             DateTime now = DateTime.Now.Date;
             if (date.Date == now)
@@ -221,15 +269,16 @@ namespace DesignLibrary_Tutorial.Background
             {
                 nextWeek = " [" + date.Day + "." + date.Month + ".]";
             }
+            string preposition = singleLine ? "Am " : "";
             var culture = new System.Globalization.CultureInfo("de-DE");
-            return culture.DateTimeFormat.GetDayName(date.DayOfWeek) + nextWeek;
+            return preposition + culture.DateTimeFormat.GetDayName(date.DayOfWeek) + nextWeek;
         }
 
         private string GetDisplayedHour(Hours[] hours)
         {
             if (hours.Length == 1)
             {
-                return TimeHandler.HourIndex[(int)hours[0]];
+                return TimeHandler.HourIndex[(int)hours[0]] + ".";
             }
             else if (hours.Length == 2)
             {

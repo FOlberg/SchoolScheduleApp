@@ -37,9 +37,7 @@ namespace DesignLibrary_Tutorial.Handler
             mWeek = new Week[2];
             mMsgList = new List<LData>();
             mMsgListOld = new List<LData>();
-            mWeek[0] = mDataHandler.GetDetailedWeek(0);
-            mWeek[1] = mDataHandler.GetDetailedWeek(1);
-            mList = DataToList();
+            Update();
             DeleteOutdatedData();
         }
 
@@ -48,19 +46,24 @@ namespace DesignLibrary_Tutorial.Handler
             SaveMsgHandler(this);
         }
 
-        public Task UpdateAsync()
+        public Task<bool> UpdateAsync()
         {
             return Task.Factory.StartNew(() => Update());
         }
 
-        public void Update()
+        public bool Update()
         {
-            mDataHandler.LoadCfg();
+            //mDataHandler.LoadCfg();
             mWeek[0] = mDataHandler.GetDetailedWeek(0, true);
             mWeek[1] = mDataHandler.GetDetailedWeek(1, true);
-            mList = DataToList();
-            Check();
-            SaveMsgHandler(this);
+            if ((mWeek[0] != null || mWeek[1] != null)) //to avoid resetting data if there is no internet connection
+            {
+                mList = DataToList();
+                Check();
+                SaveMsgHandler(this);
+                return true;
+            }
+            return false;
         }
 
         private void DeleteOutdatedData()
@@ -77,7 +80,7 @@ namespace DesignLibrary_Tutorial.Handler
                     //{
                     //    for (int j = mList[i].mCardList.Count - 1; j >= 0; j--)
                     //    {
-                    //        if (mDataHandler.mConfig.GetTableConf()[(int)mList[i].mTime.Date.DayOfWeek - 1 % 7][(int)mList[i].mCardList[j].h[0]] == -1)
+                    //        if (DataHandler.GetConfig().GetTableConf()[(int)mList[i].mTime.Date.DayOfWeek - 1 % 7][(int)mList[i].mCardList[j].h[0]] == -1)
                     //        {
                     //            mList[i].mCardList.RemoveAt(j);
                     //        }
@@ -94,9 +97,9 @@ namespace DesignLibrary_Tutorial.Handler
         public List<Card> DataToList()
         {
             List<Card> tList = new List<Card>();
-            int[][] config = mDataHandler.mConfig.GetTableConf();
+            int[][] config = DataHandler.GetConfig().GetTableConf();
 
-            if (mMsgList != null)
+            if ( mMsgList != null) //to avoid resetting data if there is no internet connection
             {
                 mMsgListOld = mMsgList;
                 mMsgList = new List<LData>();
@@ -169,14 +172,14 @@ namespace DesignLibrary_Tutorial.Handler
         //test
         public class MessageArgs : EventArgs
         {
-            private string msg;
-            public MessageArgs(string message)
+            private bool oldListisEmpty;
+            public MessageArgs(bool isEmpty)
             {
-                msg = message;
+                oldListisEmpty = isEmpty;
             }
-            public string Message
+            public bool EmptyList
             {
-                get { return msg; }
+                get { return oldListisEmpty; }
             } 
         }
 
@@ -189,7 +192,10 @@ namespace DesignLibrary_Tutorial.Handler
                 if (list.Count > 0)
                 {
                     //list are new messages that will be displayed in refresh or as notification
-                    OnDataChanged(list, new MessageArgs((mMsgListOld.Count == 0).ToString()));
+                    if (OnDataChanged != null)
+                    {
+                        OnDataChanged(list, new MessageArgs(mMsgListOld.Count == 0));
+                    }  
                 }
 
                 //Delete outdated Messages
@@ -225,7 +231,7 @@ namespace DesignLibrary_Tutorial.Handler
 
         public string GetCurrentClass()
         {
-            return mDataHandler.mConfig.GetClassName();
+            return DataHandler.GetConfig().GetClassName();
         }
 
         public static MessageHandler GetMsgHandler()
@@ -281,7 +287,11 @@ namespace DesignLibrary_Tutorial.Handler
             }
             
             bool a = date.Date == ob.date.Date;
-            bool b2 = item.h[0] == ob.item.h[0] && item.h[1] == ob.item.h[1];
+            bool b2 = item.h[0] == ob.item.h[0] && item.h.Length == ob.item.h.Length;
+            if (b2 && item.h.Length == 2)
+            {
+                b2 = item.h[1] == ob.item.h[1];
+            }
             bool b1 = item.mSubject.name == ob.item.mSubject.name;
             bool b3 = item.mSubject.room == ob.item.mSubject.room;
             bool b4 = item.mSubject.omitted == ob.item.mSubject.omitted;

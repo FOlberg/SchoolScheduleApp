@@ -1,8 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
 using System;
-using Java.Util;
-using Android.Util;
 using AppTestProzesse.Header;
 
 namespace DesignLibrary_Tutorial.Background
@@ -30,12 +28,12 @@ namespace DesignLibrary_Tutorial.Background
             Intent intent = new Intent(context, typeof(AlarmReceiver));
             PendingIntent pi = PendingIntent.GetBroadcast(context, 0, intent, 0);
 
-            int sequence = DataHandler.GetConfig().updateSequence;
+            int sequence = DataHandler.GetConfig().mSettings.updateSequence;
             if (sequence <= 0)
             {
                 //log
                 var config = DataHandler.GetConfig();
-                config.updateSequence = 120;
+                config.mSettings.updateSequence = 120;
                 DataHandler.SaveConfig(config);
             }
 
@@ -60,32 +58,23 @@ namespace DesignLibrary_Tutorial.Background
         public void SetNextAlarm(Context context)
         {
             //Cancel? or check if alarm is still up to date
-            AlarmManager am = (AlarmManager)context.GetSystemService(Context.AlarmService);
-            Intent intent = new Intent(context, typeof(AlarmReceiver));
-            PendingIntent pi = PendingIntent.GetBroadcast(context, 0, intent, 0);
+            int sequence = DataHandler.GetConfig().mSettings.updateSequence;
+            if (DateTime.Now.Hour * 60 + DateTime.Now.Minute % sequence == 0) //Delay? -> +/- 1 min?
+            {
+                AlarmManager am = (AlarmManager)context.GetSystemService(Context.AlarmService);
+                Intent intent = new Intent(context, typeof(AlarmReceiver));
+                PendingIntent pi = PendingIntent.GetBroadcast(context, 0, intent, 0);
 
-            long t = GetMilisecondsUntilNextCheckS(DateTime.Now.Hour, DateTime.Now.Minute);
-            am.SetExact(AlarmType.RtcWakeup, t, pi);
+                long t = GetMilisecondsUntilNextCheckS(DateTime.Now.Hour, DateTime.Now.Minute);
+                am.SetExact(AlarmType.RtcWakeup, t, pi);
+            }
         }
-
-        //public static long GetMilisecondsUntilNextCheck(int hour, int min)
-        //{
-        //    using (var cal = Java.Util.Calendar.GetInstance(Java.Util.TimeZone.Default))
-        //    {
-        //        cal.Set(CalendarField.Second, 0);
-        //        cal.Set(CalendarField.Hour, hour);
-        //        cal.Set(CalendarField.Minute, min);
-        //        if (cal.TimeInMillis < Java.Lang.JavaSystem.CurrentTimeMillis())
-        //            cal.Add(CalendarField.Date, 1);
-        //        return cal.TimeInMillis;
-        //    }
-        //}
 
         public static long GetMilisecondsUntilNextCheckS(int hour, int min) // bool next = false
         {
             DateTime now = DateTime.Now;
             DateTime todayAtTime = now.Date.AddHours(hour).AddMinutes(min);
-            DateTime nextInstance = now <= todayAtTime ? todayAtTime : todayAtTime.AddDays(1); //&& !next
+            DateTime nextInstance = now <= todayAtTime ? todayAtTime : todayAtTime.AddDays(1);
             TimeSpan span = nextInstance - now;
             using (var cal = Java.Util.Calendar.GetInstance(Java.Util.TimeZone.Default))
             {
@@ -95,13 +84,13 @@ namespace DesignLibrary_Tutorial.Background
             }
         }
 
-        public void CancelAlarm(Context context)
-        {
-            Intent intent = new Intent(context, this.Class);
-            PendingIntent sender = PendingIntent.GetBroadcast(context, 0, intent, 0);
-            AlarmManager alarmManager = (AlarmManager)context.GetSystemService(Context.AlarmService);
-            alarmManager.Cancel(sender);
-        }
+        //public void CancelAlarm(Context context)
+        //{
+        //    Intent intent = new Intent(context, this.Class);
+        //    PendingIntent sender = PendingIntent.GetBroadcast(context, 0, intent, 0);
+        //    AlarmManager alarmManager = (AlarmManager)context.GetSystemService(Context.AlarmService);
+        //    alarmManager.Cancel(sender);
+        //}
 
         public static void CancelOldAlarm(Context context, int sequence)
         {

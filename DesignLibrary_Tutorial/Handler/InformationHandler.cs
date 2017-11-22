@@ -34,7 +34,7 @@ namespace AppTestProzesse.Header
                 .Replace("<BR>", "")
                 .Replace("<p>", "")
                 .Replace("<br>", "")
-                .Replace("&nbsp;", "")
+                .Replace("&nbsp;", "---") //Important to replace it NOT WITH a blank space
                 .Replace("|", "");
             while (source.Contains("<a href=")) //cuts out unnecessary information/ tables etc
             {
@@ -83,7 +83,7 @@ namespace AppTestProzesse.Header
                     case XmlNodeType.Text:
                         if (readTableRow && reader.Value != "")
                         {
-                            if (reader.Value == "---")
+                            if (reader.Value == "---" || reader.Value == "???")
                             {
                                 tempChanges[regPosition] = string.Empty;
                             }
@@ -121,10 +121,22 @@ namespace AppTestProzesse.Header
                             }
                             //Subject
                             SubChange change;
-                            if ((tempChanges[8] != null || tempChanges[9] != null) && (!tempChanges[8].Contains("---") || !tempChanges[9].Contains("---"))) //more Information given here; there is no new room!
-                                change = new SubChange(tempChanges[0], tempChanges[4], tempChanges[7], new Tuple<string, string>(tempChanges[8], tempChanges[9]), tempChanges[10]);
+                            string room = "";
+                            if (tempChanges[7] != null && tempChanges[7].Length > 0 && !tempChanges[7].Contains("---") && (tempChanges[6] == null || !tempChanges[6].Contains(tempChanges[7])))
+                                room = tempChanges[7];
+                            //Checks for unuseful data like dates
+                            if ((tempChanges[8].Contains("-") && tempChanges[8].Contains(".") && tempChanges[8].Contains("/")) || tempChanges[8] == tempChanges[0])
+                            {
+                                tempChanges[8] =  null;
+                            }
+                            if ((tempChanges[9].Contains("-") && tempChanges[9].Contains(".") && tempChanges[9].Contains("/")) || tempChanges[9] == tempChanges[0])
+                            {
+                                tempChanges[9] = null;
+                            }
+                            if (tempChanges[8] != null || tempChanges[9] != null) //more Information given here; there is no new room!
+                                change = new SubChange(tempChanges[0], tempChanges[4], room, new Tuple<string, string>(tempChanges[8], tempChanges[9]), tempChanges[10]);
                             else
-                                change = new SubChange(tempChanges[0], tempChanges[4], tempChanges[7], tempChanges[10]);
+                                change = new SubChange(tempChanges[0], tempChanges[4], room, tempChanges[10]);
 
                             //check if type is "Entfall" -> init new bool as 4th parameter and add it to the following constroctur of subject
                             Subject subject;
@@ -133,15 +145,48 @@ namespace AppTestProzesse.Header
                             else
                                 subject = new Subject(tempChanges[3], tempChanges[6], change);
 
+                            //Checks class string for "-"
+                            if (tempChanges[5].Contains("-"))
+                            {
+                                tempChanges[5] = GetIncludedClasses(tempChanges[5]);
+                            }
+
                             //Final Add
                             registeredChanges.Add(new Tuple<Days, Hours[], string, Subject>(day, hours.ToArray(), tempChanges[5], subject));
-
+                            Array.Clear(tempChanges, 0, tempChanges.Length);
                             readTableRow = false;
                         }
                         break;
                 }
             }
             return registeredChanges;
+        }
+
+        private string GetIncludedClasses(string cls)
+        {
+            string singleCl = "";
+            if (cls.Contains(";"))
+            {
+                if (cls.IndexOf(";") < cls.IndexOf("-"))
+                {
+                    singleCl = cls.Substring(0, cls.IndexOf(";"));
+                    cls = cls.Substring(cls.IndexOf(";") + 1);
+                }
+                else
+                {
+                    singleCl = cls.Substring(cls.IndexOf(";") + 1);
+                    cls = cls.Substring(0, cls.IndexOf(";"));
+                }
+            }
+            int.TryParse(cls.Substring(0, cls.IndexOf('-')), out int start);
+            int.TryParse(cls.Substring(cls.IndexOf('-') + 1), out int end);
+            cls = "";
+            for (int i = start; i <= end; i++)
+            {
+                cls += i.ToString() + ",";
+            }
+            if (cls == "") return singleCl;
+            return cls + singleCl;
         }
 
         public void ApplyChanges(Week w, List<Tuple<Days, Hours[], string, Subject>> changes) //needs tests
@@ -163,6 +208,10 @@ namespace AppTestProzesse.Header
                                         (subject.room.Contains(",") && (change.Item4.room.Contains(subject.room.Substring(0, subject.room.IndexOf(","))) || change.Item4.change.newRoom.Contains(subject.room.Substring(0, subject.room.IndexOf(","))))))) //checks if information matches | Ex: if weeks room is already set to newRoom
                                     {
                                         subject.change = change.Item4.change; //adds new changes to original subject instance
+                                        if (subject.change != null && change.Item4.room != null && change.Item4.room.Length > 0)
+                                        {
+                                            subject.room = change.Item4.room;
+                                        }
                                         if (subject.ev != null)
                                         {
                                             if (!subject.ev.Describtion.Contains(subject.change.remarks)) //Needs to be checked
@@ -356,7 +405,8 @@ namespace AppTestProzesse.Header
                     case XmlNodeType.EndElement:
                         if (reader.Name == "strike")
                         {
-                            if (lessonsStack.Count != 1) //It must be only one object inside -> else there appeared blank spaces with "strike" -> incorrect
+                            //!(lessonsStack.Count == 2 && strike[1]) ||
+                            if ( lessonsStack.Count == 0 || ( lessonsStack.Count == 2 && lessonsStack[0].Contains("\n") ) ) //It must be only one object inside -> else there appeared blank spaces with "strike" -> incorrect
                             {
                                 strike[0] = false;
                             }

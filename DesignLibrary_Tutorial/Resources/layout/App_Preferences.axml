@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <android.support.v7.preference.PreferenceCategory
-        android:title="Stundenplan">
-        <!--<android.support.v7.preference.EditTextPreference
+        android:title="Benutzer">
+    <!--<android.support.v7.preference.EditTextPreference
             android:key="key2"
             android:title="EditText Preference"
             android:summary="EditText Summary"
             android:dialogMessage="Dialog Message"
             android:defaultValue="Default value" />-->
         <Preference
+            android:key="ChangeClass"
+            android:title="Klasse"
+            android:summary="Summary" />
+        <Preference
             android:key="ChangeSchedule"
-            android:title="Stundenplan ändern"
-            android:summary="Summary"/>
+            android:title="Stundenplan"/>
+    <!--<android.support.v7.preference.CheckBoxPreference
+            android:key="vibration_preference"
+            android:title="Vibration"
+            android:defaultValue="false" />-->
+    </android.support.v7.preference.PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory
+        android:title="Benachrichtigungen">
         <ListPreference
             android:key="SyncIntervall_preference"
             android:title="Update Intervall"
             android:summary="Alle %s"
             android:entries="@array/update_intervall"
             android:entryValues="@array/update_intervall_values"
-            android:defaultValue="60"/>
-
-        <!--<android.support.v7.preference.CheckBoxPreference
+            android:defaultValue="120" />
+        <android.support.v7.preference.SwitchPreferenceCompat
             android:key="vibration_preference"
             android:title="Vibration"
-            android:defaultValue="false" />-->
-    </android.support.v7.preference.PreferenceCategory>
-    <android.support.v7.preference.PreferenceCategory
-      android:title="Benachrichtigungen">
-      <android.support.v7.preference.SwitchPreferenceCompat
-            android:key="vibration_preference"
-            android:title="Vibration"
-            android:defaultValue="true" />
-    
+            android:defaultValue="false" />
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:key="priority_preference"
+            android:title="Hohe Priorität"
+            android:defaultValue="false" />
     </android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>

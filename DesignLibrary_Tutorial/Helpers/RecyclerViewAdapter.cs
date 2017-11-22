@@ -4,6 +4,9 @@ using Android.Widget;
 using Android.Support.V7.Widget;
 using AppTestProzesse.Header;
 using System;
+using Java.Lang;
+using Android.Support.V4.View;
+using Android.Views.Animations;
 
 namespace DesignLibrary_Tutorial.Helpers
 {
@@ -61,13 +64,28 @@ namespace DesignLibrary_Tutorial.Helpers
 
         public void SortOutData()
         {
-            if ( mList != null )
+            if (mList != null)
             {
+                var config = DataHandler.GetConfig();
                 for (int i = mList.Count - 1; i >= 0; i--)
                 {
                     if (mList[i].mTime.Date < DateTime.Now.Date)
                     {
                         mList.RemoveAt(i);
+                    }
+                    else
+                    {
+                        for (int j = mList[i].mCardList.Count - 1; j >= 0; j--)
+                        {
+                            if (config.GetTableConf()[(int)mList[i].mTime.Date.DayOfWeek - 1 % 7][(int)mList[i].mCardList[j].h[0]] == -1)
+                            {
+                                mList[i].mCardList.RemoveAt(j);
+                            }
+                        }
+                        if (mList[i].mCardList.Count < 1)
+                        {
+                            mList.RemoveAt(i);
+                        }
                     }
                 }
             }
@@ -86,6 +104,21 @@ namespace DesignLibrary_Tutorial.Helpers
             viewHolder.mTextView.Text = culture.DateTimeFormat.GetDayName(mList[position].mTime.DayOfWeek);
             viewHolder.mDateText.Text = GetDisplayedDay(mList[position].mTime);
             viewHolder.mCardRV.SetAdapter(new CardListAdapter(mList[position].mCardList));
+            //animate(holder.ItemView, position);
+        }
+        private void AnimateView(View view, int pos)
+        {
+            ViewCompat.Animate(view)
+                .Alpha(1)
+                .TranslationY(0) //-250 / -160
+                .SetDuration(1500)
+                //.SetInterpolator(new DecelerateInterpolator(1.2f))
+                .SetStartDelay(pos * 100)
+                .Start();
+            //view.Animate().Cancel();
+            //view.SetTranslationY(100);
+            //view.SetAlpha(0);
+            //view.Animate().alpha(1.0f).translationY(0).setDuration(300).setStartDelay(pos * 100);
         }
 
         private string GetDisplayedDay(DateTime date)
@@ -147,6 +180,7 @@ namespace DesignLibrary_Tutorial.Helpers
             ListViewHolder viewHolder = holder as ListViewHolder;
             viewHolder.mDescText.Visibility = ViewStates.Visible;
             viewHolder.mNameText.Visibility = ViewStates.Visible;
+            string subtext = "";
             viewHolder.mTypeText.TextSize = 20;
 
             if (mList[position].mSubject.omitted)
@@ -155,12 +189,7 @@ namespace DesignLibrary_Tutorial.Helpers
                 viewHolder.mTypeText.Text = "Entfall";
                 if (mList[position].mSubject.change != null && mList[position].mSubject.change.remarks != null && mList[position].mSubject.change.remarks != "")
                 {
-                    viewHolder.mDescText.Text = mList[position].mSubject.change.remarks;
-                }
-                else
-                {
-                    viewHolder.mTypeText.TextSize = 24;
-                    viewHolder.mDescText.Visibility = ViewStates.Gone;
+                    subtext = mList[position].mSubject.change.remarks;
                 }
                 viewHolder.mImageView.SetImageResource(Resource.Drawable.ic_cal_remove);
             }
@@ -168,7 +197,7 @@ namespace DesignLibrary_Tutorial.Helpers
             {
                 viewHolder.mNameText.Text = mList[position].mSubject.name;
                 viewHolder.mTypeText.Text = mList[position].mSubject.change.type;
-                viewHolder.mDescText.Text = "";
+
                 if (mList[position].mSubject.change.type == "Entfall")
                 {
                     viewHolder.mImageView.SetImageResource(Resource.Drawable.ic_cal_remove);
@@ -178,33 +207,29 @@ namespace DesignLibrary_Tutorial.Helpers
                     viewHolder.mImageView.SetImageResource(Resource.Drawable.ic_cal_alert);
                 }
 
-                string stream = "";
                 if (mList[position].mSubject.change.newSubject != "" && mList[position].mSubject.change.newSubject != mList[position].mSubject.name)
                 {
-                    stream += "Neues Fach: " + mList[position].mSubject.change.newSubject + "  ";
+                    subtext += "Neues Fach: " + mList[position].mSubject.change.newSubject + "  ";
                 }
-                if (mList[position].mSubject.change.newRoom != "" && mList[position].mSubject.change.newRoom != mList[position].mSubject.room)
+                if (mList[position].mSubject.change.newRoom != "" && mList[position].mSubject.change.newRoom != mList[position].mSubject.room) //mList[position].mSubject.change.newRoom != mList[position].mSubject.room
                 {
-                    stream += "Neuer Raum: " + mList[position].mSubject.change.newRoom + "  ";
+                    subtext += "Neuer Raum: " + mList[position].mSubject.change.newRoom + "  ";
                 }
-                if (mList[position].mSubject.change.remarks != "")
+                if (mList[position].mSubject.change.remarks != null && mList[position].mSubject.change.remarks != "")
                 {
-                    stream += mList[position].mSubject.change.remarks + "  ";
+                    subtext += mList[position].mSubject.change.remarks + "  ";
                 }
-                //if(mList[position].mSubject.change.transfer != null)
-                //{
-                //Transfer 
-                //}
-                //Tabs/ Space
-
-                if (stream != "")
+                if (mList[position].mSubject.change.transfer != null)
                 {
-                    viewHolder.mDescText.Text = mList[position].mSubject.change.remarks;
-                }
-                else
-                {
-                    viewHolder.mTypeText.TextSize = 24;
-                    viewHolder.mDescText.Visibility = ViewStates.Gone;
+                    var trans = mList[position].mSubject.change.transfer;
+                    if (trans.Item1 != null && trans.Item1.Length > 2)
+                    {
+                        subtext += trans.Item1;
+                    }
+                    if (trans.Item2 != null && trans.Item2.Length > 2)
+                    {
+                        subtext += trans.Item2;
+                    }
                 }
             }
             else if (mList[position].mSubject.ev != null)
@@ -212,7 +237,14 @@ namespace DesignLibrary_Tutorial.Helpers
                 viewHolder.mNameText.Visibility = ViewStates.Gone;
                 viewHolder.mTypeText.Text = mList[position].mSubject.ev.Describtion;
                 viewHolder.mImageView.SetImageResource(Resource.Drawable.ic_cal_question);
-
+            }
+            if (subtext != "" && subtext != " ")
+            {
+                viewHolder.mDescText.Text = subtext;
+                viewHolder.mDescText.Visibility = ViewStates.Visible;
+            }
+            else
+            {
                 viewHolder.mTypeText.TextSize = 24;
                 viewHolder.mDescText.Visibility = ViewStates.Gone;
             }
@@ -220,7 +252,7 @@ namespace DesignLibrary_Tutorial.Helpers
             //set Hours
             if (mList[position].h.Length == 1)
             {
-                viewHolder.mHourText.Text = TimeHandler.HourIndex[(int)mList[position].h[0]];
+                viewHolder.mHourText.Text = TimeHandler.HourIndex[(int)mList[position].h[0]] + ".";
             }
             else if (mList[position].h.Length == 2)
             {

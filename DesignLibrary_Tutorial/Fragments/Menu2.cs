@@ -1,5 +1,7 @@
-﻿using Android.OS;
+﻿using Android.Content;
+using Android.OS;
 using Android.Views;
+using Android.Widget;
 
 namespace DesignLibrary_Tutorial.Fragments
 {
@@ -8,8 +10,13 @@ namespace DesignLibrary_Tutorial.Fragments
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
             // Create your fragment here
+        }
+
+        private void B_Click(object sender, System.EventArgs e)
+        {
+            Intent background = new Intent(Activity, typeof(Background.BackgroundService));
+            Activity.StartService(background);
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -22,6 +29,8 @@ namespace DesignLibrary_Tutorial.Fragments
         {
             base.OnViewCreated(view, savedInstanceState);
             this.Activity.Title = "Wochenansicht";
+            Button b = Activity.FindViewById<Button>(Resource.Id.buttonTest);
+            b.Click += B_Click;
         }
     }
 }

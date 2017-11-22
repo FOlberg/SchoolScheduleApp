@@ -12,6 +12,20 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent">
             <LinearLayout
+                android:id="@+id/ProgLayout"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:visibility="visible"
+                android:orientation="vertical">
+              <ProgressBar
+                    android:id="@+id/indeterminateBar"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:indeterminate="true"/>
+            </LinearLayout>
+            <LinearLayout
                 android:id="@+id/LinLayout"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
@@ -34,7 +48,7 @@
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:scrollbars="vertical"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
