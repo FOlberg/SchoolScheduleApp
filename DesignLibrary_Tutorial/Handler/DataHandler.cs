@@ -267,5 +267,10 @@ namespace AppTestProzesse.Header
             editor.Apply();
             return dataHandler;
         }
+
+        public static bool GetDarkThemePref(Activity activity)
+        {
+            return activity.GetSharedPreferences("Config", FileCreationMode.Private).GetBoolean("DarkTheme", false);
+        }
     }
 }

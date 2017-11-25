@@ -10,6 +10,7 @@ using Android.Views.Animations;
 using Android.Content;
 using AlertDialog = Android.Support.V7.App.AlertDialog;
 using System;
+using System.Threading;
 
 namespace DesignLibrary_Tutorial.Activities
 {
@@ -43,7 +44,10 @@ namespace DesignLibrary_Tutorial.Activities
         {
             if (firstStartUp)
             {
-                firstStartUp = !GetDataAsync();
+                new Thread(new ThreadStart(delegate
+                {
+                    firstStartUp = !GetDataAsync();
+                })).Start();
             }
             if (!firstStartUp)
             {
@@ -52,6 +56,8 @@ namespace DesignLibrary_Tutorial.Activities
                 StartActivity(i);
             }
         }
+
+
 
         public override void OnWindowFocusChanged(bool hasFocus)
         {
@@ -132,7 +138,7 @@ namespace DesignLibrary_Tutorial.Activities
             catch (Exception e)
             {
                 if (!start)
-                    BuildAlertDialog(this).Show();
+                    RunOnUiThread(() => BuildAlertDialog(this).Show());
                     //Toast.MakeText(this, "Netzwerkfehler!", ToastLength.Short).Show();
                 return false;
             }
@@ -142,7 +148,7 @@ namespace DesignLibrary_Tutorial.Activities
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.SetTitle("Keine Internetverbindung")
-                .SetMessage("Es müssen WLAN oder Mobile Daten aktiviert werden")
+                .SetMessage("Um fortzufahren, muss eine Verbindung mittels WLAN oder Mobile Daten sichergestellt werden")
                 .SetPositiveButton("Ok", (o, e) => {});
             return builder.Create();
         }

@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using DesignLibrary_Tutorial.Fragments;
 using DesignLibrary_Tutorial.Handler;
 using Android.Content;
+using AppTestProzesse.Header;
 
 namespace DesignLibrary_Tutorial.Activities
 {
@@ -25,6 +26,10 @@ namespace DesignLibrary_Tutorial.Activities
 
         protected override void OnCreate(Bundle bundle)
         {
+            if (DataHandler.GetDarkThemePref(this))
+                SetTheme(Resource.Style.Theme_DarkTheme);
+            else
+                SetTheme(Resource.Style.Theme_DesignDemo);
             base.OnCreate(bundle);
 
             // Set our view from the "main" layout resource
@@ -39,7 +44,7 @@ namespace DesignLibrary_Tutorial.Activities
 
             mDrawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             InitHandler();
-
+            
             NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             if (navigationView != null)
             {
@@ -47,8 +52,17 @@ namespace DesignLibrary_Tutorial.Activities
             }
             if (bundle == null)
             {
-                ListItemClicked(0);
-                navigationView.SetCheckedItem(Resource.Id.nav_menu1);
+                if (GetSharedPreferences("Config", FileCreationMode.Private).GetBoolean("ThemeChanged", false))
+                {
+                    navigationView.SetCheckedItem(Resource.Id.nav_menu4);
+                    ListItemClicked(3);
+                    GetSharedPreferences("Config", FileCreationMode.Private).Edit().PutBoolean("ThemeChanged", false).Apply();
+                }
+                else
+                {
+                    ListItemClicked(0);
+                    navigationView.SetCheckedItem(Resource.Id.nav_menu1);
+                }
             }
         }
 

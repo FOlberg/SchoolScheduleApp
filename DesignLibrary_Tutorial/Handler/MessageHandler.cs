@@ -147,7 +147,14 @@ namespace DesignLibrary_Tutorial.Handler
                             else if (mWeek[wp].mEvents.Count > 0 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour][0].ev != null)
                             {
                                 Subject temp = mWeek[wp].week[day].list[hour][0];
-                                tCardList.Add(new CardList(temp, new Hours[] { temp.ev.Hour, temp.ev.Number }));
+                                for (int h = (int) temp.ev.Hour; h < (int) temp.ev.Number; h++)
+                                {
+                                    if (config[day][hour] != -1)
+                                    {
+                                        tCardList.Add(new CardList(temp, new Hours[] { temp.ev.Hour, temp.ev.Number }));
+                                        break;
+                                    }
+                                }   
                             }
                         }
                         if (tCardList.Count > 0)

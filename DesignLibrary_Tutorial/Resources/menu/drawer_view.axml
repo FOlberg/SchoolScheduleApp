@@ -10,11 +10,12 @@
     <item
         android:id="@+id/nav_menu2"
         android:icon="@drawable/ic_event"
-        android:title="Wochenansicht" />
+        android:title="Wochenansicht"/>
     <item
         android:id="@+id/nav_menu3"
         android:icon="@drawable/ic_calendar_multi"
-        android:title="Alle Pläne" />
+        android:title="Alle Pläne"
+        android:enabled="true"/>
   </group>
   <group
     android:checkableBehavior="single"

@@ -2,8 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="192dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:layout_height="192dp">
     <ImageView
         android:id="@+id/navHeader"
         android:layout_marginTop="5dp"
@@ -16,6 +15,6 @@
         android:layout_height="wrap_content"
         android:text="Vertretungsplan"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:textColor="#000"
+        android:textColor="?android:attr/textColorPrimary"
         android:layout_gravity="bottom|center" />
 </FrameLayout>

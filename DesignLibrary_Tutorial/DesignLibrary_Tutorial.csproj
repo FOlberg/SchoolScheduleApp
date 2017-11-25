@@ -167,9 +167,6 @@
     <AndroidResource Include="Resources\layout\Fragment3.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\List_Item.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
     <AndroidResource Include="Resources\menu\sample_actions.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -182,9 +179,6 @@
     <AndroidResource Include="Resources\layout\menu1.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\testLayout.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
     <AndroidResource Include="Resources\layout\Activity_Setup.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -192,9 +186,6 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\Fragment_Tab.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\sandbox.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\item_layout.axml" />
@@ -345,9 +336,6 @@
     <AndroidResource Include="Resources\drawable\stroke2.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\drawable\Back.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\chevron_down.png" />

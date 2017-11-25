@@ -91,10 +91,11 @@ namespace AppTestProzesse.Header
             if (File.Exists(codepath + folder + "/" + filename + "." + format))
             {
                 string[] source = File.ReadAllText(codepath + folder + "/" + filename + "." + format).Split('\n');
-                if(JsonConvert.DeserializeObject<Semester>(source[0]) == sem)
+                if(source[0].Length > 0 && JsonConvert.DeserializeObject<Semester>(source[0]) == sem)
                 {
                     return JsonConvert.DeserializeObject<Timetable>(source[1]);
-                }  
+                }
+                File.Delete(codepath + folder + "/" + filename + "." + format);
             }
             return null;
         }

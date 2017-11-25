@@ -16,7 +16,6 @@ namespace DesignLibrary_Tutorial.Background
     [Service]
     public class BackgroundService : IntentService
     {
-        //private Android.OS.Handler mHandler;
         private MessageHandler mMsgHandler;
         private static readonly int ButtonClickNotificationId = 1000;
         private const int VIBRATION_ITV = 500;
@@ -31,7 +30,6 @@ namespace DesignLibrary_Tutorial.Background
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
-            //mHandler = new Android.OS.Handler();
             mMsgHandler = MessageHandler.GetMsgHandler();
             mMsgHandler.OnDataChanged += MMsgHandler_OnDataChanged;
             return base.OnStartCommand(intent, flags, startId);

@@ -13,6 +13,7 @@ namespace DesignLibrary_Tutorial.Fragments
         Preference classPreference;
         Preference vibrationPreference;
         Preference priorityPreference;
+        Preference themePreference;
 
         public override void OnCreatePreferences(Bundle savedInstanceState, string rootKey)
         {
@@ -24,24 +25,6 @@ namespace DesignLibrary_Tutorial.Fragments
         {
             base.OnViewCreated(view, savedInstanceState);
             Activity.Title = "Einstellungen";
-            //Activity.Title = "Einstellungen";
-
-            //var config = DataHandler.GetConfig();
-
-            ////Change Schedule Pref.
-            //schedulePreference = FindPreference("ChangeSchedule");
-            //schedulePreference.Intent = new Intent(Activity, typeof(DesignLibrary_Tutorial.Activities.TimetableWeekActivity));
-            //schedulePreference.Summary = "Ausgewählte Klasse: " + config.GetClassName();
-
-            ////Update Sequence Pref.
-            //syncIntPreference = (ListPreference)FindPreference("SyncIntervall_preference");
-            //syncIntPreference.SetDefaultValue(config.updateSequence);
-            //syncIntPreference.PreferenceChange += SyncIntPreference_PreferenceChange;
-
-            ////Vibration Pref.
-            //vibrationPreference = FindPreference("vibration_preference");
-            //vibrationPreference.SetDefaultValue(config.vibration);
-            //vibrationPreference.PreferenceChange += VibrationPreference_PreferenceChange;
         }
 
         public override void OnStart()
@@ -73,6 +56,19 @@ namespace DesignLibrary_Tutorial.Fragments
             priorityPreference = FindPreference("priority_preference");
             priorityPreference.SetDefaultValue(config.mSettings.priority);
             priorityPreference.PreferenceChange += PriorityPreference_PreferenceChange;
+
+            themePreference = FindPreference("theme_preference");
+            themePreference.SetDefaultValue(DataHandler.GetDarkThemePref(Activity));
+            themePreference.PreferenceChange += ThemePreference_PreferenceChange;
+        }
+
+        private void ThemePreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
+        {
+            Activity.GetSharedPreferences("Config", FileCreationMode.Private).Edit().PutBoolean("DarkTheme", (bool) e.NewValue).Apply();
+            Activity.GetSharedPreferences("Config", FileCreationMode.Private).Edit().PutBoolean("ThemeChanged", true).Apply();
+            var intent = Activity.Intent;
+            Activity.Finish();
+            StartActivity(intent);
         }
 
         private void PriorityPreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)

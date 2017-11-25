@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace DesignLibrary_Tutorial.Activities
 {
-    [Activity(Label = "Klassen", Theme = "@style/Theme.DesignDemo")]
+    [Activity(Label = "Klassen")]
     public class TimetableSetupActivity : AppCompatActivity
     {
         private List<string> mItems;
@@ -21,9 +21,14 @@ namespace DesignLibrary_Tutorial.Activities
         public DataHandler mDataHandler;
         ISharedPreferences preferences;
         ISharedPreferencesEditor editor;
+        ProgressDialog mProgressDialog;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            if (DataHandler.GetDarkThemePref(this))
+                SetTheme(Resource.Style.Theme_DarkTheme);
+            else
+                SetTheme(Resource.Style.Theme_DesignDemo);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Activity_Setup);
 
@@ -52,20 +57,30 @@ namespace DesignLibrary_Tutorial.Activities
             mListView.ItemClick += MListView_ItemClick;
         }
 
+        protected override void OnResume()
+        {
+            base.OnResume();
+            if (mProgressDialog != null)
+                mProgressDialog.Hide();
+        }
+
         private void MListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
             //Toast.MakeText(this, e.Position + "c", ToastLength.Short).Show();
+            mProgressDialog = ProgressDialog.Show(this, "", "Stundenplan wird geladen...", true); //, "Bitte warten"
 
-            preferences = Application.GetSharedPreferences("TableSetup", FileCreationMode.Private);
-            editor = preferences.Edit();
-            editor.PutInt("classIndex", e.Position);
-            editor.Apply();
-            preferences = Application.GetSharedPreferences("Config", FileCreationMode.Private);
-            editor = preferences.Edit();
-            editor.PutBoolean("Changed", true);
-            editor.Apply();
-            Intent iActivity = new Intent(this, typeof(Activities.TimetableWeekActivity)); //Activities.TimetableWeekActivity
-            StartActivityForResult(iActivity, 1);
+            new Thread(new ThreadStart(delegate
+            {
+                //LOAD METHOD     
+                preferences = Application.GetSharedPreferences("TableSetup", FileCreationMode.Private);
+                editor = preferences.Edit();
+                editor.PutInt("classIndex", e.Position);
+                editor.Apply();
+                mDataHandler.GetTimetable(e.Position);
+                Intent iActivity = new Intent(this, typeof(Activities.TimetableWeekActivity)); //Activities.TimetableWeekActivity
+                StartActivityForResult(iActivity, 1);              
+                //RunOnUiThread(() => progressDialog.Hide());
+            })).Start();
         }
 
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
@@ -73,20 +88,23 @@ namespace DesignLibrary_Tutorial.Activities
             //base.OnActivityResult(requestCode, resultCode, data);
             if (requestCode == 1 && resultCode == Result.Ok)
             {
-                Finish();
+                
                 if (Intent.GetBooleanExtra("StartMain", false))
                 {
-                    var progressDialog = ProgressDialog.Show(this, "Bitte warten...", "Daten werden geladen...", true);
-                    new Thread(new ThreadStart(delegate 
-                    {
-                        //LOAD METHOD               
-                        StartActivity(new Intent(this, typeof(Activities.MainActivity)));
-                        //HIDE PROGRESS DIALOG                 
-                        RunOnUiThread(() => progressDialog.Hide());
-                    })).Start();
-                    
+                    var progressDialog = ProgressDialog.Show(this, "", "Daten werden geladen...", true);
+                    StartActivity(new Intent(this, typeof(Activities.MainActivity)));
+                    Finish();
+                    //new Thread(new ThreadStart(delegate 
+                    //{
+                    //    //LOAD METHOD               
+                    //    StartActivity(new Intent(this, typeof(Activities.MainActivity)));
+                    //    //HIDE PROGRESS DIALOG                 
+                    //    //RunOnUiThread(() => progressDialog.Hide());
+                    //})).Start();
+
                 }
-                
+                else Finish();
+
             }
         }
 

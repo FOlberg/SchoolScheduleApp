@@ -1,16 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:minWidth="25px"
     android:minHeight="25px">
     <TextView
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Menu3"
+        android:text="actionMenuTextColor"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="?android:attr/actionMenuTextColor"
         android:id="@+id/textView1" />
-</RelativeLayout>
+  <TextView
+    android:text="editTextColor"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="?android:attr/editTextColor"
+     />
+  <TextView
+    android:text="Menu3"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="?android:attr/textColorPrimary"
+    />
+  <TextView
+    android:text="Menu3"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="?android:attr/textColorSecondary"
+     />
+  <TextView
+    android:text="Menu3"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="wrap_content"
+    android:textColor="?android:attr/textColorTertiary"
+    android:layout_height="wrap_content"
+     />
+  <TextView
+    android:text="Menu3"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="?android:attr/textColorPrimaryInverse"
+/>
+  <TextView
+    android:text="Menu3"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="?android:attr/textColorSecondaryInverse"
+ />
+  <TextView
+    android:text="Menu3"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="wrap_content"
+    android:textColor="?android:attr/textColorTertiaryInverse"
+    android:layout_height="wrap_content"
+/>
+  <TextView
+    android:text="Menu3"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="?android:attr/textColorHighlight"
+ />
+  <TextView
+    android:text="Menu3"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="?android:attr/textColorHint"
+/>
+  <TextView
+    android:text="Menu3"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="wrap_content"
+    android:textColor="?android:attr/textColorPrimaryDisableOnly"
+    android:layout_height="wrap_content"
+ />
+  <TextView
+    android:text="Menu3"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_width="wrap_content"
+    android:textColor="?android:attr/textColorPrimaryInverseDisableOnly"
+    android:layout_height="wrap_content"
+/>
+  <TextView
+  android:text="Menu3"
+  android:textAppearance="?android:attr/textAppearanceMedium"
+  android:layout_width="wrap_content"
+  android:textColor="?android:attr/textColorPrimaryNoDisable"
+  android:layout_height="wrap_content"
+/>
+  <TextView
+  android:text="Menu3"
+  android:textAppearance="?android:attr/textAppearanceMedium"
+  android:layout_width="wrap_content"
+  android:textColor="?android:attr/textColorSecondaryNoDisable"
+  android:layout_height="wrap_content"
+/>
+  <TextView
+android:text="Menu3"
+android:textAppearance="?android:attr/textAppearanceMedium"
+android:layout_width="wrap_content"
+android:textColor="?android:attr/textColorPrimaryInverseNoDisable"
+android:layout_height="wrap_content"
+/>
+  <TextView
+android:text="Menu3"
+android:textAppearance="?android:attr/textAppearanceMedium"
+android:layout_width="wrap_content"
+android:textColor="?android:attr/textColorSecondaryInverseNoDisable"
+android:layout_height="wrap_content"
+/>
+</LinearLayout>

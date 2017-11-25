@@ -10,46 +10,48 @@ using Android.Support.Design.Widget;
 using Android.Support.V4.View;
 using Android.Support.V4.App;
 using System.Collections.Generic;
-using Java.Lang;
 using Android.Content;
 using DesignLibrary_Tutorial.Fragments;
 using AppTestProzesse.Header;
 using Newtonsoft.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DesignLibrary_Tutorial.Activities
 {
-    [Activity(Label = "Plan", Theme = "@style/Theme.DesignDemo")]
+    [Activity(Label = "Stundenplan")]
     public class TimetableWeekActivity : AppCompatActivity
     {
         TabLayout mTabs;
         TabAdapter mAdapter;
         FloatingActionButton mFab;
+        ViewPager viewPager;
 
         static int countDay = 0;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            if (DataHandler.GetDarkThemePref(this))
+                SetTheme(Resource.Style.Theme_DarkTheme);
+            else
+                SetTheme(Resource.Style.Theme_DesignDemo);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Activity_Week);
 
             SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBarW);
+            mFab = FindViewById<FloatingActionButton>(Resource.Id.fabW);
+            mTabs = FindViewById<TabLayout>(Resource.Id.tabLayoutW);
             SetSupportActionBar(toolBar);
 
             SupportActionBar ab = SupportActionBar;
             ab.SetDisplayHomeAsUpEnabled(true);
             ab.SetHomeButtonEnabled(true);
 
-            mTabs = FindViewById<TabLayout>(Resource.Id.tabLayoutW);
-
-            ViewPager viewPager = FindViewById<ViewPager>(Resource.Id.viewPagerW);
-
+            viewPager = FindViewById<ViewPager>(Resource.Id.viewPagerW);
             SetUpViewPager(viewPager);
-            viewPager.PageSelected += ViewPager_PageSelected;
-
             mTabs.SetupWithViewPager(viewPager);
 
-            mFab = FindViewById<FloatingActionButton>(Resource.Id.fabW);
-
+            viewPager.PageSelected += ViewPager_PageSelected;
             mFab.Click += Fab_Click;
         }
 
@@ -80,6 +82,7 @@ namespace DesignLibrary_Tutorial.Activities
             else
             {
                 FinishSetup();
+                //FinishSetup();
             }
 
         }
@@ -109,6 +112,11 @@ namespace DesignLibrary_Tutorial.Activities
             }
             //Delete Preference TableSetup
             editor.Clear();
+            editor.Apply();
+
+            preferences = Application.GetSharedPreferences("Config", FileCreationMode.Private);
+            editor = preferences.Edit();
+            editor.PutBoolean("Changed", true);
             editor.Apply();
 
             //Update mDataHandler
@@ -142,7 +150,7 @@ namespace DesignLibrary_Tutorial.Activities
                 mAdapter.AddFragment(new TabFragment(), ((Days)i).ToString());
             }
             viewPager.OffscreenPageLimit = 5;
-            viewPager.Adapter = mAdapter;
+            RunOnUiThread(() => viewPager.Adapter = mAdapter);
         }
 
         public class TabAdapter : FragmentPagerAdapter
@@ -175,7 +183,7 @@ namespace DesignLibrary_Tutorial.Activities
                 return Fragments[position];
             }
 
-            public override ICharSequence GetPageTitleFormatted(int position)
+            public override Java.Lang.ICharSequence GetPageTitleFormatted(int position)
             {
                 return new Java.Lang.String(FragmentNames[position]);
             }

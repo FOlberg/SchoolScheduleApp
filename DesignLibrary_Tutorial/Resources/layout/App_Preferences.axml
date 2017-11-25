@@ -14,7 +14,11 @@
             android:summary="Summary" />
         <Preference
             android:key="ChangeSchedule"
-            android:title="Stundenplan"/>
+            android:title="Stundenplan" />
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:key="theme_preference"
+            android:title="Nachtmodus"
+            android:defaultValue="false" />
     <!--<android.support.v7.preference.CheckBoxPreference
             android:key="vibration_preference"
             android:title="Vibration"

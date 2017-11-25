@@ -9,7 +9,16 @@
   <style name="Base.Theme.DesignDemo" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="colorPrimary">#673AB7</item>
     <item name="colorPrimaryDark">#512DA8</item>
-    <item name="colorAccent">#448AFF</item><!--#FF4081-->
+    <item name="colorAccent">#039be5</item> <!--#FF4081 #448AFF-->
+    <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+  </style>
+  
+  <style name="Theme.DarkTheme" parent="Theme.AppCompat.NoActionBar">
+    <item name="colorPrimary">#673AB7</item>
+    <item name="colorPrimaryDark">#512DA8</item>
+    <item name="colorAccent">#039be5</item><!--#FF4081-->
+    <item name="colorControlHighlight">#242424</item>
+    <item name="android:listDivider">@style/android:drawable/divider_horizontal_dark</item> 
     <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
   </style>
 
@@ -30,6 +39,10 @@
   <style name="PinkBtn" parent="Theme.AppCompat.Light">
     <item name="colorButtonNormal">#448AFF</item>
     <item name="android:textColor">#FFFFFF</item>
+  </style>
+
+  <style name="ProgressAlert" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <item name="android:colorAccent">#039be5</item>
   </style>
 
   <!--<style name="PreferenceThemeOverlay" parent="Theme.AppCompat.Light.NoActionBar">
