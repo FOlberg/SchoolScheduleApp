@@ -9,13 +9,13 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-using DesignLibrary_Tutorial.Helpers;
-using AppTestProzesse.Header;
+using ScheduleApp.Helpers;
+using Helper.Header;
 using Newtonsoft.Json;
-using DesignLibrary_Tutorial.Activities;
+using ScheduleApp.Activities;
 using System.Threading;
 
-namespace DesignLibrary_Tutorial.Fragments
+namespace ScheduleApp.Fragments
 {
     public class TabFragment : Android.Support.V4.App.Fragment
     {

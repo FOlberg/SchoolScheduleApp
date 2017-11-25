@@ -4,10 +4,10 @@ using Android.App;
 using Android.Content;
 using Android.Views;
 using Android.Widget;
-using AppTestProzesse.Header;
-using DesignLibrary_Tutorial.Helpers;
+using Helper.Header;
+using ScheduleApp.Helpers;
 
-namespace DesignLibrary_Tutorial.Helpers
+namespace ScheduleApp.Helpers
 {
     public class ExpandableListViewAdapter : BaseExpandableListAdapter
     {

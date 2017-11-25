@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Android.App;
 using Android.Content;
-using AppTestProzesse.Header;
-using DesignLibrary_Tutorial.Helpers;
+using Helper.Header;
+using ScheduleApp.Helpers;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 
-namespace DesignLibrary_Tutorial.Handler
+namespace ScheduleApp.Handler
 {
     public class MessageHandler
     {

@@ -1,9 +1,9 @@
 ﻿using Android.App;
 using Android.Content;
 using System;
-using AppTestProzesse.Header;
+using Helper.Header;
 
-namespace DesignLibrary_Tutorial.Background
+namespace ScheduleApp.Background
 {
     [BroadcastReceiver]
     class AlarmReceiver : BroadcastReceiver

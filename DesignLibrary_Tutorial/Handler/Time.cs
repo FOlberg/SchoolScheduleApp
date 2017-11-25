@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace AppTestProzesse.Header
+namespace Helper.Header
 {
     public enum Semester { winter_semester, summer_semester };
     public enum Hours {first, second, third, fourth, fifth, sixth, MP, seventh, eighth, ninth, tenth};

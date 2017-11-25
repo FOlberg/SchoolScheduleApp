@@ -4,7 +4,7 @@ using System.Xml;
 using System.Xml.Linq;
 
 
-namespace AppTestProzesse.Header
+namespace Helper.Header
 {
     public class InformationHandler
     {

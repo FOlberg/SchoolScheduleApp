@@ -11,13 +11,13 @@ using Android.Support.V4.View;
 using Android.Support.V4.App;
 using System.Collections.Generic;
 using Android.Content;
-using DesignLibrary_Tutorial.Fragments;
-using AppTestProzesse.Header;
+using ScheduleApp.Fragments;
+using Helper.Header;
 using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DesignLibrary_Tutorial.Activities
+namespace ScheduleApp.Activities
 {
     [Activity(Label = "Stundenplan")]
     public class TimetableWeekActivity : AppCompatActivity

@@ -1,6 +1,6 @@
 ﻿using Android.App;
 using Android.OS;
-using AppTestProzesse.Header;
+using Helper.Header;
 using System.Threading.Tasks;
 using Android.Support.V7.App;
 using Android.Support.V4.View;
@@ -12,7 +12,7 @@ using AlertDialog = Android.Support.V7.App.AlertDialog;
 using System;
 using System.Threading;
 
-namespace DesignLibrary_Tutorial.Activities
+namespace ScheduleApp.Activities
 {
     [Activity(Label = "@string/app_name", Icon = "@drawable/icon", MainLauncher = true, NoHistory = true, Theme = "@style/Theme.DesignDemo.CenterAnimation")]
     public class SplashScreen : AppCompatActivity

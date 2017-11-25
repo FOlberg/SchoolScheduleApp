@@ -1,17 +1,17 @@
 ﻿    using Android.App;
 using Android.Content;
 using Android.Support.V4.App;
-using DesignLibrary_Tutorial.Activities;
+using ScheduleApp.Activities;
 using TaskStackBuilder = Android.Support.V4.App.TaskStackBuilder;
 using Android.Runtime;
-using DesignLibrary_Tutorial.Handler;
+using ScheduleApp.Handler;
 using System.Collections.Generic;
 using System;
-using AppTestProzesse.Header;
+using Helper.Header;
 using Android.Graphics;
 using System.Linq;
 
-namespace DesignLibrary_Tutorial.Background
+namespace ScheduleApp.Background
 {
     [Service]
     public class BackgroundService : IntentService

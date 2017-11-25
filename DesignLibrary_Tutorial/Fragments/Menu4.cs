@@ -2,9 +2,9 @@
 using Android.OS;
 using Android.Views;
 using Android.Support.V7.Preferences;
-using AppTestProzesse.Header;
+using Helper.Header;
 
-namespace DesignLibrary_Tutorial.Fragments
+namespace ScheduleApp.Fragments
 {
     public class Menu4 : Android.Support.V7.Preferences.PreferenceFragmentCompat
     {

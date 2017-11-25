@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("DesignLibrary_Tutorial.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("ScheduleApp.Resource", IsApplication=true)]
 
-namespace DesignLibrary_Tutorial
+namespace ScheduleApp
 {
 	
 	

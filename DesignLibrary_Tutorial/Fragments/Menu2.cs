@@ -3,7 +3,7 @@ using Android.OS;
 using Android.Views;
 using Android.Widget;
 
-namespace DesignLibrary_Tutorial.Fragments
+namespace ScheduleApp.Fragments
 {
     public class Menu2 : Android.Support.V4.App.Fragment
     {

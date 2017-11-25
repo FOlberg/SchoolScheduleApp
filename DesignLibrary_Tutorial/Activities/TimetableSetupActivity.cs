@@ -7,11 +7,11 @@ using SupportActionBar = Android.Support.V7.App.ActionBar;
 using Android.Support.V7.App;
 using Android.Widget;
 using System.Collections.Generic;
-using AppTestProzesse.Header;
+using Helper.Header;
 using Android.Runtime;
 using System.Threading;
 
-namespace DesignLibrary_Tutorial.Activities
+namespace ScheduleApp.Activities
 {
     [Activity(Label = "Klassen")]
     public class TimetableSetupActivity : AppCompatActivity

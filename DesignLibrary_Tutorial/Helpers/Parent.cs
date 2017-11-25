@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DesignLibrary_Tutorial.Helpers
+namespace ScheduleApp.Helpers
 {
     public class Parent
     {

@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace AppTestProzesse.Header
+namespace Helper.Header
 {
     public class cTimetable
     {

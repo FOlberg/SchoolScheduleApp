@@ -1,12 +1,12 @@
 ﻿using Android.OS;
 using Android.Views;
 using Android.Support.V7.Widget;
-using DesignLibrary_Tutorial.Helpers;
+using ScheduleApp.Helpers;
 using System.Threading;
 using SwipeRefresh = Android.Support.V4.Widget.SwipeRefreshLayout;
 using System;
-using DesignLibrary_Tutorial.Handler;
-using DesignLibrary_Tutorial.Background;
+using ScheduleApp.Handler;
+using ScheduleApp.Background;
 using Void = Java.Lang.Void;
 using Android.Widget;
 using Java.Lang;
@@ -15,7 +15,7 @@ using Android.App;
 //using RecyclerViewAnimators.Animators;
 //using Android.Views.Animations;
 
-namespace DesignLibrary_Tutorial.Fragments
+namespace ScheduleApp.Fragments
 {
     public class Menu1 : Android.Support.V4.App.Fragment
     {

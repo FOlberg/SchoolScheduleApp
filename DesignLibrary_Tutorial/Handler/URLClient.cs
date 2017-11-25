@@ -6,7 +6,7 @@ using System.Text;
 using System.IO;
 using System.IO.Compression;
 
-namespace AppTestProzesse.Header
+namespace Helper.Header
 {
     public class URLClient
     {

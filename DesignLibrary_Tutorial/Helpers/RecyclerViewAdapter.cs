@@ -2,13 +2,13 @@
 using Android.Views;
 using Android.Widget;
 using Android.Support.V7.Widget;
-using AppTestProzesse.Header;
+using Helper.Header;
 using System;
 using Java.Lang;
 using Android.Support.V4.View;
 using Android.Views.Animations;
 
-namespace DesignLibrary_Tutorial.Helpers
+namespace ScheduleApp.Helpers
 {
     public class Card
     {

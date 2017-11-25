@@ -2,9 +2,9 @@
 using Android.Content;
 using Android.Util;
 using Android.Widget;
-using DesignLibrary_Tutorial.Helpers;
+using ScheduleApp.Helpers;
 
-namespace DesignLibrary_Tutorial.Background
+namespace ScheduleApp.Background
 {
     [BroadcastReceiver]
     [IntentFilter(new[] { Intent.ActionBootCompleted })]

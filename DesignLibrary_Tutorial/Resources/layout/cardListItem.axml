@@ -9,8 +9,9 @@
         android:id="@+id/cardListImageView"
         android:scaleType="fitXY"
         android:src="@drawable/ic_cal_remove"
-        android:tint="#616161"
+        android:tint="?android:attr/textColorPrimary"
         android:layout_gravity="center" />
+  <!--#616161-->
     <TextView xmlns:tools="http://schemas.android.com/tools"
         android:text="PROGE"
         android:layout_width="wrap_content"

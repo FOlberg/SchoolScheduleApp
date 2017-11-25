@@ -11,12 +11,12 @@ using SupportActionBar = Android.Support.V7.App.ActionBar;
 using Android.Support.V7.App;
 using Android.Support.Design.Widget;
 using Newtonsoft.Json;
-using DesignLibrary_Tutorial.Fragments;
-using DesignLibrary_Tutorial.Handler;
+using ScheduleApp.Fragments;
+using ScheduleApp.Handler;
 using Android.Content;
-using AppTestProzesse.Header;
+using Helper.Header;
 
-namespace DesignLibrary_Tutorial.Activities
+namespace ScheduleApp.Activities
 {
     [Activity(Label = "@string/app_name", Icon = "@drawable/icon", Theme = "@style/Theme.DesignDemo")]
     public class MainActivity : AppCompatActivity

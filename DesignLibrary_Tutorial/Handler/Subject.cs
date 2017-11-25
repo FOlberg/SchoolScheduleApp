@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace AppTestProzesse.Header
+namespace Helper.Header
 {
     public class Event
     {
