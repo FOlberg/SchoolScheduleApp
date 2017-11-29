@@ -72,6 +72,14 @@ namespace Helper.Header
             this.omitted = omitted;
             this.change = change;
         }
+        public Subject(Event ev, bool omitted = false)
+        {
+            this.ev = ev;
+            this.omitted = omitted;
+            //room = null;
+            //name = null;
+            //change = null;
+        }
     }
 
     public class Day

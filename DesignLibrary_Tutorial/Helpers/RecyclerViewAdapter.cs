@@ -19,16 +19,16 @@ namespace ScheduleApp.Helpers
             mTime = date.Date;
             mCardList = list;
         }
-        public override int GetHashCode()
-        {
-            return mTime.GetHashCode() + mCardList.GetHashCode();
-        }
+        //public override int GetHashCode()
+        //{
+        //    return mTime.GetHashCode() + mCardList.GetHashCode();
+        //}
 
-        public override bool Equals(object obj)
-        {
-            Card card = obj as Card;
-            return card == null ? false : GetHashCode() == card.GetHashCode();
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    Card card = obj as Card;
+        //    return card == null ? false : GetHashCode() == card.GetHashCode();
+        //}
     }
 
     public class CardList
@@ -40,16 +40,16 @@ namespace ScheduleApp.Helpers
             mSubject = subject;
             h = hours;
         }
-        public override int GetHashCode()
-        {
-            return mSubject.GetHashCode() + h.GetHashCode();
-        }
+        //public override int GetHashCode()
+        //{
+        //    return mSubject.GetHashCode() + h.GetHashCode();
+        //}
 
-        public override bool Equals(object obj)
-        {
-            CardList cardList = obj as CardList;
-            return cardList == null ? false : GetHashCode() == cardList.GetHashCode();
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    CardList cardList = obj as CardList;
+        //    return cardList == null ? false : GetHashCode() == cardList.GetHashCode();
+        //}
     }
 
     public class RecyclerViewAdapter : RecyclerView.Adapter
@@ -77,9 +77,26 @@ namespace ScheduleApp.Helpers
                     {
                         for (int j = mList[i].mCardList.Count - 1; j >= 0; j--)
                         {
-                            if (config.GetTableConf()[(int)mList[i].mTime.Date.DayOfWeek - 1 % 7][(int)mList[i].mCardList[j].h[0]] == -1)
+                            var table = config.GetTableConf();
+                            if (table[(int)mList[i].mTime.Date.DayOfWeek - 1 % 7][(int)mList[i].mCardList[j].h[0]] == -1)
                             {
-                                mList[i].mCardList.RemoveAt(j);
+                                if (mList[i].mCardList[j].mSubject.ev != null && (int)mList[i].mCardList[j].h.Length == 2)
+                                {
+                                    var affected = false;
+                                    for (int hour = (int)mList[i].mCardList[j].h[0] + 1; hour <= (int)mList[i].mCardList[j].h[1]; hour++)
+                                    {
+                                        if (table[(int)mList[i].mTime.Date.DayOfWeek - 1 % 7][hour] != -1)
+                                        {
+                                            affected = true;
+                                            break;
+                                        }                       
+                                    }
+                                    if (!affected)
+                                    {
+                                        mList[i].mCardList.RemoveAt(j);
+                                    }
+                                }
+                                else mList[i].mCardList.RemoveAt(j);
                             }
                         }
                         if (mList[i].mCardList.Count < 1)
@@ -181,7 +198,7 @@ namespace ScheduleApp.Helpers
             viewHolder.mDescText.Visibility = ViewStates.Visible;
             viewHolder.mNameText.Visibility = ViewStates.Visible;
             string subtext = "";
-            viewHolder.mTypeText.TextSize = 20;
+            viewHolder.mTypeText.TextSize = 24;
 
             if (mList[position].mSubject.omitted)
             {
@@ -235,17 +252,21 @@ namespace ScheduleApp.Helpers
             else if (mList[position].mSubject.ev != null)
             {
                 viewHolder.mNameText.Visibility = ViewStates.Gone;
+                if (mList[position].mSubject.ev.Describtion.Length > 25)
+                {
+                    viewHolder.mTypeText.TextSize = 20;
+                }
                 viewHolder.mTypeText.Text = mList[position].mSubject.ev.Describtion;
                 viewHolder.mImageView.SetImageResource(Resource.Drawable.ic_cal_question);
             }
             if (subtext != "" && subtext != " ")
             {
+                viewHolder.mTypeText.TextSize = 20;
                 viewHolder.mDescText.Text = subtext;
                 viewHolder.mDescText.Visibility = ViewStates.Visible;
             }
             else
             {
-                viewHolder.mTypeText.TextSize = 24;
                 viewHolder.mDescText.Visibility = ViewStates.Gone;
             }
 

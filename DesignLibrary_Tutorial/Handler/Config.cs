@@ -62,7 +62,7 @@ namespace Helper.Header
 
         public void AddTableConf(string className, int[][] table)
         {
-            if (mCfgList.Count > 30)
+            if (mCfgList.Count > 45)
             {
                 //log
                 throw new Exception("Configurtaion File Overflow");

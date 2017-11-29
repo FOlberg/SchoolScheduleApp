@@ -20,7 +20,6 @@ namespace Helper.Header
             webClient = new WebClient();
             webClient.Encoding = Encoding.GetEncoding(1252);
         }
-        ~URLClient() { }
 
         public string GetRawCode(string url)
         {

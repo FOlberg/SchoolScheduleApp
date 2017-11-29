@@ -27,7 +27,6 @@ namespace Helper.Header
             today = date;
             cal = dfi.Calendar;
         }
-        ~TimeHandler() { }
 
         public void update()
         {

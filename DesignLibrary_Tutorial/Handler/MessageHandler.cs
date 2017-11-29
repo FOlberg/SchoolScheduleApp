@@ -146,15 +146,23 @@ namespace ScheduleApp.Handler
                             }
                             else if (mWeek[wp].mEvents.Count > 0 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour][0].ev != null)
                             {
+                                //foreach (var ev in mWeek[wp].mEvents)
+                                //{
+                                //    if (ev.Day == (Days)day && (int)ev.Hour <= hour && hour <= (int)ev.Number && config[day][hour] != -1)
+                                //    {
+                                //        tCardList.Add(new CardList(new Subject(ev), new Hours[] { ev.Hour, ev.Number }));
+                                //        break;
+                                //    }
+                                //}
                                 Subject temp = mWeek[wp].week[day].list[hour][0];
-                                for (int h = (int) temp.ev.Hour; h < (int) temp.ev.Number; h++)
+                                for (int h = (int)temp.ev.Hour; h <= (int)temp.ev.Number; h++)
                                 {
-                                    if (config[day][hour] != -1)
+                                    if (config[day][h] != -1)
                                     {
                                         tCardList.Add(new CardList(temp, new Hours[] { temp.ev.Hour, temp.ev.Number }));
                                         break;
                                     }
-                                }   
+                                }
                             }
                         }
                         if (tCardList.Count > 0)

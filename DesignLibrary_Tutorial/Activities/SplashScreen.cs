@@ -135,7 +135,7 @@ namespace ScheduleApp.Activities
             {
                 GetDataHandler().GetClasses();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (!start)
                     RunOnUiThread(() => BuildAlertDialog(this).Show());
