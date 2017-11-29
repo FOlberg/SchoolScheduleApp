@@ -30,7 +30,6 @@ namespace ScheduleApp.Activities
             Window.DecorView.SystemUiVisibility = StatusBarVisibility.Hidden;
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.splash);
-
             Button buttonU = FindViewById<Button>(Resource.Id.btn_choice1);
             buttonU.Click += ButtonU_Click;
         }
@@ -87,7 +86,7 @@ namespace ScheduleApp.Activities
             }
 
             ViewCompat.Animate(logoImageView)
-                .TranslationY(-180) //-250 / -160
+                .TranslationY(-220) //-250 / -160
                 .SetStartDelay(STARTUP_DELAY)
                 .SetDuration(ANIM_ITEM_DURATION)
                 .SetInterpolator(new DecelerateInterpolator(1.2f))
@@ -148,7 +147,7 @@ namespace ScheduleApp.Activities
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.SetTitle("Keine Internetverbindung")
-                .SetMessage("Um fortzufahren, muss eine Verbindung mittels WLAN oder Mobile Daten sichergestellt werden")
+                .SetMessage("Um fortzufahren, muss eine Verbindung über WLAN oder Mobile Daten sichergestellt werden")
                 .SetPositiveButton("Ok", (o, e) => {});
             return builder.Create();
         }

@@ -38,7 +38,7 @@ namespace ScheduleApp.Fragments
         public override void OnStart()
         {
             base.OnStart();
-            Activity.Title = "Klasse ";
+            Activity.Title = "Klasse " + Activity.GetSharedPreferences("Config", FileCreationMode.Private).GetString("className", "");
             new BckTask(this).Execute();
             //mMsgHandler = MessageHandler.GetMsgHandler();
             //mMsgHandler.OnDataChanged += MUpdater_OnDataChanged;

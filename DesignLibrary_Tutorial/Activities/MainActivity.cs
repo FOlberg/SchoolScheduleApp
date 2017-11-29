@@ -55,7 +55,7 @@ namespace ScheduleApp.Activities
                 if (GetSharedPreferences("Config", FileCreationMode.Private).GetBoolean("ThemeChanged", false))
                 {
                     navigationView.SetCheckedItem(Resource.Id.nav_menu4);
-                    ListItemClicked(3);
+                    ListItemClicked(2);
                     GetSharedPreferences("Config", FileCreationMode.Private).Edit().PutBoolean("ThemeChanged", false).Apply();
                 }
                 else
@@ -95,14 +95,14 @@ namespace ScheduleApp.Activities
                     case Resource.Id.nav_menu1:
                         ListItemClicked(0);
                         break;
-                    case Resource.Id.nav_menu2:
+                    //case Resource.Id.nav_menu2:
+                    //    ListItemClicked(1);
+                    //    break;
+                    case Resource.Id.nav_menu3:
                         ListItemClicked(1);
                         break;
-                    case Resource.Id.nav_menu3:
-                        ListItemClicked(2);
-                        break;
                     case Resource.Id.nav_menu4:
-                        ListItemClicked(3);
+                        ListItemClicked(2);
                         break;
                 }
                 //e.MenuItem.SetChecked(true);
@@ -118,13 +118,13 @@ namespace ScheduleApp.Activities
                 case 0:
                     fragment = new Menu1();
                     break;
+                //case 1:
+                //    fragment = new Menu2();
+                //    break;
                 case 1:
                     fragment = new Menu2();
                     break;
                 case 2:
-                    fragment = new Menu3();
-                    break;
-                case 3:
                     fragment = new Menu4();
                     break;
             }

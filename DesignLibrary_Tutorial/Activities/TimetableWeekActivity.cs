@@ -114,16 +114,23 @@ namespace ScheduleApp.Activities
             editor.Clear();
             editor.Apply();
 
-            preferences = Application.GetSharedPreferences("Config", FileCreationMode.Private);
-            editor = preferences.Edit();
-            editor.PutBoolean("Changed", true);
-            editor.Apply();
+            //preferences = Application.GetSharedPreferences("Config", FileCreationMode.Private);
+            //editor = preferences.Edit();
+            //editor.PutBoolean("Changed", true);
+            //editor.Apply();
 
             //Update mDataHandler
             var data = DataHandler.GetDataHandler();
             var config = DataHandler.GetConfig();
-            config.AddTableConf(data.GetClassName(classIndex), tempSel);
+            var className = data.GetClassName(classIndex);
+            config.AddTableConf(className, tempSel);
             DataHandler.SaveConfig(config);
+
+            preferences = Application.GetSharedPreferences("Config", FileCreationMode.Private);
+            editor = preferences.Edit();
+            editor.PutString("className", className);
+            editor.PutBoolean("Changed", true);
+            editor.Apply();
 
             SetResult(Result.Ok);
             Finish();

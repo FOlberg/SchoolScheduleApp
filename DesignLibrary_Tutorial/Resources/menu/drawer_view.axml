@@ -7,11 +7,11 @@
         android:id="@+id/nav_menu1"
         android:icon="@drawable/ic_view_list"
         android:title="Dashboard" />
-    <item
+    <!--<item
         android:id="@+id/nav_menu2"
         android:icon="@drawable/ic_event"
         android:title="Wochenansicht"
-        android:enabled="false"/>
+        android:enabled="false"/>-->
     <item
         android:id="@+id/nav_menu3"
         android:icon="@drawable/ic_calendar_multi"

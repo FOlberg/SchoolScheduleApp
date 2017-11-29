@@ -1,17 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using Android.App;
+using Newtonsoft.Json;
 using System.IO;
 
 namespace Helper.Header
 {
     public class JsonHandler
     {
-        public static string codepath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        public static string codepath = Application.Context.FilesDir.Path;//System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
-        public JsonHandler()
-        {
-            codepath = System.Reflection.Assembly.GetExecutingAssembly().Location;//System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-            codepath = System.IO.Path.GetDirectoryName(codepath);
-        }
+        public JsonHandler(){}
 
         public static int countFiles(string folder, string filename, string format)
         {

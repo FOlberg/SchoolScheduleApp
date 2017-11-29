@@ -2216,9 +2216,6 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f06003d
 			public const int action_mode_close_button = 2131099709;
 			
-			// aapt resource value: 0x7f0600b9
-			public const int action_settings = 2131099833;
-			
 			// aapt resource value: 0x7f06003e
 			public const int activity_chooser_view_content = 2131099710;
 			
@@ -2465,8 +2462,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f0600a0
 			public const int media_actions = 2131099808;
 			
-			// aapt resource value: 0x7f0600b7
-			public const int menu_bottom = 2131099831;
+			// aapt resource value: 0x7f0600b6
+			public const int menu_bottom = 2131099830;
 			
 			// aapt resource value: 0x7f0600b3
 			public const int menu_top = 2131099827;
@@ -2490,13 +2487,10 @@ namespace ScheduleApp
 			public const int nav_menu1 = 2131099828;
 			
 			// aapt resource value: 0x7f0600b5
-			public const int nav_menu2 = 2131099829;
+			public const int nav_menu3 = 2131099829;
 			
-			// aapt resource value: 0x7f0600b6
-			public const int nav_menu3 = 2131099830;
-			
-			// aapt resource value: 0x7f0600b8
-			public const int nav_menu4 = 2131099832;
+			// aapt resource value: 0x7f0600b7
+			public const int nav_menu4 = 2131099831;
 			
 			// aapt resource value: 0x7f060094
 			public const int nav_view = 2131099796;
@@ -3027,12 +3021,6 @@ namespace ScheduleApp
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f08001a
-			public const int ApplicationName = 2131230746;
-			
-			// aapt resource value: 0x7f080019
-			public const int Hello = 2131230745;
-			
 			// aapt resource value: 0x7f080002
 			public const int abc_action_bar_home_description = 2131230722;
 			
@@ -3090,8 +3078,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f080014
 			public const int abc_toolbar_collapse_description = 2131230740;
 			
-			// aapt resource value: 0x7f080020
-			public const int app_name = 2131230752;
+			// aapt resource value: 0x7f080019
+			public const int app_name = 2131230745;
 			
 			// aapt resource value: 0x7f080016
 			public const int appbar_scrolling_view_behavior = 2131230742;
@@ -3102,23 +3090,11 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f080018
 			public const int character_counter_pattern = 2131230744;
 			
-			// aapt resource value: 0x7f08001e
-			public const int checkin = 2131230750;
+			// aapt resource value: 0x7f08001a
+			public const int empty_dashboard = 2131230746;
 			
 			// aapt resource value: 0x7f08001b
-			public const int cheese_ipsum = 2131230747;
-			
-			// aapt resource value: 0x7f08001d
-			public const int drawer_close = 2131230749;
-			
-			// aapt resource value: 0x7f08001c
-			public const int drawer_open = 2131230748;
-			
-			// aapt resource value: 0x7f080021
-			public const int empty_dashboard = 2131230753;
-			
-			// aapt resource value: 0x7f08001f
-			public const int menu_settings = 2131230751;
+			public const int splash_subtext = 2131230747;
 			
 			// aapt resource value: 0x7f080015
 			public const int status_bar_notification_info_overflow = 2131230741;

@@ -3,6 +3,8 @@ using Android.OS;
 using Android.Views;
 using Android.Support.V7.Preferences;
 using Helper.Header;
+using Android.App;
+using System.Threading;
 
 namespace ScheduleApp.Fragments
 {
@@ -39,6 +41,7 @@ namespace ScheduleApp.Fragments
 
             //Change Schedule Pref.
             schedulePreference = FindPreference("ChangeSchedule");
+            //schedulePreference.PreferenceClick += SchedulePreference_PreferenceClick;
             schedulePreference.Intent = new Intent(Activity, typeof(Activities.TimetableWeekActivity));
             //schedulePreference.Summary = "Ausgewählte Klasse: " + config.GetClassName();
 
@@ -61,6 +64,16 @@ namespace ScheduleApp.Fragments
             themePreference.SetDefaultValue(DataHandler.GetDarkThemePref(Activity));
             themePreference.PreferenceChange += ThemePreference_PreferenceChange;
         }
+
+        //private void SchedulePreference_PreferenceClick(object sender, Preference.PreferenceClickEventArgs e)
+        //{
+        //    var mProgressDialog = ProgressDialog.Show(Activity, "", "Stundenplan wird geladen...", true);
+        //    new Thread(new ThreadStart(delegate
+        //    {
+        //        StartActivity(new Intent(Activity, typeof(Activities.TimetableWeekActivity)));
+        //        Activity.RunOnUiThread(() => mProgressDialog.Cancel());
+        //    })).Start();
+        //}
 
         private void ThemePreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
         {
