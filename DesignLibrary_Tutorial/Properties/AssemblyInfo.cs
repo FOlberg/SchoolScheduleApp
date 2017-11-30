@@ -6,12 +6,12 @@ using Android.App;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("schedule_app")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("ScheduleApp")]
+[assembly: AssemblyDescription("Schedule App made by Frederik Olberg")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Frederik Olberg")]
 [assembly: AssemblyProduct("THG Vertretungsplan")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyright © 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
@@ -29,8 +29,8 @@ using Android.App;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-//#if DEBUG
-//[assembly: Application(Debuggable = true)]
-//#else
-//[assembly: Application(Debuggable=false)]
-//#endif
+#if DEBUG
+[assembly: Application(Debuggable = true)]
+#else
+[assembly: Application(Debuggable = false)]
+#endif
