@@ -65,7 +65,6 @@ namespace ScheduleApp.Fragments
                     mAdapter.mParentList[groupPosition].mEditMode = true;
                     mAdapter.NotifyDataSetChanged();
                 }
-                //Toast.MakeText(Activity, "Group: " + (e.Position - children), ToastLength.Long).Show();
             }
         }
 

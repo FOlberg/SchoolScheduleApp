@@ -66,7 +66,6 @@ namespace ScheduleApp.Activities
 
         private void MListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            //Toast.MakeText(this, e.Position + "c", ToastLength.Short).Show();
             mProgressDialog = ProgressDialog.Show(this, "", "Stundenplan wird geladen...", true); //, "Bitte warten"
 
             new Thread(new ThreadStart(delegate

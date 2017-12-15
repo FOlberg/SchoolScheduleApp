@@ -17,9 +17,9 @@ using Android.App;
 
 namespace ScheduleApp.Fragments
 {
-    public class Menu1 : Android.Support.V4.App.Fragment
+    public class Dashboard : Android.Support.V4.App.Fragment
     {
-        protected RecyclerView mRecyclerView;
+        RecyclerView mRecyclerView;
         public RecyclerViewAdapter mRecyclerViewAdapter;
         SwipeRefresh mSwipeRefresh;
         MessageHandler mMsgHandler;
@@ -64,9 +64,9 @@ namespace ScheduleApp.Fragments
 
         private class BckTask : AsyncTask
         {
-            Menu1 menu;
+            Dashboard menu;
 
-            public BckTask(Menu1 menu1)
+            public BckTask(Dashboard menu1)
             {
                 menu = menu1;
             }
@@ -166,7 +166,7 @@ namespace ScheduleApp.Fragments
             }
             else
             {
-                Toast.MakeText(Activity, "Keine Internetverbindung", ToastLength.Short).Show();
+                Toast.MakeText(Activity, Activity.GetString(Resource.String.toast_no_internet_connection), ToastLength.Short).Show();
             }
 
             mSwipeRefresh.Refreshing = false;
@@ -174,7 +174,7 @@ namespace ScheduleApp.Fragments
 
         private RecyclerViewAdapter FillAdapter()
         {
-            return new RecyclerViewAdapter(mMsgHandler.mList);
+            return new RecyclerViewAdapter(mMsgHandler.mList, Helpers.Type.USER);
         }
     }
 }

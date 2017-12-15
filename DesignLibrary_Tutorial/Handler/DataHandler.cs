@@ -22,7 +22,7 @@ namespace Helper.Header
         TimeHandler mTimeHandler; // -""-
         InformationHandler mInfoHandler; // -""-
         [JsonProperty]
-        Week[,] mWeekStack;
+        Week[,] weekStack;
         [JsonProperty]
         List<Timetable> mTimetables;
 
@@ -47,13 +47,13 @@ namespace Helper.Header
             //Maybe Dictionary check depending on update peroid in settings
             DateTime mondayDate = TimeHandler.GetMonday(week);
             var config = GetConfig();
-            if (mWeekStack == null)
+            if (weekStack == null)
             {
-                mWeekStack = new Week[mClassNames.Length, 2];
+                weekStack = new Week[mClassNames.Length, 2];
             }
-            if (mWeekStack[classNameIndex, week] != null && mWeekStack[classNameIndex, week].tMon.Date == mondayDate.Date && !newDload)
+            if (weekStack[classNameIndex, week] != null && weekStack[classNameIndex, week].tMon.Date == mondayDate.Date && !newDload)
             {
-                return mWeekStack[classNameIndex, week];
+                return weekStack[classNameIndex, week];
             }
 
             if (mSource == null)
@@ -73,7 +73,7 @@ namespace Helper.Header
                 mondayDate = mondayDate.AddDays(7);
             }
             Week w = mInfoHandler.ClassSourceToWeek(mSource[classNameIndex, week], mClassNames[classNameIndex], mondayDate);
-            mWeekStack[classNameIndex, week] = w;
+            weekStack[classNameIndex, week] = w;
             return w;
         }
 
@@ -81,18 +81,18 @@ namespace Helper.Header
         {
             return Task.Factory.StartNew(() =>
             {
-                if (mWeekStack != null)
+                if (weekStack != null)
                 {
                     DateTime[] date = new DateTime[] { TimeHandler.GetMonday(0), TimeHandler.GetMonday(1) };
-                    for (int i = 0; i < mWeekStack.Length; i++)
+                    for (int i = 0; i < weekStack.Length; i++)
                     {
                         for (int j = 0; j < 2; j++)
                         {
-                            if (mWeekStack[i, j] != null)
+                            if (weekStack[i, j] != null)
                             {
-                                if (mWeekStack[i, j].tMon.Date != date[j].Date)
+                                if (weekStack[i, j].tMon.Date != date[j].Date)
                                 {
-                                    mWeekStack[i, j] = null;
+                                    weekStack[i, j] = null;
                                 }
                             }
                         }
@@ -107,6 +107,14 @@ namespace Helper.Header
             Week w = GetWeek(GetClassIndex(config.GetClassName()), week, newDload);
             string source = mClientURL.GetRawCode(config.urlB, mTimeHandler.GetWeekIndex(week));
             mInfoHandler.ApplyChanges(w, mInfoHandler.GetDetailedInfo(source));
+            return w;
+        }
+
+        public Week GetDetailedWeek(int className, int week)
+        {
+            Week w = GetWeek(className, week, true);
+            string detailedSource = mClientURL.GetRawCode(GetConfig().urlB, mTimeHandler.GetWeekIndex(week));
+            mInfoHandler.ApplyChanges(w, mInfoHandler.GetDetailedInfo(detailedSource));
             return w;
         }
 

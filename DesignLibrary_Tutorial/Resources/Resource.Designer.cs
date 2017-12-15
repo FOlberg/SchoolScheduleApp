@@ -2703,14 +2703,20 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070037
 			public const int SYM = 2131165239;
 			
+			// aapt resource value: 0x7f0700c3
+			public const int SmileyIcon = 2131165379;
+			
 			// aapt resource value: 0x7f0700bb
 			public const int SwipeRefresh = 2131165371;
 			
 			// aapt resource value: 0x7f07001c
 			public const int TAG_IMGVIEW_ID = 2131165212;
 			
-			// aapt resource value: 0x7f0700c6
-			public const int action0 = 2131165382;
+			// aapt resource value: 0x7f0700c2
+			public const int TextMid = 2131165378;
+			
+			// aapt resource value: 0x7f0700c8
+			public const int action0 = 2131165384;
 			
 			// aapt resource value: 0x7f07007c
 			public const int action_bar = 2131165308;
@@ -2733,17 +2739,17 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f07005a
 			public const int action_bar_title = 2131165274;
 			
-			// aapt resource value: 0x7f0700c3
-			public const int action_container = 2131165379;
+			// aapt resource value: 0x7f0700c5
+			public const int action_container = 2131165381;
 			
 			// aapt resource value: 0x7f07007d
 			public const int action_context_bar = 2131165309;
 			
-			// aapt resource value: 0x7f0700ca
-			public const int action_divider = 2131165386;
+			// aapt resource value: 0x7f0700cc
+			public const int action_divider = 2131165388;
 			
-			// aapt resource value: 0x7f0700c4
-			public const int action_image = 2131165380;
+			// aapt resource value: 0x7f0700c6
+			public const int action_image = 2131165382;
 			
 			// aapt resource value: 0x7f070003
 			public const int action_menu_divider = 2131165187;
@@ -2760,11 +2766,11 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f07005c
 			public const int action_mode_close_button = 2131165276;
 			
-			// aapt resource value: 0x7f0700c5
-			public const int action_text = 2131165381;
+			// aapt resource value: 0x7f0700c7
+			public const int action_text = 2131165383;
 			
-			// aapt resource value: 0x7f0700d3
-			public const int actions = 2131165395;
+			// aapt resource value: 0x7f0700d5
+			public const int actions = 2131165397;
 			
 			// aapt resource value: 0x7f07005d
 			public const int activity_chooser_view_content = 2131165277;
@@ -2808,8 +2814,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f0700ad
 			public const int btnLogin = 2131165357;
 			
-			// aapt resource value: 0x7f0700df
-			public const int btn_choice1 = 2131165407;
+			// aapt resource value: 0x7f0700e2
+			public const int btn_choice1 = 2131165410;
 			
 			// aapt resource value: 0x7f070063
 			public const int buttonPanel = 2131165283;
@@ -2817,8 +2823,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f0700c1
 			public const int buttonTest = 2131165377;
 			
-			// aapt resource value: 0x7f0700c7
-			public const int cancel_action = 2131165383;
+			// aapt resource value: 0x7f0700c9
+			public const int cancel_action = 2131165385;
 			
 			// aapt resource value: 0x7f070093
 			public const int cardListImageView = 2131165331;
@@ -2841,8 +2847,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070073
 			public const int checkbox = 2131165299;
 			
-			// aapt resource value: 0x7f0700cf
-			public const int chronometer = 2131165391;
+			// aapt resource value: 0x7f0700d1
+			public const int chronometer = 2131165393;
 			
 			// aapt resource value: 0x7f07004e
 			public const int clip_horizontal = 2131165262;
@@ -2856,11 +2862,11 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f07009e
 			public const int container = 2131165342;
 			
-			// aapt resource value: 0x7f0700de
-			public const int container_first = 2131165406;
+			// aapt resource value: 0x7f0700e1
+			public const int container_first = 2131165409;
 			
-			// aapt resource value: 0x7f0700dc
-			public const int container_norm = 2131165404;
+			// aapt resource value: 0x7f0700df
+			public const int container_norm = 2131165407;
 			
 			// aapt resource value: 0x7f070066
 			public const int contentPanel = 2131165286;
@@ -2916,8 +2922,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070030
 			public const int end = 2131165232;
 			
-			// aapt resource value: 0x7f0700d5
-			public const int end_padder = 2131165397;
+			// aapt resource value: 0x7f0700d7
+			public const int end_padder = 2131165399;
 			
 			// aapt resource value: 0x7f07003f
 			public const int enterAlways = 2131165247;
@@ -2979,11 +2985,11 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070062
 			public const int icon = 2131165282;
 			
-			// aapt resource value: 0x7f0700d6
-			public const int icon_frame = 2131165398;
+			// aapt resource value: 0x7f0700d8
+			public const int icon_frame = 2131165400;
 			
-			// aapt resource value: 0x7f0700d4
-			public const int icon_group = 2131165396;
+			// aapt resource value: 0x7f0700d6
+			public const int icon_group = 2131165398;
 			
 			// aapt resource value: 0x7f07003a
 			public const int ifRoom = 2131165242;
@@ -2994,14 +3000,14 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f0700b3
 			public const int imageView1 = 2131165363;
 			
-			// aapt resource value: 0x7f0700e0
-			public const int img_logo = 2131165408;
+			// aapt resource value: 0x7f0700e3
+			public const int img_logo = 2131165411;
 			
 			// aapt resource value: 0x7f0700bd
 			public const int indeterminateBar = 2131165373;
 			
-			// aapt resource value: 0x7f0700d0
-			public const int info = 2131165392;
+			// aapt resource value: 0x7f0700d2
+			public const int info = 2131165394;
 			
 			// aapt resource value: 0x7f070099
 			public const int infoText = 2131165337;
@@ -3030,8 +3036,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070018
 			public const int line3 = 2131165208;
 			
-			// aapt resource value: 0x7f0700d8
-			public const int list = 2131165400;
+			// aapt resource value: 0x7f0700da
+			public const int list = 2131165402;
 			
 			// aapt resource value: 0x7f07001d
 			public const int listMode = 2131165213;
@@ -3042,20 +3048,20 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070061
 			public const int list_item = 2131165281;
 			
-			// aapt resource value: 0x7f0700e3
-			public const int masked = 2131165411;
+			// aapt resource value: 0x7f0700e6
+			public const int masked = 2131165414;
 			
-			// aapt resource value: 0x7f0700c9
-			public const int media_actions = 2131165385;
+			// aapt resource value: 0x7f0700cb
+			public const int media_actions = 2131165387;
+			
+			// aapt resource value: 0x7f0700ea
+			public const int menu_bottom = 2131165418;
 			
 			// aapt resource value: 0x7f0700e7
-			public const int menu_bottom = 2131165415;
+			public const int menu_top = 2131165415;
 			
 			// aapt resource value: 0x7f0700e4
-			public const int menu_top = 2131165412;
-			
-			// aapt resource value: 0x7f0700e1
-			public const int message = 2131165409;
+			public const int message = 2131165412;
 			
 			// aapt resource value: 0x7f070031
 			public const int middle = 2131165233;
@@ -3069,17 +3075,17 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070094
 			public const int nameText = 2131165332;
 			
-			// aapt resource value: 0x7f0700c2
-			public const int navHeader = 2131165378;
-			
-			// aapt resource value: 0x7f0700e5
-			public const int nav_menu1 = 2131165413;
-			
-			// aapt resource value: 0x7f0700e6
-			public const int nav_menu3 = 2131165414;
+			// aapt resource value: 0x7f0700c4
+			public const int navHeader = 2131165380;
 			
 			// aapt resource value: 0x7f0700e8
-			public const int nav_menu4 = 2131165416;
+			public const int nav_menu1 = 2131165416;
+			
+			// aapt resource value: 0x7f0700e9
+			public const int nav_menu3 = 2131165417;
+			
+			// aapt resource value: 0x7f0700eb
+			public const int nav_menu4 = 2131165419;
 			
 			// aapt resource value: 0x7f0700ba
 			public const int nav_view = 2131165370;
@@ -3096,14 +3102,14 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f07001e
 			public const int normal = 2131165214;
 			
-			// aapt resource value: 0x7f0700d2
-			public const int notification_background = 2131165394;
+			// aapt resource value: 0x7f0700d4
+			public const int notification_background = 2131165396;
 			
-			// aapt resource value: 0x7f0700cc
-			public const int notification_main_column = 2131165388;
+			// aapt resource value: 0x7f0700ce
+			public const int notification_main_column = 2131165390;
 			
-			// aapt resource value: 0x7f0700cb
-			public const int notification_main_column_container = 2131165387;
+			// aapt resource value: 0x7f0700cd
+			public const int notification_main_column_container = 2131165389;
 			
 			// aapt resource value: 0x7f07004c
 			public const int parallax = 2131165260;
@@ -3123,8 +3129,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070007
 			public const int progress_horizontal = 2131165191;
 			
-			// aapt resource value: 0x7f0700dd
-			public const int progressbar = 2131165405;
+			// aapt resource value: 0x7f0700e0
+			public const int progressbar = 2131165408;
 			
 			// aapt resource value: 0x7f070075
 			public const int radio = 2131165301;
@@ -3135,11 +3141,11 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f07004a
 			public const int right = 2131165258;
 			
-			// aapt resource value: 0x7f0700d1
-			public const int right_icon = 2131165393;
+			// aapt resource value: 0x7f0700d3
+			public const int right_icon = 2131165395;
 			
-			// aapt resource value: 0x7f0700cd
-			public const int right_side = 2131165389;
+			// aapt resource value: 0x7f0700cf
+			public const int right_side = 2131165391;
 			
 			// aapt resource value: 0x7f07000c
 			public const int save_image_matrix = 2131165196;
@@ -3198,11 +3204,11 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070089
 			public const int search_voice_btn = 2131165321;
 			
-			// aapt resource value: 0x7f0700d9
-			public const int seekbar = 2131165401;
+			// aapt resource value: 0x7f0700db
+			public const int seekbar = 2131165403;
 			
-			// aapt resource value: 0x7f0700da
-			public const int seekbar_value = 2131165402;
+			// aapt resource value: 0x7f0700dc
+			public const int seekbar_value = 2131165404;
 			
 			// aapt resource value: 0x7f07008a
 			public const int select_dialog_listview = 2131165322;
@@ -3234,8 +3240,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070064
 			public const int spacer = 2131165284;
 			
-			// aapt resource value: 0x7f0700d7
-			public const int spinner = 2131165399;
+			// aapt resource value: 0x7f0700d9
+			public const int spinner = 2131165401;
 			
 			// aapt resource value: 0x7f070008
 			public const int split_action_bar = 2131165192;
@@ -3252,8 +3258,11 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f07004b
 			public const int start = 2131165259;
 			
-			// aapt resource value: 0x7f0700c8
-			public const int status_bar_latest_event_content = 2131165384;
+			// aapt resource value: 0x7f0700ca
+			public const int status_bar_latest_event_content = 2131165386;
+			
+			// aapt resource value: 0x7f0700de
+			public const int stripeProBar = 2131165406;
 			
 			// aapt resource value: 0x7f070076
 			public const int submenuarrow = 2131165302;
@@ -3261,8 +3270,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070087
 			public const int submit_area = 2131165319;
 			
-			// aapt resource value: 0x7f0700db
-			public const int switchWidget = 2131165403;
+			// aapt resource value: 0x7f0700dd
+			public const int switchWidget = 2131165405;
 			
 			// aapt resource value: 0x7f070090
 			public const int tabLayoutW = 2131165328;
@@ -3294,8 +3303,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070015
 			public const int textinput_error = 2131165205;
 			
-			// aapt resource value: 0x7f0700ce
-			public const int time = 2131165390;
+			// aapt resource value: 0x7f0700d0
+			public const int time = 2131165392;
 			
 			// aapt resource value: 0x7f07001b
 			public const int title = 2131165211;
@@ -3363,8 +3372,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f070016
 			public const int view_offset_helper = 2131165206;
 			
-			// aapt resource value: 0x7f0700e2
-			public const int visible = 2131165410;
+			// aapt resource value: 0x7f0700e5
+			public const int visible = 2131165413;
 			
 			// aapt resource value: 0x7f07003c
 			public const int withText = 2131165244;
@@ -3696,22 +3705,31 @@ namespace ScheduleApp
 			public const int preference_widget_switch_compat = 2130903128;
 			
 			// aapt resource value: 0x7f030059
-			public const int select_dialog_item_material = 2130903129;
+			public const int progress_widget = 2130903129;
 			
 			// aapt resource value: 0x7f03005a
-			public const int select_dialog_multichoice_material = 2130903130;
+			public const int select_dialog_item_material = 2130903130;
 			
 			// aapt resource value: 0x7f03005b
-			public const int select_dialog_singlechoice_material = 2130903131;
+			public const int select_dialog_multichoice_material = 2130903131;
 			
 			// aapt resource value: 0x7f03005c
-			public const int splash = 2130903132;
+			public const int select_dialog_singlechoice_material = 2130903132;
 			
 			// aapt resource value: 0x7f03005d
-			public const int support_simple_spinner_dropdown_item = 2130903133;
+			public const int spinnerDropDownItem = 2130903133;
 			
 			// aapt resource value: 0x7f03005e
-			public const int tooltip = 2130903134;
+			public const int spinnerLayout = 2130903134;
+			
+			// aapt resource value: 0x7f03005f
+			public const int splash = 2130903135;
+			
+			// aapt resource value: 0x7f030060
+			public const int support_simple_spinner_dropdown_item = 2130903136;
+			
+			// aapt resource value: 0x7f030061
+			public const int tooltip = 2130903137;
 			
 			static Layout()
 			{
@@ -3727,10 +3745,13 @@ namespace ScheduleApp
 		{
 			
 			// aapt resource value: 0x7f0e0000
-			public const int drawer_view = 2131623936;
+			public const int appbar_spinner = 2131623936;
 			
 			// aapt resource value: 0x7f0e0001
-			public const int sample_actions = 2131623937;
+			public const int drawer_view = 2131623937;
+			
+			// aapt resource value: 0x7f0e0002
+			public const int sample_actions = 2131623938;
 			
 			static Menu()
 			{
@@ -3868,6 +3889,9 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f09002a
 			public const int path_password_strike_through = 2131296298;
 			
+			// aapt resource value: 0x7f09002e
+			public const int planselect_no_class_selected = 2131296302;
+			
 			// aapt resource value: 0x7f090015
 			public const int search_menu_title = 2131296277;
 			
@@ -3876,6 +3900,9 @@ namespace ScheduleApp
 			
 			// aapt resource value: 0x7f090016
 			public const int status_bar_notification_info_overflow = 2131296278;
+			
+			// aapt resource value: 0x7f09002f
+			public const int toast_no_internet_connection = 2131296303;
 			
 			// aapt resource value: 0x7f090000
 			public const int v7_preference_off = 2131296256;

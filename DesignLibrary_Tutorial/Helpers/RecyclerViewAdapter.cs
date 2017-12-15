@@ -10,6 +10,7 @@ using Android.Views.Animations;
 
 namespace ScheduleApp.Helpers
 {
+    public enum Type {USER, ALL};
     public class Card
     {
         public DateTime mTime;
@@ -55,10 +56,11 @@ namespace ScheduleApp.Helpers
     public class RecyclerViewAdapter : RecyclerView.Adapter
     {
         public List<Card> mList;
-
-        public RecyclerViewAdapter(List<Card> list)
+        public Type mType;
+        public RecyclerViewAdapter(List<Card> list, Type type)
         {
             mList = list;
+            mType = type;
             SortOutData();
         }
 
@@ -73,7 +75,7 @@ namespace ScheduleApp.Helpers
                     {
                         mList.RemoveAt(i);
                     }
-                    else
+                    else if (mType == Type.USER)
                     {
                         for (int j = mList[i].mCardList.Count - 1; j >= 0; j--)
                         {
@@ -252,9 +254,9 @@ namespace ScheduleApp.Helpers
             else if (mList[position].mSubject.ev != null)
             {
                 viewHolder.mNameText.Visibility = ViewStates.Gone;
-                if (mList[position].mSubject.ev.Describtion.Length > 25)
+                if (mList[position].mSubject.ev.Describtion.Length > 24)
                 {
-                    viewHolder.mTypeText.TextSize = 20;
+                    viewHolder.mTypeText.TextSize = 20 - mList[position].mSubject.ev.Describtion.Length / 10f;
                 }
                 viewHolder.mTypeText.Text = mList[position].mSubject.ev.Describtion;
                 viewHolder.mImageView.SetImageResource(Resource.Drawable.ic_cal_question);

@@ -15,6 +15,8 @@ using ScheduleApp.Fragments;
 using ScheduleApp.Handler;
 using Android.Content;
 using Helper.Header;
+using System.Linq;
+using Android.Graphics;
 
 namespace ScheduleApp.Activities
 {
@@ -23,10 +25,15 @@ namespace ScheduleApp.Activities
     {
         private DrawerLayout mDrawerLayout;
         IMenuItem previousItem;
+        NavigationView navigationView;
+        bool darkTheme = false;
+        SupportActionBar ab;
+        int selFragment;
 
         protected override void OnCreate(Bundle bundle)
         {
-            if (DataHandler.GetDarkThemePref(this))
+            darkTheme = DataHandler.GetDarkThemePref(this);
+            if (darkTheme)
                 SetTheme(Resource.Style.Theme_DarkTheme);
             else
                 SetTheme(Resource.Style.Theme_DesignDemo);
@@ -38,21 +45,22 @@ namespace ScheduleApp.Activities
             SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBar);
             SetSupportActionBar(toolBar);
 
-            SupportActionBar ab = SupportActionBar;
+            ab = SupportActionBar;
             ab.SetHomeAsUpIndicator(Resource.Drawable.ic_menu);
             ab.SetDisplayHomeAsUpEnabled(true);
 
             mDrawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
             InitHandler();
             
-            NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
+            navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             if (navigationView != null)
             {
                 SetUpDrawerContent(navigationView);
             }
+            selFragment = GetSharedPreferences("Config", FileCreationMode.Private).GetBoolean("ThemeChanged", false) ? 3 : 1;
             if (bundle == null)
             {
-                if (GetSharedPreferences("Config", FileCreationMode.Private).GetBoolean("ThemeChanged", false))
+                if (selFragment == 3)
                 {
                     navigationView.SetCheckedItem(Resource.Id.nav_menu4);
                     ListItemClicked(2);
@@ -64,6 +72,11 @@ namespace ScheduleApp.Activities
                     navigationView.SetCheckedItem(Resource.Id.nav_menu1);
                 }
             }
+            //var spinner = FindViewById<Spinner>(Resource.Id.appbar_spinner);
+            //var arr = DataHandler.GetDataHandler().GetClasses().ToList<string>();
+            //arr.Insert(0, "Keine");
+            //ArrayAdapter<string> adapter = new ArrayAdapter<string>(this, Resource.Layout.support_simple_spinner_dropdown_item, arr);
+            //spinner.Adapter = adapter;
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -73,10 +86,43 @@ namespace ScheduleApp.Activities
                 case Android.Resource.Id.Home:
                     mDrawerLayout.OpenDrawer((int)GravityFlags.Left);
                     return true;
-
                 default:
                     return base.OnOptionsItemSelected(item);                    
             }
+        }
+
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            if (selFragment == 2)//previousItem != null && previousItem.GroupId == 1)
+            {
+                MenuInflater.Inflate(Resource.Menu.appbar_spinner, menu);
+                var item = menu.FindItem(Resource.Id.spinner);
+                var spinner = item.ActionView as Spinner;
+                var arr = DataHandler.GetDataHandler().GetClasses().ToList<string>();
+                arr.Insert(0, "Klasse");
+                //Resource.Layout.abc_action_menu_item_layout
+                ArrayAdapter<string> adapter;
+   
+                if (darkTheme)
+                {
+                    adapter = new ArrayAdapter<string>(this, Resource.Layout.support_simple_spinner_dropdown_item, arr);
+                }
+                else
+                {
+                    //Context con = ab.ThemedContext;
+                    adapter = new ArrayAdapter<string>(ab.ThemedContext, Resource.Layout.support_simple_spinner_dropdown_item, arr);
+                    adapter.SetDropDownViewResource(Resource.Layout.support_simple_spinner_dropdown_item);
+                    //adapter = new ArrayAdapter<string>(this, Resource.Layout.spinnerLayout, arr);
+                    //adapter.SetDropDownViewResource(Resource.Layout.spinnerDropDownItem);
+                }
+                spinner.Adapter = adapter;
+                spinner.SetMinimumWidth(300);
+                spinner.TextAlignment = TextAlignment.TextEnd;
+                //spinner.ForceHasOverlappingRendering(false);
+            }
+
+
+            return base.OnCreateOptionsMenu(menu);
         }
 
         private void SetUpDrawerContent(NavigationView navigationView)
@@ -87,25 +133,27 @@ namespace ScheduleApp.Activities
                 if (previousItem != null)
                     previousItem.SetChecked(false);
 
-                navigationView.SetCheckedItem(e.MenuItem.ItemId);
+                navigationView.SetCheckedItem(e.MenuItem.ItemId);  
 
                 previousItem = e.MenuItem;
                 switch (e.MenuItem.ItemId)
                 {
                     case Resource.Id.nav_menu1:
-                        ListItemClicked(0);
+                        selFragment = 1;
                         break;
                     //case Resource.Id.nav_menu2:
                     //    ListItemClicked(1);
                     //    break;
                     case Resource.Id.nav_menu3:
-                        ListItemClicked(1);
+                        selFragment = 2;
                         break;
                     case Resource.Id.nav_menu4:
-                        ListItemClicked(2);
+                        selFragment = 3;
                         break;
                 }
-                //e.MenuItem.SetChecked(true);
+                InvalidateOptionsMenu();
+                ListItemClicked(selFragment - 1);
+                e.MenuItem.SetChecked(true);
                 mDrawerLayout.CloseDrawers();
             };
         }
@@ -116,16 +164,16 @@ namespace ScheduleApp.Activities
             switch (position)
             {
                 case 0:
-                    fragment = new Menu1();
+                    fragment = new Dashboard();
                     break;
                 //case 1:
                 //    fragment = new Menu2();
                 //    break;
                 case 1:
-                    fragment = new Menu2();
+                    fragment = new PlanSelect();//new Menu2();
                     break;
                 case 2:
-                    fragment = new Menu4();
+                    fragment = new Properties();
                     break;
             }
 

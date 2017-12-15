@@ -15,5 +15,5 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/drawer_view" />
-  <!--android:layout_marginTop="?android:attr/actionBarSize"-->
+<!--android:layout_marginTop="?android:attr/actionBarSize"-->
 </android.support.v4.widget.DrawerLayout>

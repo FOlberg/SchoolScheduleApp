@@ -11,6 +11,7 @@
     <item name="colorPrimaryDark">#512DA8</item>
     <item name="colorAccent">#039be5</item> <!--#FF4081 #448AFF-->
     <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    <!--<item name="android:popupTheme">@style/ThemeOverlay.Material.Light"</item>-->
   </style>
   
   <style name="Theme.DarkTheme" parent="Theme.AppCompat.NoActionBar">
@@ -22,6 +23,14 @@
     <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
   </style>
 
+     <!--<style name="SpinnerItem" parent="android:style/Widget.TextView.SpinnerItem">
+        <item name="android:textColor">#F5F5F5</item>
+    </style>-->
+
+    <!--<style name="SpinnerItem.DropDownItem" parent="android:style/Widget.DropDownItem.Spinner">
+        <item name="android:textColor">#F5F5F5</item>
+        <item name="android:background">#F5F5F5</item>
+    </style>-->
   <!--<style name ="Theme.PreferenceCatogoryText" parent="@android:style/Widget.TextView.ListSeparator">
     <item name="android:paddingTop">6px</item>
     <item name="android:paddingBottom">6px</item>

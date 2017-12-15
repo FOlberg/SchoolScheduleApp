@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+  <item
+      android:id="@+id/spinner"
+      android:title="ActionBar Spinner"
+      app:actionViewClass="android.widget.Spinner"
+      android:dropDownWidth="wrap_content"
+      app:showAsAction="always" />
+  <!--<item android:id="@+id/action_clear"
+      android:title="ActionBar ClearButton"
+      app:showAsAction="never"/>-->
+</menu>

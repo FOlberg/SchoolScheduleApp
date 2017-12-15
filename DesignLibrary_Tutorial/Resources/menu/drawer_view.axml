@@ -16,7 +16,7 @@
         android:id="@+id/nav_menu3"
         android:icon="@drawable/ic_calendar_multi"
         android:title="Alle Pläne"
-        android:enabled="false"/>
+        android:enabled="true"/>
   </group>
   <group
     android:checkableBehavior="single"

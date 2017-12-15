@@ -114,7 +114,7 @@ namespace ScheduleApp.Handler
                         List<CardList> tCardList = new List<CardList>();
                         for (int hour = 0; hour < 11; hour++)
                         {
-                            if (config[day][hour] != -1 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour].Length >= config[day][hour])
+                            if (config[day][hour] != -1 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour].Length > config[day][hour])
                             {
                                 //if (mWeek[wp].week[day].list[hour] != null && (mWeek[wp].week[day].list[hour].Length >= config[day][hour])
                                 //{
@@ -146,23 +146,22 @@ namespace ScheduleApp.Handler
                             }
                             else if (mWeek[wp].mEvents.Count > 0 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour][0].ev != null)
                             {
-                                //foreach (var ev in mWeek[wp].mEvents)
-                                //{
-                                //    if (ev.Day == (Days)day && (int)ev.Hour <= hour && hour <= (int)ev.Number && config[day][hour] != -1)
-                                //    {
-                                //        tCardList.Add(new CardList(new Subject(ev), new Hours[] { ev.Hour, ev.Number }));
-                                //        break;
-                                //    }
-                                //}
                                 Subject temp = mWeek[wp].week[day].list[hour][0];
                                 for (int h = (int)temp.ev.Hour; h <= (int)temp.ev.Number; h++)
                                 {
                                     if (config[day][h] != -1)
                                     {
                                         tCardList.Add(new CardList(temp, new Hours[] { temp.ev.Hour, temp.ev.Number }));
+                                        hour = (int) temp.ev.Number; //Check
                                         break;
                                     }
                                 }
+                            }
+                            else if (config[day][hour] != -1 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour].Length == 1) //Check
+                            {
+                                Subject temp = mWeek[wp].week[day].list[hour][0];
+                                temp.ev = new Event((Days) day, (Hours) hour, (Hours) hour, temp.name);
+                                tCardList.Add(new CardList(temp, new Hours[] { temp.ev.Hour }));
                             }
                         }
                         if (tCardList.Count > 0)
@@ -171,6 +170,78 @@ namespace ScheduleApp.Handler
                             foreach (var item in tCardList)
                             {
                                 mMsgList.Add(new LData(mWeek[wp].tMon.AddDays(day).Date, item));
+                            }
+                        }
+                    }
+                }
+            }
+            return tList;
+        }
+
+        public static List<Card> GetCardList(Week[] week)
+        {
+            List<Card> tList = new List<Card>();
+
+            for (int wp = 0; week != null && wp < week.Length; wp++)
+            {
+                if (week[wp] != null)
+                {
+                    for (int day = 0; day < 5; day++)
+                    {
+                        if (week[wp].tMon.AddDays(day).Date >= System.DateTime.UtcNow.Date)
+                        {
+                            List<CardList> tCardList = new List<CardList>();
+                            int[] count = { 0, 0, 0 };
+                            for (int hour = 0; hour < 11; hour++)
+                            {
+                                if (week[wp].week[day].list[hour] != null)
+                                {
+                                    count[0] = count[1];
+                                    count[1] = 0;
+                                    count[2] = 0;
+                                    for (int index = 0; index < week[wp].week[day].list[hour].Length; index++)
+                                    {
+                                        Subject temp = null;
+                                        if (week[wp].week[day].list[hour][index] != null)
+                                            temp = week[wp].week[day].list[hour][index];
+                                        if (temp != null && (temp.omitted || temp.change != null || temp.ev != null))
+                                        {
+                                            if (temp.ev != null)
+                                            {
+                                                CardList cList = new CardList(temp, new Hours[] { temp.ev.Hour, temp.ev.Number });
+                                                tCardList.Add(cList);
+                                                hour = (int)temp.ev.Number; //Check
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                int counter = count[0] + count[1] - count[2];
+                                                if (tCardList.Count > 0 && tCardList[tCardList.Count - 1].mSubject.room == temp.room && tCardList[tCardList.Count - 1].mSubject.name == temp.name
+                                                    && tCardList[tCardList.Count - 1].h.Length == 1 && (int)tCardList[tCardList.Count - 1].h[0] + 1 == hour)
+                                                {
+                                                    count[2]++;
+                                                    tCardList[tCardList.Count - 1].h = new Hours[] { tCardList[tCardList.Count - 1].h[0], (Hours)hour };
+                                                }
+                                                else if (counter > 0 && tCardList.Count >= counter && tCardList[tCardList.Count - counter].mSubject.room == temp.room && tCardList[tCardList.Count - counter].mSubject.name == temp.name
+                                                    && tCardList[tCardList.Count - counter].h.Length == 1 && (int)tCardList[tCardList.Count - counter].h[0] + 1 == hour)
+                                                {
+                                                    count[2]++;
+                                                    tCardList[tCardList.Count - counter].h = new Hours[] { tCardList[tCardList.Count - counter].h[0], (Hours)hour };
+                                                }
+                                                else
+                                                {
+                                                    CardList cList = new CardList(temp, new Hours[] { (Hours)hour });
+                                                    tCardList.Add(cList);
+                                                    count[1]++;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (tCardList.Count > 0)
+                            {
+                                tList.Add(new Card(tCardList, week[wp].tMon.AddDays(day)));
                             }
                         }
                     }

@@ -136,9 +136,9 @@
     <Compile Include="Background\AutoStart.cs" />
     <Compile Include="Background\BackgroundService.cs" />
     <Compile Include="Fragments\TabFragment.cs" />
-    <Compile Include="Fragments\Menu1.cs" />
-    <Compile Include="Fragments\Menu4.cs" />
-    <Compile Include="Fragments\Menu3.cs" />
+    <Compile Include="Fragments\Dashboard.cs" />
+    <Compile Include="Fragments\Properties.cs" />
+    <Compile Include="Fragments\PlanSelect.cs" />
     <Compile Include="Fragments\Menu2.cs" />
     <Compile Include="Handler\Config.cs" />
     <Compile Include="Handler\DataHandler.cs" />
@@ -216,6 +216,9 @@
     <AndroidResource Include="Resources\layout\splash.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\progress_widget.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml">
@@ -223,7 +226,9 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\values\Strings.xml" />
+    <AndroidResource Include="Resources\values\Strings.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml">
@@ -486,6 +491,19 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\thg_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\menu\appbar_spinner.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\spinnerLayout.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\spinnerDropDownItem.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

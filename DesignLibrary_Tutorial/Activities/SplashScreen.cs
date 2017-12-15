@@ -138,7 +138,6 @@ namespace ScheduleApp.Activities
             {
                 if (!start)
                     RunOnUiThread(() => BuildAlertDialog(this).Show());
-                    //Toast.MakeText(this, "Netzwerkfehler!", ToastLength.Short).Show();
                 return false;
             }
             return true;

@@ -392,8 +392,12 @@ namespace Helper.Header
                                     }
                                 }
                             }
-                            if (con) continue;
+                            if (con && eventDayCount == 0) continue;
                             //t += reader.Value;
+                            if (eventDayCount != 0)
+                            {
+                                day = eventDayCount;
+                            }
                             week.AddEvent(new Event((Days)(day % 5), row, (rowspan / 2) - 1 + row)); //CHECK!
                             /*t += eventSpace.ToArray()[eventSpace.Count - 1].Day + " "
                                 + eventSpace.ToArray()[eventSpace.Count - 1].Hour + " "
@@ -440,9 +444,9 @@ namespace Helper.Header
             {
                 if (temp[0] == temp[1])
                 {
-                    lesson.Add(new Subject(temp[0].Replace("\n", "").Replace(".", ""), "N.A.", strike[1]));
+                    lesson.Add(new Subject(temp[0].Replace(".\n", "").Replace("\n", ""), "N.A.", strike[1]));
                 }
-                else lesson.Add(new Subject(temp[1].Replace("\n", "").Replace(".", ""), temp[0].Replace("\n", "").Replace(".", ""), strike[1]));
+                else lesson.Add(new Subject(temp[1].Replace(".\n", "").Replace("\n", ""), temp[0].Replace(".\n", "").Replace("\n", ""), strike[1]));
                 strike[1] = strike[0];
                 strike[0] = false;
                 temp.Clear();
