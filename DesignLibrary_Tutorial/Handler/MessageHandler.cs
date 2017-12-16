@@ -216,13 +216,13 @@ namespace ScheduleApp.Handler
                                             else
                                             {
                                                 int counter = count[0] + count[1] - count[2];
-                                                if (tCardList.Count > 0 && tCardList[tCardList.Count - 1].mSubject.room == temp.room && tCardList[tCardList.Count - 1].mSubject.name == temp.name
-                                                    && tCardList[tCardList.Count - 1].h.Length == 1 && (int)tCardList[tCardList.Count - 1].h[0] + 1 == hour)
-                                                {
-                                                    count[2]++;
-                                                    tCardList[tCardList.Count - 1].h = new Hours[] { tCardList[tCardList.Count - 1].h[0], (Hours)hour };
-                                                }
-                                                else if (counter > 0 && tCardList.Count >= counter && tCardList[tCardList.Count - counter].mSubject.room == temp.room && tCardList[tCardList.Count - counter].mSubject.name == temp.name
+                                                //if (tCardList.Count > 0 && tCardList[tCardList.Count - 1].mSubject.room == temp.room && tCardList[tCardList.Count - 1].mSubject.name == temp.name
+                                                //    && tCardList[tCardList.Count - 1].h.Length == 1 && (int)tCardList[tCardList.Count - 1].h[0] + 1 == hour)
+                                                //{
+                                                //    count[2]++;
+                                                //    tCardList[tCardList.Count - 1].h = new Hours[] { tCardList[tCardList.Count - 1].h[0], (Hours)hour };
+                                                //}
+                                                if (counter > 0 && tCardList.Count >= counter && tCardList[tCardList.Count - counter].mSubject.room == temp.room && tCardList[tCardList.Count - counter].mSubject.name == temp.name
                                                     && tCardList[tCardList.Count - counter].h.Length == 1 && (int)tCardList[tCardList.Count - counter].h[0] + 1 == hour)
                                                 {
                                                     count[2]++;

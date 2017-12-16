@@ -130,6 +130,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\LicenseActivity.cs" />
     <Compile Include="Activities\SplashScreen.cs" />
     <Compile Include="Activities\TimetableWeekActivity.cs" />
     <Compile Include="Activities\TimetableSetupActivity.cs" />
@@ -217,6 +218,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\progress_widget.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\Activity_License.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
@@ -504,6 +508,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\spinnerDropDownItem.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\ApacheLicense.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

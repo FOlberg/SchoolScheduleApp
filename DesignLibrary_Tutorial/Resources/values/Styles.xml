@@ -50,9 +50,9 @@
     <item name="android:textColor">#FFFFFF</item>
   </style>
 
-  <style name="ProgressAlert" parent="Theme.AppCompat.Light.Dialog.Alert">
-    <item name="android:colorAccent">#039be5</item>
-  </style>
+  <!--<style name="ProgressAlert" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <item name="android:colorAccent">#510536</item>
+  </style>-->
 
   <!--<style name="PreferenceThemeOverlay" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>

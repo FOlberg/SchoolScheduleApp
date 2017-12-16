@@ -69,7 +69,8 @@ namespace ScheduleApp.Fragments
             themePreference.SetDefaultValue(DataHandler.GetDarkThemePref(Activity));
             themePreference.PreferenceChange += ThemePreference_PreferenceChange;
 
-
+            var licensePreference = FindPreference("license_preference");
+            licensePreference.Intent = new Intent(Activity, typeof(Activities.LicenseActivity));
 
         }
 
@@ -86,7 +87,11 @@ namespace ScheduleApp.Fragments
         private void SchedulePreference_PreferenceClick(object sender, Preference.PreferenceClickEventArgs e)
         {
             if (!mProgressDialog.IsShowing)
+            {
+
                 new InnerScheduleLoader(Activity, mProgressDialog).Execute();
+            }
+
             //mProgressBar.Visibility = ViewStates.Visible;
             //if (!mProgressDialog.IsShowing)
             //{
@@ -118,6 +123,9 @@ namespace ScheduleApp.Fragments
                 //        StartActivity(new Intent(Activity, typeof(Activities.TimetableWeekActivity)));
                 //        Activity.RunOnUiThread(() => mProgressDialog.Cancel());
                 //    })).Start();
+                var editor = activity.GetSharedPreferences("TableSetup", FileCreationMode.Private).Edit();
+                editor.PutInt("classIndex", -1);
+                editor.Apply();
                 activity.StartActivity(new Intent(activity, typeof(Activities.TimetableWeekActivity)));
                 return true;
             }
@@ -162,7 +170,7 @@ namespace ScheduleApp.Fragments
 
         private void ThemePreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
         {
-            Activity.GetSharedPreferences("Config", FileCreationMode.Private).Edit().PutBoolean("DarkTheme", (bool) e.NewValue).Apply();
+            Activity.GetSharedPreferences("Config", FileCreationMode.Private).Edit().PutBoolean("DarkTheme", (bool)e.NewValue).Apply();
             Activity.GetSharedPreferences("Config", FileCreationMode.Private).Edit().PutBoolean("ThemeChanged", true).Apply();
             var intent = Activity.Intent;
             Activity.Finish();
@@ -179,7 +187,7 @@ namespace ScheduleApp.Fragments
         private void VibrationPreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
         {
             var config = DataHandler.GetConfig();
-            config.mSettings.vibration = (bool) e.NewValue;
+            config.mSettings.vibration = (bool)e.NewValue;
             DataHandler.SaveConfig(config);
         }
 
@@ -193,7 +201,7 @@ namespace ScheduleApp.Fragments
                 Background.AlarmReceiver.mOldSequence = config.mSettings.updateSequence;
                 config.mSettings.updateSequence = newValue;
                 DataHandler.SaveConfig(config);
-            }  
+            }
         }
     }
 }

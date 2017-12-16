@@ -288,12 +288,18 @@ namespace Helper.Header
 
                             if (week.mEvents.Count > 0) //Events
                             {
-                                foreach (Event ev in week.mEvents)
+                                bool nextDay = true;
+                                for (int i = 0; i < 5 && nextDay; i++)
                                 {
-                                    if (ev.Day == (Days)(day % 5) && ev.Hour < row && ev.Number >= row)
+                                    nextDay = false;
+                                    foreach (Event ev in week.mEvents)
                                     {
-                                        day++;
-                                        eventDayCount++;
+                                        if (ev.Day == (Days)(day % 5) && ev.Hour < row && ev.Number >= row)
+                                        {
+                                            day++;
+                                            eventDayCount++;
+                                            nextDay = true;
+                                        }
                                     }
                                 }
                             }
@@ -324,12 +330,18 @@ namespace Helper.Header
 
                             if (week.mEvents.Count > 0)
                             {
-                                foreach (Event ev in week.mEvents)
+                                bool nextDay = true;
+                                for (int i = 0; i < 5 && nextDay; i++)
                                 {
-                                    if (ev.Day == (Days)(day % 5) && ev.Hour < row && ev.Number >= row && lesson.Count > 0)
+                                    nextDay = false;
+                                    foreach (Event ev in week.mEvents)
                                     {
-                                        day++;
-                                        eventDayCount++;
+                                        if (ev.Day == (Days)(day % 5) && ev.Hour < row && ev.Number >= row)
+                                        {
+                                            day++;
+                                            eventDayCount++;
+                                            nextDay = true;
+                                        }
                                     }
                                 }
                             }
@@ -394,10 +406,10 @@ namespace Helper.Header
                             }
                             if (con && eventDayCount == 0) continue;
                             //t += reader.Value;
-                            if (eventDayCount != 0)
-                            {
-                                day = eventDayCount;
-                            }
+                            //if (eventDayCount != 0)
+                            //{
+                            //    day = eventDayCount;
+                            //}
                             week.AddEvent(new Event((Days)(day % 5), row, (rowspan / 2) - 1 + row)); //CHECK!
                             /*t += eventSpace.ToArray()[eventSpace.Count - 1].Day + " "
                                 + eventSpace.ToArray()[eventSpace.Count - 1].Hour + " "

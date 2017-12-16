@@ -32,7 +32,7 @@ namespace ScheduleApp.Fragments
         DateTime mLastUpdate;
         Spinner mSpinner;
         int mClassIndex = -1;
-        bool updateIsRunning = false;
+        bool updateIsRunning = true;
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -65,6 +65,8 @@ namespace ScheduleApp.Fragments
             mSmiley = Activity.FindViewById<ImageView>(Resource.Id.SmileyIcon);
             mTextMid = Activity.FindViewById<TextView>(Resource.Id.TextMid);
             mSpinner = Activity.FindViewById<Spinner>(Resource.Id.spinner);
+            mClassIndex = Application.Context.GetSharedPreferences("PlanSelect", FileCreationMode.Private).GetInt("ClassIndex", -1);
+            mSpinner.SetSelection(mClassIndex + 1);
             mSpinner.ItemSelected += MSpinner_ItemSelected;
         }
 
@@ -202,7 +204,7 @@ namespace ScheduleApp.Fragments
             protected override void OnPostExecute(Java.Lang.Object result)
             {
                 base.OnPostExecute(result);
-                menu.mSpinner.SetSelection(menu.mClassIndex + 1);
+                //menu.mSpinner.SetSelection(menu.mClassIndex + 1);
                 menu.UpdateView();
                 if (firstBuild && menu.mClassIndex > -1)
                 {
@@ -268,7 +270,7 @@ namespace ScheduleApp.Fragments
                 var sharedPref = Application.Context.GetSharedPreferences("PlanSelect", FileCreationMode.Private);
                 string source = sharedPref.GetString("CardList", string.Empty);
                 var date = sharedPref.GetString("LastUpdate", string.Empty);
-                mClassIndex = sharedPref.GetInt("ClassIndex", -1);
+                //mClassIndex = sharedPref.GetInt("ClassIndex", -1);
                 if (date.Length > 5) mLastUpdate = JsonConvert.DeserializeObject<DateTime>(date);
                 mList = JsonConvert.DeserializeObject<List<Card>>(source);
             }
