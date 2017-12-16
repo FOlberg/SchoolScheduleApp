@@ -90,6 +90,7 @@ namespace ScheduleApp.Activities
         private void FinishSetup()
         {
             //Get Data from Children Fragments via SharedPreferences -> Delete Fragments -> Destructor passes Data -> Data will be gathered by:
+            var prog = ProgressDialog.Show(this, "", GetString(Resource.String.progressdialog_schedule_changed), true);
             ISharedPreferences preferences = Application.Context.GetSharedPreferences("TableSetup", FileCreationMode.Private);
             ISharedPreferencesEditor editor = preferences.Edit();
             int[][] tempSel = new int[5][];
@@ -113,11 +114,6 @@ namespace ScheduleApp.Activities
             //Delete Preference TableSetup
             editor.Clear();
             editor.Apply();
-
-            //preferences = Application.GetSharedPreferences("Config", FileCreationMode.Private);
-            //editor = preferences.Edit();
-            //editor.PutBoolean("Changed", true);
-            //editor.Apply();
 
             //Update mDataHandler
             var data = DataHandler.GetDataHandler();

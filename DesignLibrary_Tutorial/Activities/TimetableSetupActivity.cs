@@ -86,24 +86,13 @@ namespace ScheduleApp.Activities
         {
             //base.OnActivityResult(requestCode, resultCode, data);
             if (requestCode == 1 && resultCode == Result.Ok)
-            {
-                
+            {    
                 if (Intent.GetBooleanExtra("StartMain", false))
                 {
-                    var progressDialog = ProgressDialog.Show(this, "", "Daten werden geladen...", true);
                     StartActivity(new Intent(this, typeof(Activities.MainActivity)));
                     Finish();
-                    //new Thread(new ThreadStart(delegate 
-                    //{
-                    //    //LOAD METHOD               
-                    //    StartActivity(new Intent(this, typeof(Activities.MainActivity)));
-                    //    //HIDE PROGRESS DIALOG                 
-                    //    //RunOnUiThread(() => progressDialog.Hide());
-                    //})).Start();
-
                 }
                 else Finish();
-
             }
         }
 

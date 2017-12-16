@@ -9,4 +9,5 @@
   <string name="splash_subtext">BETA - Frederik Olberg</string>
   <string name="planselect_no_class_selected">Aktuell ist keine Klasse ausgewählt</string>
   <string name="toast_no_internet_connection">Keine Internetverbindung</string>
+  <string name="progressdialog_schedule_changed">Stundenplan wird gespeichert...</string>
 </resources>

@@ -3901,6 +3901,9 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f09002e
 			public const int planselect_no_class_selected = 2131296302;
 			
+			// aapt resource value: 0x7f090030
+			public const int progressdialog_schedule_changed = 2131296304;
+			
 			// aapt resource value: 0x7f090015
 			public const int search_menu_title = 2131296277;
 			

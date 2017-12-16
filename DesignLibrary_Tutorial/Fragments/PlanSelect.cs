@@ -152,7 +152,7 @@ namespace ScheduleApp.Fragments
                 if (firstBuild)
                 {
                     menu.LoadLastList();
-                    if (menu.mClassIndex > -1) menu.updateIsRunning = true;
+                    menu.updateIsRunning = menu.mClassIndex > -1;
                     menu.mRecyclerViewAdapter = menu.GetRecyclerAdapter();
                     menu.Activity.RunOnUiThread(() => menu.mRecyclerView.SetAdapter(menu.mRecyclerViewAdapter));
                 }
