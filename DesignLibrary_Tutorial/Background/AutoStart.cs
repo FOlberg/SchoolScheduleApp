@@ -15,7 +15,7 @@ namespace ScheduleApp.Background
             if (intent.Action == Intent.ActionBootCompleted || intent.Action.Equals("android.intent.action.BOOT_COMPLETED"))
             {
                 AlarmReceiver alarm = new AlarmReceiver();
-                alarm.SetAlarm(context);
+                alarm.SetUpAlarmService(context);
             }
         }
     }

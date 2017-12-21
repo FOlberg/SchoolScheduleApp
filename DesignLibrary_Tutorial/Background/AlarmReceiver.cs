@@ -2,6 +2,7 @@
 using Android.Content;
 using System;
 using Helper.Header;
+using Android.OS;
 
 namespace ScheduleApp.Background
 {
@@ -16,7 +17,7 @@ namespace ScheduleApp.Background
             SetNextAlarm(context);
         }
 
-        public void SetAlarm(Context context)
+        public void SetUpAlarmService(Context context)
         {
             if (mOldSequence > 0)
             {
@@ -44,14 +45,14 @@ namespace ScheduleApp.Background
                 {
                     am.Cancel(pi);
                 }
-                long x = GetMilisecondsUntilNextCheckS((int)Math.Floor(t / 60.0), t % 60);
-                am.SetExact(AlarmType.RtcWakeup, x, pi);
+                long time = GetMilisecondsUntilNextCheckS((int)Math.Floor(t / 60.0), t % 60);
+                SetAlarm(am, time, pi);//am.SetExact(AlarmType.RtcWakeup, time, pi);
             }
 
             pi = PendingIntent.GetBroadcast(context, 420, intent, 0);
             if (PendingIntent.GetBroadcast(context, 420, intent, PendingIntentFlags.NoCreate) == null)
             {
-                am.SetExact(AlarmType.RtcWakeup, GetMilisecondsUntilNextCheckS(7, 0), pi);
+                SetAlarm(am, GetMilisecondsUntilNextCheckS(7, 0), pi);//am.SetExact(AlarmType.RtcWakeup, GetMilisecondsUntilNextCheckS(7, 0), pi);
             }
         }
 
@@ -66,8 +67,16 @@ namespace ScheduleApp.Background
                 PendingIntent pi = PendingIntent.GetBroadcast(context, 0, intent, 0);
 
                 long t = GetMilisecondsUntilNextCheckS(DateTime.Now.Hour, DateTime.Now.Minute);
-                am.SetExact(AlarmType.RtcWakeup, t, pi);
+                SetAlarm(am, t, pi);//am.SetExact(AlarmType.RtcWakeup, t, pi);
             }
+        }
+
+        private void SetAlarm(AlarmManager alarmManager, long time, PendingIntent pi)
+        {
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
+                alarmManager.SetExact(AlarmType.RtcWakeup, time, pi);
+            else
+                alarmManager.Set(AlarmType.RtcWakeup, time, pi);
         }
 
         public static long GetMilisecondsUntilNextCheckS(int hour, int min) // bool next = false

@@ -76,7 +76,7 @@ namespace ScheduleApp.Fragments
                 menu.mMsgHandler = MessageHandler.GetMsgHandler();
                 menu.mMsgHandler.OnDataChanged += menu.MUpdater_OnDataChanged;
                 menu.mAlarmReceiver = new AlarmReceiver();
-                menu.mAlarmReceiver.SetAlarm(menu.Activity);
+                menu.mAlarmReceiver.SetUpAlarmService(menu.Activity);
                 menu.Activity.RegisterReceiver(menu.mAlarmReceiver, new IntentFilter());
                 if (menu.Activity.GetSharedPreferences("Config", FileCreationMode.Private).GetBoolean("Changed", false))
                 {
