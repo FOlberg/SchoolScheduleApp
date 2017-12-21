@@ -16,6 +16,7 @@ using Helper.Header;
 using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Android.Support.V4.Content;
 
 namespace ScheduleApp.Activities
 {
@@ -62,11 +63,11 @@ namespace ScheduleApp.Activities
         {
             if (e.Position == 4)
             {
-                mFab.SetImageDrawable(GetDrawable(Resource.Drawable.ic_done));
+                mFab.SetImageDrawable(ContextCompat.GetDrawable(this, Resource.Drawable.ic_done));
             }
             else
             {
-                mFab.SetImageDrawable(GetDrawable(Resource.Drawable.ic_arrow_forward));
+                mFab.SetImageDrawable(ContextCompat.GetDrawable(this, Resource.Drawable.ic_arrow_forward));
             }
         }
 
