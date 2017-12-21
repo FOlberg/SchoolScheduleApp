@@ -2,6 +2,7 @@
 using Android.Content;
 using System;
 using Helper.Header;
+using Android.OS;
 
 namespace ScheduleApp.Background
 {
@@ -45,13 +46,15 @@ namespace ScheduleApp.Background
                     am.Cancel(pi);
                 }
                 long x = GetMilisecondsUntilNextCheckS((int)Math.Floor(t / 60.0), t % 60);
-                am.SetExact(AlarmType.RtcWakeup, x, pi);
+                //am.SetExact(AlarmType.RtcWakeup, x, pi);
+                SetAla(am, t, pi);
             }
 
             pi = PendingIntent.GetBroadcast(context, 420, intent, 0);
             if (PendingIntent.GetBroadcast(context, 420, intent, PendingIntentFlags.NoCreate) == null)
             {
-                am.SetExact(AlarmType.RtcWakeup, GetMilisecondsUntilNextCheckS(7, 0), pi);
+                SetAla(am, GetMilisecondsUntilNextCheckS(7, 0), pi);
+                //am.SetExact(AlarmType.RtcWakeup, GetMilisecondsUntilNextCheckS(7, 0), pi);
             }
         }
 
@@ -66,8 +69,16 @@ namespace ScheduleApp.Background
                 PendingIntent pi = PendingIntent.GetBroadcast(context, 0, intent, 0);
 
                 long t = GetMilisecondsUntilNextCheckS(DateTime.Now.Hour, DateTime.Now.Minute);
-                am.SetExact(AlarmType.RtcWakeup, t, pi);
+                SetAla(am, t, pi);//am.SetExact(AlarmType.RtcWakeup, t, pi);
             }
+        }
+
+        private void SetAla(AlarmManager alarmManager, long time, PendingIntent pi)
+        {
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Kitkat)
+                alarmManager.SetExact(AlarmType.RtcWakeup, time, pi);
+            else
+                alarmManager.Set(AlarmType.RtcWakeup, time, pi);
         }
 
         public static long GetMilisecondsUntilNextCheckS(int hour, int min) // bool next = false

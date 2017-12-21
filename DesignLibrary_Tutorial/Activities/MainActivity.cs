@@ -20,7 +20,7 @@ using Android.Graphics;
 
 namespace ScheduleApp.Activities
 {
-    [Activity(Label = "@string/app_name", Icon = "@drawable/icon", Theme = "@style/Theme.DesignDemo")]
+    [Activity(Label = "@string/app_name", MainLauncher = true,Icon = "@drawable/icon", Theme = "@style/Theme.DesignDemo")]
     public class MainActivity : AppCompatActivity
     {
         private DrawerLayout mDrawerLayout;
@@ -50,7 +50,7 @@ namespace ScheduleApp.Activities
             ab.SetDisplayHomeAsUpEnabled(true);
 
             mDrawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
-            InitHandler();
+            //InitHandler();
             
             navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             if (navigationView != null)

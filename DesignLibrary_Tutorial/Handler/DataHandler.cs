@@ -33,7 +33,7 @@ namespace Helper.Header
             mInfoHandler = new InformationHandler();
             mTimetables = new List<Timetable>();
             //LoadCfg();
-            GetClassData();
+            //GetClassData();
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Helper.Header
 
         private int GetClassIndex(string className)
         {
-            for (int i = 0; i < mClassNames.Length; i++)
+            for (int i = 0; mClassNames != null && i < mClassNames.Length; i++)
             {
                 if (mClassNames[i] == className)
                 {
@@ -266,7 +266,12 @@ namespace Helper.Header
             string HandlerSource = Application.Context.GetSharedPreferences("DataHandler", FileCreationMode.Private).GetString("mData", null);
             if (HandlerSource != null)
             {
-                return JsonConvert.DeserializeObject<DataHandler>(HandlerSource);
+                try
+                {
+                    var obj = JsonConvert.DeserializeObject<DataHandler>(HandlerSource);
+                    return obj;
+                }
+                catch (Exception) { }
             }
             //preferences = Application.Context.GetSharedPreferences("DataHandler", FileCreationMode.Private);
             var dataHandler = new DataHandler();

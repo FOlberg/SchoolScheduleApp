@@ -372,7 +372,7 @@ namespace Helper.Header
                         if (rowspan == 2 && colspan == "" && row != Hours.tenth) //Hinzugefügt: && row != Hours.tenth
                         {
                             if (reader.Value.Contains("MP")) row = Hours.MP;
-                            else if (int.Parse(reader.Value) < 7) row = (Hours)(int.Parse(reader.Value) - 1);
+                            else if (int.Parse(reader.Value) < 7) row = (Hours)(int.Parse(reader.Value) - 1); //Check for letter
                             else row = (Hours)(int.Parse(reader.Value));
 
                             lessonsStack.Clear();

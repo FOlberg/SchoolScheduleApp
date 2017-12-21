@@ -14,7 +14,7 @@ using System.Threading;
 
 namespace ScheduleApp.Activities
 {
-    [Activity(Label = "@string/app_name", Icon = "@drawable/icon", MainLauncher = true, NoHistory = true, Theme = "@style/Theme.DesignDemo.CenterAnimation")]
+    [Activity(Label = "@string/app_name", Icon = "@drawable/icon", NoHistory = true, Theme = "@style/Theme.DesignDemo.CenterAnimation")]
     public class SplashScreen : AppCompatActivity
     {
         public static int STARTUP_DELAY = 300;

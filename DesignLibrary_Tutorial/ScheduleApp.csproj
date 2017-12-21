@@ -223,6 +223,8 @@
     <AndroidResource Include="Resources\layout\Activity_License.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\BL_Activity_Week.axml" />
+    <AndroidResource Include="Resources\layout\BL_Fragment_Tab.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml">
@@ -512,6 +514,7 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\ApacheLicense.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

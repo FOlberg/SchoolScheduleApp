@@ -16,6 +16,7 @@ using Helper.Header;
 using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Android.Support.V4.Content;
 
 namespace ScheduleApp.Activities
 {
@@ -36,7 +37,10 @@ namespace ScheduleApp.Activities
             else
                 SetTheme(Resource.Style.Theme_DesignDemo);
             base.OnCreate(savedInstanceState);
-            SetContentView(Resource.Layout.Activity_Week);
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+                SetContentView(Resource.Layout.Activity_Week);
+            else
+                SetContentView(Resource.Layout.BL_Activity_Week);
 
             SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBarW);
             mFab = FindViewById<FloatingActionButton>(Resource.Id.fabW);
@@ -59,11 +63,11 @@ namespace ScheduleApp.Activities
         {
             if (e.Position == 4)
             {
-                mFab.SetImageDrawable(GetDrawable(Resource.Drawable.ic_done));
+                mFab.SetImageDrawable(ContextCompat.GetDrawable(this, Resource.Drawable.ic_done));
             }
             else
             {
-                mFab.SetImageDrawable(GetDrawable(Resource.Drawable.ic_arrow_forward));
+                mFab.SetImageDrawable(ContextCompat.GetDrawable(this, Resource.Drawable.ic_arrow_forward));
             }
         }
 

@@ -23,15 +23,15 @@ namespace ScheduleApp.Background
 
         protected override void OnHandleIntent(Intent intent)
         {
-            mMsgHandler.UpdateAsync();
+            //mMsgHandler.UpdateAsync();
             //StartNotification(GetTempData());
         }
 
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
-            mMsgHandler = MessageHandler.GetMsgHandler();
-            mMsgHandler.OnDataChanged += MMsgHandler_OnDataChanged;
+            //mMsgHandler = MessageHandler.GetMsgHandler();
+            //mMsgHandler.OnDataChanged += MMsgHandler_OnDataChanged;
             return base.OnStartCommand(intent, flags, startId);
         }
 

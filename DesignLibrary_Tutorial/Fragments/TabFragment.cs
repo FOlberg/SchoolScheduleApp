@@ -39,14 +39,18 @@ namespace ScheduleApp.Fragments
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // Use this to return your custom view for this Fragment
-            return inflater.Inflate(Resource.Layout.Fragment_Tab, container, false);
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+                return inflater.Inflate(Resource.Layout.Fragment_Tab, container, false);
+            else
+                return inflater.Inflate(Resource.Layout.BL_Fragment_Tab, container, false);
         }
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             base.OnViewCreated(view, savedInstanceState);
             mExpandableListView = view.FindViewById<ExpandableListView>(Resource.Id.expandableListView);
-            mExpandableListView.NestedScrollingEnabled = true;
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+                mExpandableListView.NestedScrollingEnabled = true;
 
             SetData(out mAdapter);
             mExpandableListView.SetAdapter(mAdapter);

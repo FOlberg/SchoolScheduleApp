@@ -73,14 +73,14 @@ namespace ScheduleApp.Fragments
 
             protected override Java.Lang.Object DoInBackground(params Java.Lang.Object[] @params)
             {
-                menu.mMsgHandler = MessageHandler.GetMsgHandler();
-                menu.mMsgHandler.OnDataChanged += menu.MUpdater_OnDataChanged;
+                //menu.mMsgHandler = MessageHandler.GetMsgHandler();
+                //menu.mMsgHandler.OnDataChanged += menu.MUpdater_OnDataChanged;
                 menu.mAlarmReceiver = new AlarmReceiver();
                 menu.mAlarmReceiver.SetAlarm(menu.Activity);
                 menu.Activity.RegisterReceiver(menu.mAlarmReceiver, new IntentFilter());
                 if (menu.Activity.GetSharedPreferences("Config", FileCreationMode.Private).GetBoolean("Changed", false))
                 {
-                    menu.mMsgHandler.Update();
+                    //menu.mMsgHandler.Update();
                     menu.Activity.GetSharedPreferences("Config", FileCreationMode.Private).Edit().PutBoolean("Changed", false).Apply();
                 }
                 menu.mRecyclerViewAdapter = menu.FillAdapter();
@@ -92,7 +92,7 @@ namespace ScheduleApp.Fragments
             protected override void OnPostExecute(Java.Lang.Object result)
             {
                 base.OnPostExecute(result);
-                menu.Activity.Title = "Klasse " + menu.mMsgHandler.GetCurrentClass();
+                //menu.Activity.Title = "Klasse " + menu.mMsgHandler.GetCurrentClass();
                 menu.mProgLayout.Visibility = ViewStates.Gone;
                 if (menu.mRecyclerViewAdapter.mList.Count == 0)
                 {
@@ -174,7 +174,7 @@ namespace ScheduleApp.Fragments
 
         private RecyclerViewAdapter FillAdapter()
         {
-            return new RecyclerViewAdapter(mMsgHandler.mList, Helpers.Type.USER);
+            return new RecyclerViewAdapter(new System.Collections.Generic.List<Card>(), Helpers.Type.USER);
         }
     }
 }
