@@ -36,7 +36,10 @@ namespace ScheduleApp.Activities
             else
                 SetTheme(Resource.Style.Theme_DesignDemo);
             base.OnCreate(savedInstanceState);
-            SetContentView(Resource.Layout.Activity_Week);
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
+                SetContentView(Resource.Layout.Activity_Week);
+            else
+                SetContentView(Resource.Layout.BL_Activity_Week);
 
             SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBarW);
             mFab = FindViewById<FloatingActionButton>(Resource.Id.fabW);
