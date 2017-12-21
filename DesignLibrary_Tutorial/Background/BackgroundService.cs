@@ -1,4 +1,4 @@
-﻿    using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.Support.V4.App;
 using ScheduleApp.Activities;
