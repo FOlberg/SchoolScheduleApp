@@ -24,6 +24,7 @@ namespace ScheduleApp.Activities
                 SetTheme(Resource.Style.Theme_DarkTheme);
             else
                 SetTheme(Resource.Style.Theme_DesignDemo);
+            base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Activity_License);
             SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBar);
             SetSupportActionBar(toolBar);
