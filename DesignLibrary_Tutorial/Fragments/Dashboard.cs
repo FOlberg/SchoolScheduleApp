@@ -12,6 +12,7 @@ using Android.Widget;
 using Java.Lang;
 using Android.Content;
 using Android.App;
+using Helper.Header;
 //using RecyclerViewAnimators.Animators;
 //using Android.Views.Animations;
 
@@ -174,7 +175,7 @@ namespace ScheduleApp.Fragments
 
         private RecyclerViewAdapter FillAdapter()
         {
-            return new RecyclerViewAdapter(mMsgHandler.mList, Helpers.Type.USER);
+            return new RecyclerViewAdapter(mMsgHandler.mList, Helpers.Type.USER, DataHandler.GetDarkThemePref(Activity));
         }
     }
 }

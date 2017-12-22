@@ -105,7 +105,7 @@ namespace ScheduleApp.Fragments
 
         private RecyclerViewAdapter GetRecyclerAdapter()
         {
-            return new RecyclerViewAdapter(mList, Helpers.Type.ALL);
+            return new RecyclerViewAdapter(mList, Helpers.Type.ALL, DataHandler.GetDarkThemePref(Activity));
         }
 
         public Task<bool> UpdateAsync()

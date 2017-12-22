@@ -7,6 +7,7 @@ using System;
 using Java.Lang;
 using Android.Support.V4.View;
 using Android.Views.Animations;
+using Android.OS;
 
 namespace ScheduleApp.Helpers
 {
@@ -57,10 +58,12 @@ namespace ScheduleApp.Helpers
     {
         public List<Card> mList;
         public Type mType;
-        public RecyclerViewAdapter(List<Card> list, Type type)
+        bool mTintActive;
+        public RecyclerViewAdapter(List<Card> list, Type type, bool darkTheme)
         {
             mList = list;
             mType = type;
+            mTintActive = darkTheme && Build.VERSION.SdkInt < BuildVersionCodes.Lollipop;
             SortOutData();
         }
 
@@ -122,7 +125,7 @@ namespace ScheduleApp.Helpers
             var culture = new System.Globalization.CultureInfo("de-DE");
             viewHolder.mTextView.Text = culture.DateTimeFormat.GetDayName(mList[position].mTime.DayOfWeek);
             viewHolder.mDateText.Text = GetDisplayedDay(mList[position].mTime);
-            viewHolder.mCardRV.SetAdapter(new CardListAdapter(mList[position].mCardList));
+            viewHolder.mCardRV.SetAdapter(new CardListAdapter(mList[position].mCardList, mTintActive));
             //animate(holder.ItemView, position);
         }
         private void AnimateView(View view, int pos)
@@ -180,15 +183,20 @@ namespace ScheduleApp.Helpers
     public class CardListAdapter : RecyclerView.Adapter
     {
         List<CardList> mList;
+        private bool mTintMode;
+        private int mResource;
 
-        public CardListAdapter(List<CardList> list)
+        public CardListAdapter(List<CardList> list, bool tintMode)
         {
             mList = list;
+            mTintMode = tintMode;
+            mResource = Build.VERSION.SdkInt < BuildVersionCodes.Lollipop ? Resource.Layout.BL_CardListItem : Resource.Layout.cardListItem;
+
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
-            View v = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.cardListItem, parent, false);
+            View v = LayoutInflater.From(parent.Context).Inflate(mResource, parent, false);
             return new ListViewHolder(v);
         }
 
