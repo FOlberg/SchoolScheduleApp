@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -372,6 +373,10 @@ namespace Helper.Header
                         if (rowspan == 2 && colspan == "" && row != Hours.tenth) //Hinzugefügt: && row != Hours.tenth
                         {
                             if (reader.Value.Contains("MP")) row = Hours.MP;
+                            else if (Regex.IsMatch(reader.Value, @"[a-zA-Z]"))
+                            {
+                                var a = "Error"; //log -> DIVERSE is selected -> may show incorrect information
+                            }
                             else if (int.Parse(reader.Value) < 7) row = (Hours)(int.Parse(reader.Value) - 1);
                             else row = (Hours)(int.Parse(reader.Value));
 
