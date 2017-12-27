@@ -13,6 +13,7 @@ using Java.Lang;
 using Android.Content;
 using Android.App;
 using Helper.Header;
+using Android.Graphics;
 //using RecyclerViewAnimators.Animators;
 //using Android.Views.Animations;
 
@@ -41,26 +42,6 @@ namespace ScheduleApp.Fragments
             base.OnStart();
             Activity.Title = "Klasse " + Activity.GetSharedPreferences("Config", FileCreationMode.Private).GetString("className", "");
             new BckTask(this).Execute();
-            //mMsgHandler = MessageHandler.GetMsgHandler();
-            //mMsgHandler.OnDataChanged += MUpdater_OnDataChanged;
-            //mAlarmReceiver = new AlarmReceiver();
-            //mAlarmReceiver.SetAlarm(Activity);
-            //Activity.RegisterReceiver(mAlarmReceiver, new IntentFilter());
-            //Activity.Title = "Klasse " + mMsgHandler.GetCurrentClass();
-            //mRecyclerViewAdapter = FillAdapter();
-            //mRecyclerView.SetAdapter(mRecyclerViewAdapter);
-            ////var animator = new SlideInUpAnimator(new OvershootInterpolator(1f));
-            //mRecyclerView.SetItemAnimator(new DefaultItemAnimator());
-            //if (mRecyclerViewAdapter.mList.Count == 0)
-            //{
-            //    mLinearLayout.Visibility = ViewStates.Visible;
-            //    mRecyclerView.Visibility = ViewStates.Gone;
-            //}
-            //else
-            //{
-            //    mLinearLayout.Visibility = ViewStates.Gone;
-            //    mRecyclerView.Visibility = ViewStates.Visible;
-            //}
         }
 
         private class BckTask : AsyncTask
@@ -95,7 +76,7 @@ namespace ScheduleApp.Fragments
                 base.OnPostExecute(result);
                 menu.Activity.Title = "Klasse " + menu.mMsgHandler.GetCurrentClass();
                 menu.mProgLayout.Visibility = ViewStates.Gone;
-                if (menu.mRecyclerViewAdapter.mList.Count == 0)
+                if (menu.mRecyclerViewAdapter.mList == null || menu.mRecyclerViewAdapter.mList.Count == 0)
                 {
                     menu.mLinearLayout.Visibility = ViewStates.Visible;
                     menu.mRecyclerView.Visibility = ViewStates.Gone;
@@ -135,6 +116,11 @@ namespace ScheduleApp.Fragments
             mRecyclerView = Activity.FindViewById<RecyclerView>(Resource.Id.RecyclerView);
             mRecyclerView.SetLayoutManager(new LinearLayoutManager(view.Context));
             mSwipeRefresh = Activity.FindViewById<SwipeRefresh>(Resource.Id.SwipeRefresh);
+            mSwipeRefresh.SetColorSchemeResources(Resource.Color.accent_color);
+            if (DataHandler.GetDarkThemePref(Activity))
+            {
+                mSwipeRefresh.SetProgressBackgroundColorSchemeResource(Resource.Color.dark_spinner_bgd);
+            }
             mSwipeRefresh.Refresh += MSwipeRefresh_Refresh;
         }
 
@@ -154,7 +140,7 @@ namespace ScheduleApp.Fragments
                 mRecyclerViewAdapter.SortOutData();
                 mRecyclerView.SwapAdapter(mRecyclerViewAdapter, false);
                 mProgLayout.Visibility = ViewStates.Gone;
-                if (mRecyclerViewAdapter.mList.Count == 0)
+                if (mRecyclerViewAdapter.mList == null || mRecyclerViewAdapter.mList.Count == 0)
                 {
                     mLinearLayout.Visibility = ViewStates.Visible;
                     mRecyclerView.Visibility = ViewStates.Gone;

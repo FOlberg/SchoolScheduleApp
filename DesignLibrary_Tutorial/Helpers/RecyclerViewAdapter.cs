@@ -157,7 +157,7 @@ namespace ScheduleApp.Helpers
             return "in " + date.Date.Subtract(now).Days + " Tagen";
         }
 
-        public override int ItemCount => mList.Count;
+        public override int ItemCount => mList != null ? mList.Count : 0;
 
         public override void OnAttachedToRecyclerView(RecyclerView recyclerView)
         {

@@ -255,20 +255,6 @@ namespace ScheduleApp.Handler
             mDataHandler.DeleteOutdatedDataAsync();
         }
 
-        //test
-        public class MessageArgs : EventArgs
-        {
-            private bool oldListisEmpty;
-            public MessageArgs(bool isEmpty)
-            {
-                oldListisEmpty = isEmpty;
-            }
-            public bool EmptyList
-            {
-                get { return oldListisEmpty; }
-            } 
-        }
-
         private void Check()
         {
             if (mMsgListOld != mMsgList)
@@ -400,6 +386,19 @@ namespace ScheduleApp.Handler
             //}
             
             //return a && b2 && b1 && b3 && b4 && b5 && b9;
+        }
+    }
+
+    public class MessageArgs : EventArgs
+    {
+        private bool oldListisEmpty;
+        public MessageArgs(bool isEmpty)
+        {
+            oldListisEmpty = isEmpty;
+        }
+        public bool EmptyList
+        {
+            get { return oldListisEmpty; }
         }
     }
 }

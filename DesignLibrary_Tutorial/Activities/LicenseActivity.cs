@@ -19,7 +19,6 @@ namespace ScheduleApp.Activities
         TextView mTextView;
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            base.OnCreate(savedInstanceState);
             if (DataHandler.GetDarkThemePref(this))
                 SetTheme(Resource.Style.Theme_DarkTheme);
             else

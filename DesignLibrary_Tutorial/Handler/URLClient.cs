@@ -107,7 +107,7 @@ namespace Helper.Header
             int errc = 0;
             for(int i = 1; errc < 2; i++)
             {
-                string source = GetRawCode(p1 + week + "/c/c" + i.ToString("D5") + ".htm"); //t.GetWeekOfYear()
+                string source = GetRawCode(p1 + week.ToString("D2") + "/c/c" + i.ToString("D5") + ".htm"); //t.GetWeekOfYear()
                 if (source != null)
                 {
                     errc = 0;
@@ -127,7 +127,7 @@ namespace Helper.Header
         {
             if (urlParts.Length == 2)
             {
-                return urlParts[0] + week + urlParts[1];
+                return urlParts[0] + week.ToString("D2") + urlParts[1];
             }
             return "";
         }
@@ -136,7 +136,7 @@ namespace Helper.Header
         {
             if(urlParts.Length > 2)
             {
-                return urlParts[0] + week + urlParts[1] + classIndex.ToString("D5") + urlParts[2];
+                return urlParts[0] + week.ToString("D2") + urlParts[1] + classIndex.ToString("D5") + urlParts[2];
             }
             return "";
         }

@@ -4,4 +4,6 @@
   <color name="disabled_group">#616161</color>
   <color name="background_grey">#a9a9a9</color>
   <color name="explist_itemstroke">#667B1FA2</color>
+  <color name="accent_color">#039be5</color>
+  <color name="dark_spinner_bgd">#272727</color>
 </resources>

@@ -19,7 +19,7 @@ namespace ScheduleApp.Background
         private MessageHandler mMsgHandler;
         private static readonly int ButtonClickNotificationId = 1000;
         private const int VIBRATION_ITV = 500;
-
+        string testS = "";
 
         protected override void OnHandleIntent(Intent intent)
         {
@@ -35,13 +35,22 @@ namespace ScheduleApp.Background
             return base.OnStartCommand(intent, flags, startId);
         }
 
-        private void MMsgHandler_OnDataChanged(object sender, System.EventArgs e)
+        private void MMsgHandler_OnDataChanged(object sender, EventArgs e)
         {
             var messages = sender as List<LData>;
             if (messages == null)
             {
                 //Log Error
             }
+            try
+            {
+                var arg = e as MessageArgs;
+                if (arg.EmptyList)
+                {
+                    testS = "*";
+                }
+            }
+            catch (Exception) { }
             StartNotification(messages);
             //Check MessageArgs for being true
         }
@@ -90,7 +99,7 @@ namespace ScheduleApp.Background
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .SetAutoCancel(true)                    // Dismiss from the notif. area when clicked
                     .SetContentIntent(resultPendingIntent)  // Start 2nd activity whenca the intent is clicked.
-                    .SetContentTitle(GetSingleHeadline(messages[0]))      // Set its title
+                    .SetContentTitle(testS + GetSingleHeadline(messages[0]))      // Set its title
                     .SetLights(Color.Indigo, 1500, 1500)
                     .SetColor(Color.Indigo)
                     .SetContentText(GetSingleSubTextLine(messages[0])); // The message to display.
@@ -169,7 +178,7 @@ namespace ScheduleApp.Background
                     }
                 }
                 contentText += messages[messages.Count - 1].item.mSubject.name;
-                builder.SetContentText(contentText);
+                builder.SetContentText(testS + contentText);
 
                 Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
                 for (int i = 0; i < messages.Count; i++)

@@ -68,6 +68,11 @@ namespace ScheduleApp.Fragments
             mClassIndex = Application.Context.GetSharedPreferences("PlanSelect", FileCreationMode.Private).GetInt("ClassIndex", -1);
             mSpinner.SetSelection(mClassIndex + 1);
             mSpinner.ItemSelected += MSpinner_ItemSelected;
+            mSwipeRefresh.SetColorSchemeResources(Resource.Color.accent_color);
+            if (DataHandler.GetDarkThemePref(Activity))
+            {
+                mSwipeRefresh.SetProgressBackgroundColorSchemeResource(Resource.Color.dark_spinner_bgd);
+            }
         }
 
         private void MSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
@@ -209,8 +214,8 @@ namespace ScheduleApp.Fragments
                 if (firstBuild && menu.mClassIndex > -1)
                 {
                     var time =  System.DateTime.UtcNow - menu.mLastUpdate;
-                    var msg = "Zuletzt aktualisiert vor ";
-                    msg += time.Days == 1 ? "Gestern, " : time.Days > 1 ? time.Days.ToString() + " Tagen, " : "";
+                    var msg = "Zuletzt aktualisiert ";
+                    msg += time.Days == 1 ? "Gestern, " : time.Days > 1 ? "vor " + time.Days.ToString() + " Tagen, " : "";
                     msg += time.Hours > 0 ? time.Hours.ToString() + "h und " : "";
                     msg += time.Minutes + " min";
                     Toast.MakeText(menu.Activity, msg, ToastLength.Short).Show();

@@ -47,6 +47,11 @@ namespace Helper.Header
             //Maybe Dictionary check depending on update peroid in settings
             DateTime mondayDate = TimeHandler.GetMonday(week);
             var config = GetConfig();
+            if (classNameIndex == -1)
+            {
+                //log
+                return null;
+            }
             if (weekStack == null)
             {
                 weekStack = new Week[mClassNames.Length, 2];
