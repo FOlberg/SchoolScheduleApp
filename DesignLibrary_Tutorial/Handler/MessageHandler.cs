@@ -17,7 +17,7 @@ namespace ScheduleApp.Handler
         DataHandler mDataHandler;
         public List<Card> mList;
         [JsonProperty]
-        List<LData> mMsgList; 
+        List<LData> mMsgList;
         public event EventHandler OnDataChanged;
 
         [JsonConstructor]
@@ -68,7 +68,7 @@ namespace ScheduleApp.Handler
 
         private void DeleteOutdatedData()
         {
-            if(mList != null)
+            if (mList != null)
             {
                 for (int i = mList.Count - 1; i >= 0; i--)
                 {
@@ -99,7 +99,7 @@ namespace ScheduleApp.Handler
             List<Card> tList = new List<Card>();
             int[][] config = DataHandler.GetConfig().GetTableConf();
 
-            if ( mMsgList != null) //to avoid resetting data if there is no internet connection
+            if (mMsgList != null) //to avoid resetting data if there is no internet connection
             {
                 mMsgListOld = mMsgList;
                 mMsgList = new List<LData>();
@@ -116,33 +116,30 @@ namespace ScheduleApp.Handler
                         {
                             if (config[day][hour] != -1 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour].Length > config[day][hour])
                             {
-                                //if (mWeek[wp].week[day].list[hour] != null && (mWeek[wp].week[day].list[hour].Length >= config[day][hour])
-                                //{
-                                    Subject temp = mWeek[wp].week[day].list[hour][config[day][hour]];
-                                    if (temp.omitted || temp.change != null || temp.ev != null)
-                                    {
+                                Subject temp = mWeek[wp].week[day].list[hour][config[day][hour]];
+                                if (temp.omitted || temp.change != null || temp.ev != null)
+                                {
 
-                                        if (temp.ev != null)
+                                    if (temp.ev != null)
+                                    {
+                                        CardList cList = new CardList(temp, new Hours[] { temp.ev.Hour, temp.ev.Number });
+                                        tCardList.Add(cList);
+                                        hour = (int)temp.ev.Number; //Check
+                                    }
+                                    else
+                                    {
+                                        if (tCardList.Count > 0 && tCardList[tCardList.Count - 1].mSubject.room == temp.room && tCardList[tCardList.Count - 1].mSubject.name == temp.name
+                                            && tCardList[tCardList.Count - 1].h.Length == 1 && (int)tCardList[tCardList.Count - 1].h[0] + 1 == hour)
                                         {
-                                            CardList cList = new CardList(temp, new Hours[] { temp.ev.Hour, temp.ev.Number });
-                                            tCardList.Add(cList);
-                                            hour = (int)temp.ev.Number; //Check
+                                            tCardList[tCardList.Count - 1].h = new Hours[] { tCardList[tCardList.Count - 1].h[0], (Hours)hour };
                                         }
                                         else
                                         {
-                                            if (tCardList.Count > 0 && tCardList[tCardList.Count - 1].mSubject.room == temp.room && tCardList[tCardList.Count - 1].mSubject.name == temp.name
-                                                && tCardList[tCardList.Count - 1].h.Length == 1 && (int)tCardList[tCardList.Count - 1].h[0] + 1 == hour)
-                                            {
-                                                tCardList[tCardList.Count - 1].h = new Hours[] { tCardList[tCardList.Count - 1].h[0], (Hours)hour };
-                                            }
-                                            else
-                                            {
-                                                CardList cList = new CardList(temp, new Hours[] { (Hours)hour });
-                                                tCardList.Add(cList);
-                                            }
+                                            CardList cList = new CardList(temp, new Hours[] { (Hours)hour });
+                                            tCardList.Add(cList);
                                         }
                                     }
-                                //}
+                                }
                             }
                             else if (mWeek[wp].mEvents.Count > 0 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour][0].ev != null)
                             {
@@ -152,7 +149,7 @@ namespace ScheduleApp.Handler
                                     if (config[day][h] != -1)
                                     {
                                         tCardList.Add(new CardList(temp, new Hours[] { temp.ev.Hour, temp.ev.Number }));
-                                        hour = (int) temp.ev.Number; //Check
+                                        hour = (int)temp.ev.Number; //Check
                                         break;
                                     }
                                 }
@@ -160,7 +157,7 @@ namespace ScheduleApp.Handler
                             else if (config[day][hour] != -1 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour].Length == 1) //Check
                             {
                                 Subject temp = mWeek[wp].week[day].list[hour][0];
-                                temp.ev = new Event((Days) day, (Hours) hour, (Hours) hour, temp.name);
+                                temp.ev = new Event((Days)day, (Hours)hour, (Hours)hour, temp.name);
                                 tCardList.Add(new CardList(temp, new Hours[] { temp.ev.Hour }));
                             }
                         }
@@ -267,7 +264,7 @@ namespace ScheduleApp.Handler
                     if (OnDataChanged != null)
                     {
                         OnDataChanged(list, new MessageArgs(mMsgListOld.Count == 0));
-                    }  
+                    }
                 }
 
                 //Delete outdated Messages
@@ -352,12 +349,13 @@ namespace ScheduleApp.Handler
             try
             {
                 ob = (LData)obj;
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 ob = new LData();
                 return false;
             }
-            
+
             bool a = date.Date == ob.date.Date;
             bool b2 = item.h[0] == ob.item.h[0] && item.h.Length == ob.item.h.Length;
             if (b2 && item.h.Length == 2)
@@ -384,7 +382,7 @@ namespace ScheduleApp.Handler
             //    bool b11 = item.mSubject.change.newSubject == ob.item.mSubject.change.newSubject;
             //    b9 = b10 && b11;
             //}
-            
+
             //return a && b2 && b1 && b3 && b4 && b5 && b9;
         }
     }

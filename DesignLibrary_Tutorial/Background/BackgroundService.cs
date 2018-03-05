@@ -99,7 +99,7 @@ namespace ScheduleApp.Background
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .SetAutoCancel(true)                    // Dismiss from the notif. area when clicked
                     .SetContentIntent(resultPendingIntent)  // Start 2nd activity whenca the intent is clicked.
-                    .SetContentTitle(testS + GetSingleHeadline(messages[0]))      // Set its title
+                    .SetContentTitle(GetSingleHeadline(messages[0]))      // Set its title
                     .SetLights(Color.Indigo, 1500, 1500)
                     .SetColor(Color.Indigo)
                     .SetContentText(GetSingleSubTextLine(messages[0])); // The message to display.
@@ -178,7 +178,7 @@ namespace ScheduleApp.Background
                     }
                 }
                 contentText += messages[messages.Count - 1].item.mSubject.name;
-                builder.SetContentText(testS + contentText);
+                builder.SetContentText(contentText);
 
                 Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
                 for (int i = 0; i < messages.Count; i++)

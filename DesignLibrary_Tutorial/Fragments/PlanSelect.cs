@@ -65,9 +65,12 @@ namespace ScheduleApp.Fragments
             mSmiley = Activity.FindViewById<ImageView>(Resource.Id.SmileyIcon);
             mTextMid = Activity.FindViewById<TextView>(Resource.Id.TextMid);
             mSpinner = Activity.FindViewById<Spinner>(Resource.Id.spinner);
-            mClassIndex = Application.Context.GetSharedPreferences("PlanSelect", FileCreationMode.Private).GetInt("ClassIndex", -1);
-            mSpinner.SetSelection(mClassIndex + 1);
-            mSpinner.ItemSelected += MSpinner_ItemSelected;
+            if (mSpinner != null)
+            {
+                mClassIndex = Application.Context.GetSharedPreferences("PlanSelect", FileCreationMode.Private).GetInt("ClassIndex", -1);
+                mSpinner.SetSelection(mClassIndex + 1);
+                mSpinner.ItemSelected += MSpinner_ItemSelected;
+            }
             mSwipeRefresh.SetColorSchemeResources(Resource.Color.accent_color);
             if (DataHandler.GetDarkThemePref(Activity))
             {
@@ -265,7 +268,7 @@ namespace ScheduleApp.Fragments
                 //mRecyclerView.SetAdapter(mRecyclerViewAdapter);
                 //mRecyclerViewAdapter.NotifyDataSetChanged();
             }
-            mSpinner.Enabled = true;
+            if (mSpinner != null) mSpinner.Enabled = true;
         }
 
         private void LoadLastList()
