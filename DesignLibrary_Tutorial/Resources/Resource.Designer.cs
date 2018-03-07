@@ -2519,8 +2519,26 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f020053
 			public const int avd_hide_password = 2130837587;
 			
+			// aapt resource value: 0x7f020085
+			public const int avd_hide_password_1 = 2130837637;
+			
+			// aapt resource value: 0x7f020086
+			public const int avd_hide_password_2 = 2130837638;
+			
+			// aapt resource value: 0x7f020087
+			public const int avd_hide_password_3 = 2130837639;
+			
 			// aapt resource value: 0x7f020054
 			public const int avd_show_password = 2130837588;
+			
+			// aapt resource value: 0x7f020088
+			public const int avd_show_password_1 = 2130837640;
+			
+			// aapt resource value: 0x7f020089
+			public const int avd_show_password_2 = 2130837641;
+			
+			// aapt resource value: 0x7f02008a
+			public const int avd_show_password_3 = 2130837642;
 			
 			// aapt resource value: 0x7f020055
 			public const int chevron_down = 2130837589;
@@ -2691,14 +2709,14 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f0700b4
 			public const int Index = 2131165364;
 			
-			// aapt resource value: 0x7f0700c0
-			public const int LinLayout = 2131165376;
+			// aapt resource value: 0x7f0700bf
+			public const int LinLayout = 2131165375;
 			
 			// aapt resource value: 0x7f070035
 			public const int META = 2131165237;
 			
-			// aapt resource value: 0x7f0700be
-			public const int ProgLayout = 2131165374;
+			// aapt resource value: 0x7f0700bd
+			public const int ProgLayout = 2131165373;
 			
 			// aapt resource value: 0x7f0700c1
 			public const int RecyclerView = 2131165377;
@@ -2712,8 +2730,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f0700c5
 			public const int SmileyIcon = 2131165381;
 			
-			// aapt resource value: 0x7f0700bd
-			public const int SwipeRefresh = 2131165373;
+			// aapt resource value: 0x7f0700c0
+			public const int SwipeRefresh = 2131165376;
 			
 			// aapt resource value: 0x7f07001c
 			public const int TAG_IMGVIEW_ID = 2131165212;
@@ -3009,8 +3027,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f0700e5
 			public const int img_logo = 2131165413;
 			
-			// aapt resource value: 0x7f0700bf
-			public const int indeterminateBar = 2131165375;
+			// aapt resource value: 0x7f0700be
+			public const int indeterminateBar = 2131165374;
 			
 			// aapt resource value: 0x7f0700d4
 			public const int info = 2131165396;

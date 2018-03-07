@@ -19,7 +19,7 @@ namespace ScheduleApp.Background
         private MessageHandler mMsgHandler;
         private static readonly int ButtonClickNotificationId = 1000;
         private const int VIBRATION_ITV = 500;
-        string testS = "";
+        //string testS = "";
 
         protected override void OnHandleIntent(Intent intent)
         {
@@ -47,7 +47,7 @@ namespace ScheduleApp.Background
                 var arg = e as MessageArgs;
                 if (arg.EmptyList)
                 {
-                    testS = "*";
+                    //testS = "*";
                 }
             }
             catch (Exception) { }
