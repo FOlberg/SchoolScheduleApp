@@ -58,11 +58,12 @@ namespace ScheduleApp.Helpers
     {
         public List<Card> mList;
         public Type mType;
-        bool mTintActive;
-        public RecyclerViewAdapter(List<Card> list, Type type, bool darkTheme)
+        bool mTintActive, mPotraitMode;
+        public RecyclerViewAdapter(List<Card> list, Type type, bool darkTheme, bool orientation)
         {
             mList = list;
             mType = type;
+            mPotraitMode = orientation;
             mTintActive = darkTheme && Build.VERSION.SdkInt < BuildVersionCodes.Lollipop;
             SortOutData();
         }
@@ -125,7 +126,7 @@ namespace ScheduleApp.Helpers
             var culture = new System.Globalization.CultureInfo("de-DE");
             viewHolder.mTextView.Text = culture.DateTimeFormat.GetDayName(mList[position].mTime.DayOfWeek);
             viewHolder.mDateText.Text = GetDisplayedDay(mList[position].mTime);
-            viewHolder.mCardRV.SetAdapter(new CardListAdapter(mList[position].mCardList, mTintActive));
+            viewHolder.mCardRV.SetAdapter(new CardListAdapter(mList[position].mCardList, mTintActive, mPotraitMode));
             //animate(holder.ItemView, position);
         }
         private void AnimateView(View view, int pos)
@@ -183,15 +184,16 @@ namespace ScheduleApp.Helpers
     public class CardListAdapter : RecyclerView.Adapter
     {
         List<CardList> mList;
-        private bool mTintMode;
+        private bool mTintMode, mPotraitMode;
         private int mResource;
 
-        public CardListAdapter(List<CardList> list, bool tintMode)
+
+        public CardListAdapter(List<CardList> list, bool tintMode, bool orientation)
         {
             mList = list;
             mTintMode = tintMode;
+            mPotraitMode = orientation;
             mResource = Build.VERSION.SdkInt < BuildVersionCodes.Lollipop ? Resource.Layout.BL_CardListItem : Resource.Layout.cardListItem;
-
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -262,16 +264,23 @@ namespace ScheduleApp.Helpers
             else if (mList[position].mSubject.ev != null)
             {
                 viewHolder.mNameText.Visibility = ViewStates.Gone;
-                if (mList[position].mSubject.ev.Describtion.Length > 24)
+                if (mPotraitMode && mList[position].mSubject.ev.Describtion.Length > 24)
                 {
                     viewHolder.mTypeText.TextSize = 20 - mList[position].mSubject.ev.Describtion.Length / 10f;
                 }
                 viewHolder.mTypeText.Text = mList[position].mSubject.ev.Describtion;
                 viewHolder.mImageView.SetImageResource(Resource.Drawable.ic_cal_question);
             }
-            if (subtext != "" && subtext != " ")
+            if (subtext != "" && subtext != " ") 
             {
                 viewHolder.mTypeText.TextSize = 20;
+                if (mPotraitMode && subtext.Length > 35) //lower textsize if text is too long
+                {
+                    viewHolder.mDescText.TextSize = 8;
+                    if (subtext.Length > 50) subtext = subtext.Substring(0, 48) + "..";
+                }
+                else
+                    viewHolder.mDescText.TextSize = 10;
                 viewHolder.mDescText.Text = subtext;
                 viewHolder.mDescText.Visibility = ViewStates.Visible;
             }

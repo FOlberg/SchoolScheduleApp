@@ -161,7 +161,8 @@ namespace ScheduleApp.Fragments
 
         private RecyclerViewAdapter FillAdapter()
         {
-            return new RecyclerViewAdapter(mMsgHandler.mList, Helpers.Type.USER, DataHandler.GetDarkThemePref(Activity));
+            bool potraitModeActive = Activity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait;
+            return new RecyclerViewAdapter(mMsgHandler.mList, Helpers.Type.USER, DataHandler.GetDarkThemePref(Activity), potraitModeActive);
         }
     }
 }

@@ -113,7 +113,8 @@ namespace ScheduleApp.Fragments
 
         private RecyclerViewAdapter GetRecyclerAdapter()
         {
-            return new RecyclerViewAdapter(mList, Helpers.Type.ALL, DataHandler.GetDarkThemePref(Activity));
+            bool potraitModeActive = Activity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait;
+            return new RecyclerViewAdapter(mList, Helpers.Type.ALL, DataHandler.GetDarkThemePref(Activity), potraitModeActive);
         }
 
         public Task<bool> UpdateAsync()
