@@ -14,6 +14,7 @@ using Android.Content;
 using Android.App;
 using Helper.Header;
 using Android.Graphics;
+using Android.Support.Design.Widget;
 //using RecyclerViewAnimators.Animators;
 //using Android.Views.Animations;
 
@@ -153,7 +154,10 @@ namespace ScheduleApp.Fragments
             }
             else
             {
-                Toast.MakeText(Activity, Activity.GetString(Resource.String.toast_no_internet_connection), ToastLength.Short).Show();
+                var snackbar = Snackbar.Make(View, Activity.GetString(Resource.String.toast_no_internet_connection), Snackbar.LengthIndefinite);
+                snackbar.SetAction("OK", (v) => { });
+                snackbar.Show();
+                //Toast.MakeText(Activity, Activity.GetString(Resource.String.toast_no_internet_connection), ToastLength.Short).Show();
             }
 
             mSwipeRefresh.Refreshing = false;

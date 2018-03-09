@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Helper.Header;
 using Android.App;
 using Newtonsoft.Json;
+using Android.Support.Design.Widget;
 //using RecyclerViewAnimators.Animators;
 //using Android.Views.Animations;
 
@@ -80,13 +81,13 @@ namespace ScheduleApp.Fragments
 
         private void MSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
-            if (!updateIsRunning)
+            if (!updateIsRunning && mClassIndex != e.Position - 1)
             {
                 mClassIndex = e.Position - 1;
                 mSpinner.Enabled = false;
                 new InnerDataLoader(this, mClassIndex).Execute();
             }
-            updateIsRunning = false;
+            //updateIsRunning = false;
         }
 
         private void MSwipeRefresh_Refresh(object sender, EventArgs e)
@@ -94,7 +95,7 @@ namespace ScheduleApp.Fragments
             if (mClassIndex >= 0)
             {
                 UpdateList();
-            }      
+            }
         }
 
         private async void UpdateList()
@@ -107,7 +108,7 @@ namespace ScheduleApp.Fragments
                 UpdateView();
             }
             else
-                ShowToastConnection();
+                ShowConnectionError();
             mSwipeRefresh.Refreshing = false;
         }
 
@@ -192,7 +193,7 @@ namespace ScheduleApp.Fragments
                         if (!updated)
                         {
                             if (menu.mList != null) menu.mList.Clear();
-                            menu.Activity.RunOnUiThread(() => menu.ShowToastConnection());
+                            menu.Activity.RunOnUiThread(() => menu.ShowConnectionError());
                         }
                         menu.mRecyclerViewAdapter.mList = menu.mList;
                     }
@@ -202,7 +203,7 @@ namespace ScheduleApp.Fragments
                         menu.mList.Clear();
                         menu.SaveList();
                     }
-                        
+
                 }
                 //menu.mRecyclerViewAdapter = menu.GetRecyclerAdapter();
                 //var animator = new SlideInUpAnimator(new OvershootInterpolator(1f));
@@ -213,16 +214,37 @@ namespace ScheduleApp.Fragments
             protected override void OnPostExecute(Java.Lang.Object result)
             {
                 base.OnPostExecute(result);
-                //menu.mSpinner.SetSelection(menu.mClassIndex + 1);
+
                 menu.UpdateView();
+                menu.updateIsRunning = false;
                 if (firstBuild && menu.mClassIndex > -1)
                 {
-                    var time =  System.DateTime.UtcNow - menu.mLastUpdate;
-                    var msg = "Zuletzt aktualisiert ";
-                    msg += time.Days == 1 ? "Gestern, " : time.Days > 1 ? "vor " + time.Days.ToString() + " Tagen, " : "";
-                    msg += time.Hours > 0 ? time.Hours.ToString() + "h und " : "";
-                    msg += time.Minutes + " min";
-                    Toast.MakeText(menu.Activity, msg, ToastLength.Short).Show();
+                    var time = System.DateTime.UtcNow - menu.mLastUpdate;
+                    var msg = "Zuletzt aktualisiert vor ";
+                    switch (time.Days)
+                    {
+                        case 0:
+                            if (time.TotalMinutes < 5)
+                                return;
+                            if (time.TotalMinutes > 90)
+                                msg += time.Hours.ToString() + " Stunden";
+                            else
+                                msg += time.Minutes.ToString() + " min";
+                            break;
+                        case 1:
+                            msg = "Zuletzt aktualisiert vor einem Tag";
+                            break;
+                        default:
+                            msg += time.Days.ToString() + " Tagen";
+                            break;
+                    }
+                    //msg += time.Days == 1 ? "Gestern, " : time.Days > 1 ? "vor " + time.Days.ToString() + " Tagen, " : "";
+                    //msg += time.Hours > 0 ? time.Hours.ToString() + "h und " : "";
+                    //msg += time.Minutes + " min";
+                    var snackbar = Snackbar.Make(menu.View, msg, Snackbar.LengthShort); //.SetAction("OK", (v) => { })
+                    //snackbar.View.SetBackgroundColor(Android.Graphics.Color.Argb(200, 103, 58, 183));
+                    snackbar.Show();
+                    //Toast.MakeText(menu.Activity, msg, ToastLength.Short).Show();
                 }
             }
 
@@ -286,9 +308,13 @@ namespace ScheduleApp.Fragments
             catch (Exception) { }
         }
 
-        private void ShowToastConnection()
+        private void ShowConnectionError()
         {
-            Toast.MakeText(Activity, Activity.GetString(Resource.String.toast_no_internet_connection), ToastLength.Short).Show();
+            var snackbar = Snackbar.Make(View, Activity.GetString(Resource.String.toast_no_internet_connection), Snackbar.LengthIndefinite); //.SetAction("OK", (v) => { })
+            snackbar.SetAction("OK", (v) => { });
+            //snackbar.View.SetBackgroundColor(Android.Graphics.Color.Argb(200, 103, 58, 183));
+            snackbar.Show();
+            //Toast.MakeText(Activity, Activity.GetString(Resource.String.toast_no_internet_connection), ToastLength.Short).Show();
         }
 
         private void SaveList()
