@@ -5,7 +5,7 @@ using Android.Widget;
 
 namespace ScheduleApp.Fragments
 {
-    public class Menu2 : Android.Support.V4.App.Fragment
+    public class Debug_Fragment : Android.Support.V4.App.Fragment
     {
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -22,7 +22,7 @@ namespace ScheduleApp.Fragments
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // Use this to return your custom view for this Fragment
-            return inflater.Inflate(Resource.Layout.menu2, container, false);
+            return inflater.Inflate(Resource.Layout.old_menu2, container, false);
         }
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)

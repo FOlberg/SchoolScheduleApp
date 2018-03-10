@@ -12,53 +12,37 @@ using Android.OS;
 namespace ScheduleApp.Helpers
 {
     public enum Type {USER, ALL};
+
     public class Card
     {
         public DateTime mTime;
         public List<CardList> mCardList;
+
         public Card(List<CardList> list, DateTime date)
         {
             mTime = date.Date;
             mCardList = list;
         }
-        //public override int GetHashCode()
-        //{
-        //    return mTime.GetHashCode() + mCardList.GetHashCode();
-        //}
-
-        //public override bool Equals(object obj)
-        //{
-        //    Card card = obj as Card;
-        //    return card == null ? false : GetHashCode() == card.GetHashCode();
-        //}
     }
 
     public class CardList
     {
         public Subject mSubject;
         public Hours[] h;
+
         public CardList(Subject subject, Hours[] hours)
         {
             mSubject = subject;
             h = hours;
         }
-        //public override int GetHashCode()
-        //{
-        //    return mSubject.GetHashCode() + h.GetHashCode();
-        //}
-
-        //public override bool Equals(object obj)
-        //{
-        //    CardList cardList = obj as CardList;
-        //    return cardList == null ? false : GetHashCode() == cardList.GetHashCode();
-        //}
     }
 
     public class RecyclerViewAdapter : RecyclerView.Adapter
     {
         public List<Card> mList;
-        public Type mType;
-        bool mTintActive, mPotraitMode;
+        private Type mType;
+        private bool mTintActive, mPotraitMode;
+
         public RecyclerViewAdapter(List<Card> list, Type type, bool darkTheme, bool orientation)
         {
             mList = list;
@@ -126,7 +110,7 @@ namespace ScheduleApp.Helpers
             var culture = new System.Globalization.CultureInfo("de-DE");
             viewHolder.mTextView.Text = culture.DateTimeFormat.GetDayName(mList[position].mTime.DayOfWeek);
             viewHolder.mDateText.Text = GetDisplayedDay(mList[position].mTime);
-            viewHolder.mCardRV.SetAdapter(new CardListAdapter(mList[position].mCardList, mTintActive, mPotraitMode));
+            viewHolder.mCardRV.SetAdapter(new CardListAdapter(mList[position].mCardList, mTintActive, mPotraitMode, mType));
             //animate(holder.ItemView, position);
         }
         private void AnimateView(View view, int pos)
@@ -148,13 +132,9 @@ namespace ScheduleApp.Helpers
         {
             DateTime now = DateTime.Now.Date;
             if (date.Date == now)
-            {
                 return "Heute";
-            }
             if (date.Date == now.AddDays(1))
-            {
                 return "Morgen";
-            }
             return "in " + date.Date.Subtract(now).Days + " Tagen";
         }
 
@@ -183,17 +163,18 @@ namespace ScheduleApp.Helpers
 
     public class CardListAdapter : RecyclerView.Adapter
     {
-        List<CardList> mList;
-        private bool mTintMode, mPotraitMode;
+        private List<CardList> mList;
+        private bool mTintMode, mPotraitMode, mAllPlansView;
         private int mResource;
 
 
-        public CardListAdapter(List<CardList> list, bool tintMode, bool orientation)
+        public CardListAdapter(List<CardList> list, bool tintMode, bool orientation, Type type)
         {
             mList = list;
             mTintMode = tintMode;
             mPotraitMode = orientation;
-            mResource = Build.VERSION.SdkInt < BuildVersionCodes.Lollipop ? Resource.Layout.BL_CardListItem : Resource.Layout.cardListItem;
+            mAllPlansView = type == Type.ALL;
+            mResource = Build.VERSION.SdkInt < BuildVersionCodes.Lollipop ? Resource.Layout.BL_CardListItem : Resource.Layout.cardListItem_plan;
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -207,9 +188,11 @@ namespace ScheduleApp.Helpers
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             ListViewHolder viewHolder = holder as ListViewHolder;
+            string subtext = "";
+
             viewHolder.mDescText.Visibility = ViewStates.Visible;
             viewHolder.mNameText.Visibility = ViewStates.Visible;
-            string subtext = "";
+            viewHolder.mRoomText.Visibility = ViewStates.Invisible; 
             viewHolder.mTypeText.TextSize = 24;
 
             if (mList[position].mSubject.omitted)
@@ -217,9 +200,7 @@ namespace ScheduleApp.Helpers
                 viewHolder.mNameText.Text = mList[position].mSubject.name;
                 viewHolder.mTypeText.Text = "Entfall";
                 if (mList[position].mSubject.change != null && mList[position].mSubject.change.remarks != null && mList[position].mSubject.change.remarks != "")
-                {
                     subtext = mList[position].mSubject.change.remarks;
-                }
                 viewHolder.mImageView.SetImageResource(Resource.Drawable.ic_cal_remove);
             }
             else if (mList[position].mSubject.change != null)
@@ -228,82 +209,67 @@ namespace ScheduleApp.Helpers
                 viewHolder.mTypeText.Text = mList[position].mSubject.change.type;
 
                 if (mList[position].mSubject.change.type == "Entfall")
-                {
                     viewHolder.mImageView.SetImageResource(Resource.Drawable.ic_cal_remove);
-                }
                 else
-                {
                     viewHolder.mImageView.SetImageResource(Resource.Drawable.ic_cal_alert);
-                }
 
                 if (mList[position].mSubject.change.newSubject != "" && mList[position].mSubject.change.newSubject != mList[position].mSubject.name)
-                {
                     subtext += "Neues Fach: " + mList[position].mSubject.change.newSubject + "  ";
-                }
+
                 if (mList[position].mSubject.change.newRoom != "" && mList[position].mSubject.change.newRoom != mList[position].mSubject.room) //mList[position].mSubject.change.newRoom != mList[position].mSubject.room
-                {
                     subtext += "Neuer Raum: " + mList[position].mSubject.change.newRoom + "  ";
-                }
+
                 if (mList[position].mSubject.change.remarks != null && mList[position].mSubject.change.remarks != "")
-                {
                     subtext += mList[position].mSubject.change.remarks + "  ";
-                }
+
                 if (mList[position].mSubject.change.transfer != null)
                 {
                     var trans = mList[position].mSubject.change.transfer;
                     if (trans.Item1 != null && trans.Item1.Length > 2)
-                    {
                         subtext += trans.Item1;
-                    }
+
                     if (trans.Item2 != null && trans.Item2.Length > 2)
-                    {
                         subtext += trans.Item2;
-                    }
                 }
             }
             else if (mList[position].mSubject.ev != null)
             {
                 viewHolder.mNameText.Visibility = ViewStates.Gone;
                 if (mPotraitMode && mList[position].mSubject.ev.Describtion.Length > 24)
-                {
                     viewHolder.mTypeText.TextSize = 20 - mList[position].mSubject.ev.Describtion.Length / 10f;
-                }
                 viewHolder.mTypeText.Text = mList[position].mSubject.ev.Describtion;
                 viewHolder.mImageView.SetImageResource(Resource.Drawable.ic_cal_question);
             }
             if (subtext != "" && subtext != " ") 
             {
                 viewHolder.mTypeText.TextSize = 20;
-                if (mPotraitMode && subtext.Length > 35) //lower textsize if text is too long
-                {
-                    viewHolder.mDescText.TextSize = 8;
-                    if (subtext.Length > 50) subtext = subtext.Substring(0, 48) + "..";
-                }
+                if (mPotraitMode && subtext.Length > 45) //lower textsize if text is too long
+                    viewHolder.mDescText.TextSize = 9;
                 else
                     viewHolder.mDescText.TextSize = 10;
                 viewHolder.mDescText.Text = subtext;
                 viewHolder.mDescText.Visibility = ViewStates.Visible;
             }
             else
-            {
                 viewHolder.mDescText.Visibility = ViewStates.Gone;
-            }
 
             //set Hours
             if (mList[position].h.Length == 1)
-            {
                 viewHolder.mHourText.Text = TimeHandler.HourIndex[(int)mList[position].h[0]] + ".";
-            }
+
             else if (mList[position].h.Length == 2)
             {
                 if (mList[position].h[0] + 1 == mList[position].h[1])
-                {
                     viewHolder.mHourText.Text = TimeHandler.HourIndex[(int)mList[position].h[0]] + "/" + TimeHandler.HourIndex[(int)mList[position].h[1]];
-                }
                 else
-                {
                     viewHolder.mHourText.Text = TimeHandler.HourIndex[(int)mList[position].h[0]] + "-" + TimeHandler.HourIndex[(int)mList[position].h[1]];
-                }
+            }
+
+            //Room
+            if (mAllPlansView && mList[position].mSubject.ev == null)
+            {
+                viewHolder.mRoomText.Text = mList[position].mSubject.room.Replace(".","").Split(',')[0];
+                viewHolder.mRoomText.Visibility = ViewStates.Visible;
             }
         }
 
@@ -319,6 +285,7 @@ namespace ScheduleApp.Helpers
             public TextView mTypeText;
             public TextView mDescText;
             public TextView mHourText;
+            public TextView mRoomText;
             public ListViewHolder(View itemView) : base(itemView)
             {
                 mImageView = itemView.FindViewById<ImageView>(Resource.Id.cardListImageView);
@@ -326,6 +293,7 @@ namespace ScheduleApp.Helpers
                 mDescText = itemView.FindViewById<TextView>(Resource.Id.descText);
                 mTypeText = itemView.FindViewById<TextView>(Resource.Id.typeText);
                 mHourText = itemView.FindViewById<TextView>(Resource.Id.hourText);
+                mRoomText = itemView.FindViewById<TextView>(Resource.Id.roomText);
             }
         }
     }

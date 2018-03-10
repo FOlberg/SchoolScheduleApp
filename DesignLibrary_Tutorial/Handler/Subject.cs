@@ -76,9 +76,6 @@ namespace Helper.Header
         {
             this.ev = ev;
             this.omitted = omitted;
-            //room = null;
-            //name = null;
-            //change = null;
         }
     }
 

@@ -136,11 +136,11 @@
     <Compile Include="Activities\TimetableSetupActivity.cs" />
     <Compile Include="Background\AutoStart.cs" />
     <Compile Include="Background\BackgroundService.cs" />
+    <Compile Include="Fragments\PlanSelect.cs" />
     <Compile Include="Fragments\TabFragment.cs" />
     <Compile Include="Fragments\Dashboard.cs" />
     <Compile Include="Fragments\Properties.cs" />
-    <Compile Include="Fragments\PlanSelect.cs" />
-    <Compile Include="Fragments\Menu2.cs" />
+    <Compile Include="Fragments\Debug_Fragment.cs" />
     <Compile Include="Handler\Config.cs" />
     <Compile Include="Handler\DataHandler.cs" />
     <Compile Include="Handler\InformationHandler.cs" />
@@ -183,7 +183,7 @@
     <AndroidResource Include="Resources\menu\sample_actions.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\menu2.axml">
+    <AndroidResource Include="Resources\layout\old_menu2.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\menu3.axml">
@@ -208,7 +208,7 @@
     <AndroidResource Include="Resources\layout\cardView.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\cardListItem.axml">
+    <AndroidResource Include="Resources\layout\old_cardListItem.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\App_Preferences.axml">
@@ -229,6 +229,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\cardListItem_plan.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\old_cardListItem_plan2.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

@@ -25,6 +25,7 @@ namespace ScheduleApp.Fragments
         RecyclerView mRecyclerView;
         public RecyclerViewAdapter mRecyclerViewAdapter;
         SwipeRefreshLayout mSwipeRefresh;
+        //MessageHandler mMsgHandler;
         LinearLayout mLinearLayout, mProgLayout;
         TextView mTextMid;
         ImageView mSmiley;
@@ -86,6 +87,7 @@ namespace ScheduleApp.Fragments
                 mSpinner.Enabled = false;
                 new InnerDataLoader(this, mClassIndex).Execute();
             }
+            //updateIsRunning = false;
         }
 
         private void MSwipeRefresh_Refresh(object sender, EventArgs e)
@@ -128,6 +130,7 @@ namespace ScheduleApp.Fragments
 
         public bool Update()
         {
+            //mDataHandler.LoadCfg();
             Week[] week = new Week[2];
             var mDataHandler = DataHandler.GetDataHandler();
             week[0] = mDataHandler.GetDetailedWeek(mClassIndex, 0);
@@ -155,6 +158,7 @@ namespace ScheduleApp.Fragments
 
             protected override Java.Lang.Object DoInBackground(params Java.Lang.Object[] @params)
             {
+                //menu.mRecyclerView.SetItemAnimator(new SlideInUpAnimator(new OvershootInterpolator(1f)));
                 if (firstBuild)
                 {
                     menu.LoadLastList();
@@ -164,6 +168,25 @@ namespace ScheduleApp.Fragments
                 }
                 else
                 {
+                    //if (menu.mRecyclerViewAdapter.mList != null && menu.mRecyclerViewAdapter.mList.Count > 0)
+                    //{
+                    //    //menu.Activity.RunOnUiThread(() =>
+                    //    //{
+                    //        //menu.mRecyclerViewAdapter.NotifyDataSetChanged();
+                    //        //menu.mList.RemoveRange(0, menu.mRecyclerViewAdapter.ItemCount - 1);
+                    //        //menu.mRecyclerViewAdapter.NotifyItemRangeRemoved(0, menu.mRecyclerViewAdapter.ItemCount - 1);
+                    //        // menu.mRecyclerViewAdapter.mList.Clear();//.RemoveRange(0, menu.mRecyclerViewAdapter.ItemCount - 1);
+                    //        //menu.mRecyclerViewAdapter.NotifyItemRemoved(0);
+                    //    //});
+                    //    //menu.Activity.RunOnUiThread(() => menu.mRecyclerViewAdapter.NotifyItemRemoved(2));
+                    //    //menu.Activity.RunOnUiThread(() => menu.mRecyclerViewAdapter.NotifyItemRemoved(1));
+                    //    //menu.Activity.RunOnUiThread(() => menu.mRecyclerViewAdapter.NotifyItemRemoved(0));
+                    //    //while (menu.mRecyclerViewAdapter.ItemCount > 0)
+                    //    //{
+                    //    //    menu.mRecyclerViewAdapter.mList.RemoveAt(0);
+                    //    //    menu.Activity.RunOnUiThread(() => menu.mRecyclerViewAdapter.NotifyItemRemoved(0));
+                    //    //}
+                    //}
                     if (menu.mClassIndex > -1)
                     {
                         var updated = menu.Update();
@@ -182,6 +205,8 @@ namespace ScheduleApp.Fragments
                     }
 
                 }
+                //menu.mRecyclerViewAdapter = menu.GetRecyclerAdapter();
+                //var animator = new SlideInUpAnimator(new OvershootInterpolator(1f));
                 menu.mRecyclerView.SetItemAnimator(new DefaultItemAnimator());
                 return true;
             }
