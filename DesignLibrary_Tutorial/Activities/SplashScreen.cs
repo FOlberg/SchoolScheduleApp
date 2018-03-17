@@ -14,7 +14,7 @@ using System.Threading;
 
 namespace ScheduleApp.Activities
 {
-    [Activity(Label = "@string/app_name", Icon = "@drawable/icon", MainLauncher = true, NoHistory = true, Theme = "@style/Theme.DesignDemo.CenterAnimation")]
+    [Activity(Label = "@string/app_name", Icon = "@drawable/icon", MainLauncher = true, Theme = "@style/Theme.DesignDemo.CenterAnimation")]
     public class SplashScreen : AppCompatActivity
     {
         public static int STARTUP_DELAY = 300;
@@ -56,7 +56,17 @@ namespace ScheduleApp.Activities
             }
         }
 
-
+        protected override void OnResume()
+        {
+            base.OnResume();
+            if (firstStartUp)
+            {
+                new Thread(new ThreadStart(delegate
+                {
+                    firstStartUp = !GetDataAsync();
+                })).Start();
+            }
+        }
 
         public override void OnWindowFocusChanged(bool hasFocus)
         {
@@ -76,7 +86,6 @@ namespace ScheduleApp.Activities
 
             if (firstStartUp)
             {
-                //container_norm
                 container = FindViewById<ViewGroup>(Resource.Id.container_first);
                 firstStartUp = !GetDataAsync(true);
             }
@@ -153,20 +162,20 @@ namespace ScheduleApp.Activities
 
         private DataHandler GetDataHandler()
         {
-            //return await Task.Factory.StartNew(() => DataHandler.GetDataHandler());
             return Task.Factory.StartNew(() => DataHandler.GetDataHandler()).Result;
         }
 
         public class RunInnerClassHelper : Java.Lang.Object, Java.Lang.IRunnable
         {
-            private Context mContext;
-            public RunInnerClassHelper(Context context)
+            private Activity mActivity;
+            public RunInnerClassHelper(Activity activity)
             {
-                mContext = context;
+                mActivity = activity;
             }
             public void Run()
             {
-                mContext.StartActivity(new Intent(mContext, typeof(Activities.MainActivity)));
+                mActivity.StartActivity(new Intent(mActivity, typeof(Activities.MainActivity)));
+                mActivity.Finish();
             }
         }
     }

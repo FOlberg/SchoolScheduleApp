@@ -41,7 +41,7 @@ namespace ScheduleApp.Activities
                 SetContentView(Resource.Layout.Activity_Week);
             else
                 SetContentView(Resource.Layout.BL_Activity_Week);
-
+            OverridePendingTransition(Resource.Animation.slide_from_right, Resource.Animation.slide_to_left);
             SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBarW);
             mFab = FindViewById<FloatingActionButton>(Resource.Id.fabW);
             mTabs = FindViewById<TabLayout>(Resource.Id.tabLayoutW);
@@ -145,6 +145,12 @@ namespace ScheduleApp.Activities
                 Finish();
             }
             return base.OnOptionsItemSelected(item);
+        }
+
+        public override void Finish()
+        {
+            base.Finish();
+            OverridePendingTransition(Resource.Animation.slide_from_left, Resource.Animation.slide_to_right);
         }
 
 

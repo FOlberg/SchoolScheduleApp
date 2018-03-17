@@ -4,13 +4,7 @@
     android:widgetLayout="@layout/progress_widget"/>-->
     <android.support.v7.preference.PreferenceCategory
         android:title="Benutzer">
-    <!--<android.support.v7.preference.EditTextPreference
-            android:key="key2"
-            android:title="EditText Preference"
-            android:summary="EditText Summary"
-            android:dialogMessage="Dialog Message"
-            android:defaultValue="Default value" />-->
-        <Preference
+      <Preference
             android:key="ChangeClass"
             android:title="Klasse"
             android:summary="Summary" />
@@ -21,12 +15,8 @@
             android:key="theme_preference"
             android:title="Nachtmodus"
             android:defaultValue="false" />
-    <!--<android.support.v7.preference.CheckBoxPreference
-            android:key="vibration_preference"
-            android:title="Vibration"
-            android:defaultValue="false" />-->
     </android.support.v7.preference.PreferenceCategory>
-    <android.support.v7.preference.PreferenceCategory
+  <android.support.v7.preference.PreferenceCategory
         android:title="Benachrichtigungen">
         <ListPreference
             android:key="SyncIntervall_preference"
@@ -44,10 +34,14 @@
             android:title="Hohe Priorität"
             android:defaultValue="false" />
     </android.support.v7.preference.PreferenceCategory>
-      <android.support.v7.preference.PreferenceCategory
-        android:title="Über die App">
+    <android.support.v7.preference.PreferenceCategory
+        android:title="App">
+    <!--Über die App-->
+        <Preference
+            android:key="advsettings_preference"
+            android:title="Erweiterte Einstellungen" />
         <Preference
             android:key="license_preference"
-            android:title="Rechtliche Hinweise"/>
+            android:title="Rechtliche Hinweise" />
     </android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>

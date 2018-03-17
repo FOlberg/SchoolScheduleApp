@@ -51,13 +51,14 @@ namespace Helper.Header
         public int mConfigSel;
         public Settings mSettings;
 
-        public string[] urlA = new string[] { "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/", "/c/c", ".htm" };
-        public string[] urlB = new string[] { "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/", "/w/w00000.htm" };
+        public string[] urlSourceClass, urlSourceAll;
 
         public Config()
         {
             mCfgList = new List<cTimetable>();
             mSettings = new Settings();
+            ResetSourceAll();
+            ResetSourceClass();
         }
 
         public void AddTableConf(string className, int[][] table)
@@ -124,6 +125,16 @@ namespace Helper.Header
         public int GetConfigCount()
         {
             return mCfgList.Count;
+        }
+
+        public void ResetSourceClass()
+        {
+            urlSourceClass = new string[] { "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/", "/c/c", ".htm" };
+        }
+
+        public void ResetSourceAll()
+        {
+            urlSourceAll = new string[] { "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/", "/w/w00000.htm" };
         }
     }
 }

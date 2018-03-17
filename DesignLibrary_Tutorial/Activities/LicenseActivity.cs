@@ -24,6 +24,7 @@ namespace ScheduleApp.Activities
             else
                 SetTheme(Resource.Style.Theme_DesignDemo);
             base.OnCreate(savedInstanceState);
+            OverridePendingTransition(Resource.Animation.slide_from_right, Resource.Animation.slide_to_left);
             SetContentView(Resource.Layout.Activity_License);
             SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBar);
             SetSupportActionBar(toolBar);
@@ -34,6 +35,12 @@ namespace ScheduleApp.Activities
             mTextView = FindViewById<TextView>(Resource.Id.textViewLic);
             mTextView.Text = GetLicenseText();
             // Create your application here
+        }
+
+        public override void Finish()
+        {
+            base.Finish();
+            OverridePendingTransition(Resource.Animation.slide_from_left, Resource.Animation.slide_to_right);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)

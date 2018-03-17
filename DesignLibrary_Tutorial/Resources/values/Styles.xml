@@ -10,7 +10,7 @@
     <item name="colorPrimary">#673AB7</item>
     <item name="colorPrimaryDark">#512DA8</item>
     <item name="colorAccent">#039be5</item> <!--#FF4081 #448AFF-->
-    <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    <item name="preferenceTheme">@style/PreferenceTheme</item>
     <!--<item name="android:popupTheme">@style/ThemeOverlay.Material.Light"</item>-->
   </style>
   
@@ -19,44 +19,19 @@
     <item name="colorPrimaryDark">#512DA8</item>
     <item name="colorAccent">#039be5</item><!--#FF4081-->
     <item name="colorControlHighlight">#242424</item>
-    <item name="android:listDivider">@style/android:drawable/divider_horizontal_dark</item> 
+    <item name="android:listDivider">@style/android:drawable/divider_horizontal_dim_dark</item> 
     <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
   </style>
 
-     <!--<style name="SpinnerItem" parent="android:style/Widget.TextView.SpinnerItem">
-        <item name="android:textColor">#F5F5F5</item>
-    </style>-->
-
-    <!--<style name="SpinnerItem.DropDownItem" parent="android:style/Widget.DropDownItem.Spinner">
-        <item name="android:textColor">#F5F5F5</item>
-        <item name="android:background">#F5F5F5</item>
-    </style>-->
-  <!--<style name ="Theme.PreferenceCatogoryText" parent="@android:style/Widget.TextView.ListSeparator">
-    <item name="android:paddingTop">6px</item>
-    <item name="android:paddingBottom">6px</item>
-    <item name="android:paddingLeft">12px</item>
-  </style>-->
 
   <style name="Theme.DesignDemo.CenterAnimation">
     <item name="android:windowBackground">@drawable/splash_logo</item>
   </style>
 
-  <!--<style name="Theme.DesignDemo.Splash">
-    <item name="android:windowBackground">@drawable/splash_background</item>
-  </style>-->
-
   <style name="PinkBtn" parent="Theme.AppCompat.Light">
     <item name="colorButtonNormal">#448AFF</item>
     <item name="android:textColor">#FFFFFF</item>
   </style>
-
-  <!--<style name="ProgressAlert" parent="Theme.AppCompat.Light.Dialog.Alert">
-    <item name="android:colorAccent">#510536</item>
-  </style>-->
-
-  <!--<style name="PreferenceThemeOverlay" parent="Theme.AppCompat.Light.NoActionBar">
-    <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-  </style>-->
 
   <style name="Widget.CardContent" parent="android:Widget">
     <item name="android:paddingLeft">16dp</item>
@@ -66,15 +41,21 @@
     <item name="android:orientation">vertical</item>
   </style>
 
-  <!--<style name="Theme.Splash" parent ="Theme.AppCompat.Light.NoActionBar">
-    <item name="android:windowBackground">@drawable/splash_screen</item>
-    <item name="android:windowNoTitle">true</item>
-    <item name="android:windowIsTranslucent">false</item>
-    <item name="android:windowIsFloating">false</item>
-    <item name="android:backgroundDimEnabled">true</item>
-  </style>-->
-
   <style name="Theme.DesignDemo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
   <style name="Theme.DesignDemo.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+  <style name="PreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
+    <item name="preferenceCategoryStyle">@style/PreferenceCategoryStyle</item>
+    <!--<item name="preferenceFragmentListStyle">@style/preferenceStyle</item>-->
+  </style>
+
+  <style name="PreferenceCategoryStyle" parent="@style/Preference.Category.Material">
+    <item name="android:layout">@layout/preference_category</item>
+  </style>
+
+  <!--<style name="preferenceStyle" parent="@style/PreferenceFragmentList.Material">
+    <item name="android:paddingLeft">8dp</item>
+    <item name="android:paddingRight">8dp</item>
+  </style>-->
 </resources>

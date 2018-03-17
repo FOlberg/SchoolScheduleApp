@@ -27,7 +27,6 @@ namespace ScheduleApp.Fragments
         SwipeRefreshLayout mSwipeRefresh;
         LinearLayout mLinearLayout, mProgLayout;
         TextView mTextMid;
-        ImageView mSmiley;
         List<Card> mList;
         DateTime mLastUpdate;
         Spinner mSpinner;
@@ -62,7 +61,6 @@ namespace ScheduleApp.Fragments
             mRecyclerView.SetLayoutManager(new LinearLayoutManager(view.Context));
             mSwipeRefresh = Activity.FindViewById<SwipeRefreshLayout>(Resource.Id.SwipeRefresh);
             mSwipeRefresh.Refresh += MSwipeRefresh_Refresh;
-            mSmiley = Activity.FindViewById<ImageView>(Resource.Id.SmileyIcon);
             mTextMid = Activity.FindViewById<TextView>(Resource.Id.TextMid);
             mSpinner = Activity.FindViewById<Spinner>(Resource.Id.spinner);
             if (mSpinner != null)
@@ -237,12 +235,10 @@ namespace ScheduleApp.Fragments
                 if (mClassIndex == -1)
                 {
                     mTextMid.Text = Activity.GetString(Resource.String.planselect_no_class_selected);
-                    mSmiley.Visibility = ViewStates.Gone;
                 }
                 else
                 {
                     mTextMid.Text = Activity.GetString(Resource.String.empty_dashboard);
-                    mSmiley.Visibility = ViewStates.Visible;
                     mSwipeRefresh.Enabled = true;
                 }
                 mLinearLayout.Visibility = ViewStates.Visible;

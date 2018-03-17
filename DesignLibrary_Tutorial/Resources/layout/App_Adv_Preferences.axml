@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orderingFromXml="true"
+    android:padding="8dp">
+    <Preference
+        android:key="info_text"
+        android:selectable="false"
+        android:icon="@drawable/ic_info"
+        android:summary="@string/source_dialog_warning" />
+    <Preference
+        android:key="class_source_preference"
+        android:title="Klassen"
+        android:summary="Internetadresse der einzelnen Klassen" />
+    <Preference
+        android:key="all_source_preference"
+        android:title="Nachrichten zum Tag"
+        android:summary="Internetadresse der Vertretungsübersicht" />
+</android.support.v7.preference.PreferenceScreen>

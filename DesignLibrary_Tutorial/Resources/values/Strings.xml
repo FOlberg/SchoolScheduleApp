@@ -10,4 +10,6 @@
   <string name="planselect_no_class_selected">Aktuell ist keine Klasse ausgewählt</string>
   <string name="toast_no_internet_connection">Keine Internetverbindung</string>
   <string name="progressdialog_schedule_changed">Stundenplan wird gespeichert...</string>
+  <string name="source_dialog_warning">Veränderungen der Internetadressen können zu Fehlern bei der Datenabfrage führen.\nDurch das Betätigen von <b>Default</b> im Bearbeitungsdialog können die Einstellungen wieder zurückgesetzt werden.</string>
+  <string name="source_dialog_info">Die Unterteilung der Internetadresse dient der Einbindung notwendiger Daten, wie der aktuellen Woche.</string>
 </resources>

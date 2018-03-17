@@ -67,10 +67,10 @@ namespace Helper.Header
             }
             if (mSource[classNameIndex, week] == null || newDload)
             {
-                mSource[classNameIndex, week] = mClientURL.GetRawCode(config.urlA, mTimeHandler.GetWeekIndex(week), classNameIndex);
+                mSource[classNameIndex, week] = mClientURL.GetRawCode(config.urlSourceClass, mTimeHandler.GetWeekIndex(week), classNameIndex);
                 if (mSource[classNameIndex, week] == null)
                 {
-                    mSource[classNameIndex, week] = mClientURL.GetRawCode(config.urlA, mTimeHandler.GetWeekIndex(week), classNameIndex);
+                    mSource[classNameIndex, week] = mClientURL.GetRawCode(config.urlSourceClass, mTimeHandler.GetWeekIndex(week), classNameIndex);
                 }
             }
             if (mClientURL.early == 1)
@@ -110,7 +110,7 @@ namespace Helper.Header
         {
             var config = GetConfig();
             Week w = GetWeek(GetClassIndex(config.GetClassName()), week, newDload);
-            string source = mClientURL.GetRawCode(config.urlB, mTimeHandler.GetWeekIndex(week));
+            string source = mClientURL.GetRawCode(config.urlSourceAll, mTimeHandler.GetWeekIndex(week));
             mInfoHandler.ApplyChanges(w, mInfoHandler.GetDetailedInfo(source));
             return w;
         }
@@ -118,7 +118,7 @@ namespace Helper.Header
         public Week GetDetailedWeek(int className, int week)
         {
             Week w = GetWeek(className, week, true);
-            string detailedSource = mClientURL.GetRawCode(GetConfig().urlB, mTimeHandler.GetWeekIndex(week));
+            string detailedSource = mClientURL.GetRawCode(GetConfig().urlSourceAll, mTimeHandler.GetWeekIndex(week));
             mInfoHandler.ApplyChanges(w, mInfoHandler.GetDetailedInfo(detailedSource));
             return w;
         }

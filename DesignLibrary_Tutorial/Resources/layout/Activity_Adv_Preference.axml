@@ -20,15 +20,10 @@
             android:paddingRight="14dp"
             app:layout_scrollFlags="scroll|enterAlways" />
     </android.support.design.widget.AppBarLayout>
-    <ScrollView
-        android:id="@+id/scrollView1"
+    <FrameLayout
+        android:id="@+id/preference_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:text=""
-            android:id="@+id/textViewLic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical" />
-    </ScrollView>
+        android:layout_height="match_parent"/>
+<!--        android:paddingLeft="8dp"
+        android:paddingRight="8dp"-->
 </LinearLayout>

@@ -31,6 +31,7 @@ namespace ScheduleApp.Activities
                 SetTheme(Resource.Style.Theme_DesignDemo);
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.Activity_Setup);
+            OverridePendingTransition(Resource.Animation.slide_from_right, Resource.Animation.slide_to_left);
 
             SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBarT);
             SetSupportActionBar(toolBar);
@@ -103,6 +104,12 @@ namespace ScheduleApp.Activities
                 Finish();
             }
             return base.OnOptionsItemSelected(item);
+        }
+
+        public override void Finish()
+        {
+            base.Finish();
+            OverridePendingTransition(Resource.Animation.slide_from_left, Resource.Animation.slide_to_right);
         }
     }
 }

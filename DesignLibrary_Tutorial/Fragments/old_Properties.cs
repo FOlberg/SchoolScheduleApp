@@ -4,6 +4,7 @@ using Android.Views;
 using Android.Support.V7.Preferences;
 using Helper.Header;
 using Android.App;
+using System.Threading;
 using Android.Widget;
 using Java.Lang;
 
@@ -17,9 +18,10 @@ namespace ScheduleApp.Fragments
         Preference vibrationPreference;
         Preference priorityPreference;
         Preference themePreference;
-        Preference advSettingsPreference;
+        Preference urlPreference;
         ProgressDialog mProgressDialog;
-        FrameLayout mFrameLayout;
+        AlertDialog mSourceDialog;
+        //RelativeLayout mProgressBar;
 
         public override void OnCreatePreferences(Bundle savedInstanceState, string rootKey)
         {
@@ -31,18 +33,6 @@ namespace ScheduleApp.Fragments
         {
             base.OnViewCreated(view, savedInstanceState);
             Activity.Title = "Einstellungen";
-
-            //Calculating padding in dp
-            //float scale = Resources.DisplayMetrics.Density;
-            //int dpAsPixels = (int)(8 * scale + 0.5f);
-            //mFrameLayout = Activity.FindViewById<FrameLayout>(Resource.Id.content_frame);
-            //mFrameLayout.SetPadding(dpAsPixels, 0, dpAsPixels, 0);
-        }
-
-        public override void OnDestroy()
-        {
-            base.OnDestroy();
-            //mFrameLayout.SetPadding(0, 0, 0, 0);
         }
 
         public override void OnStart()
@@ -50,56 +40,109 @@ namespace ScheduleApp.Fragments
             base.OnStart();
             var config = DataHandler.GetConfig();
 
-            // Change Schedule Pref.
+            //Change Schedule Pref.
             classPreference = FindPreference("ChangeClass");
             classPreference.Intent = new Intent(Activity, typeof(Activities.TimetableSetupActivity));
             classPreference.Summary = "Aktuell ausgewählt: " + config.GetClassName();
 
-            // mProgressBar = Activity.FindViewById<RelativeLayout>(Resource.Id.stripeProBar);
+            //mProgressBar = Activity.FindViewById<RelativeLayout>(Resource.Id.stripeProBar);
             mProgressDialog = new ProgressDialog(Activity);
-
-            // Change Schedule Pref.
+            //Change Schedule Pref.
             schedulePreference = FindPreference("ChangeSchedule");
             schedulePreference.PreferenceClick += SchedulePreference_PreferenceClick;
+            //schedulePreference.Intent = new Intent(Activity, typeof(Activities.TimetableWeekActivity)); //typeof(Activities.TimetableWeekActivity)
 
-            // Update Sequence Pref.
+            //Update Sequence Pref.
             syncIntPreference = (ListPreference)FindPreference("SyncIntervall_preference");
             syncIntPreference.SetDefaultValue(config.mSettings.updateSequence);
             syncIntPreference.PreferenceChange += SyncIntPreference_PreferenceChange;
 
-            // Vibration Pref.
+            //Vibration Pref.
             vibrationPreference = FindPreference("vibration_preference");
             vibrationPreference.SetDefaultValue(config.mSettings.vibration);
             vibrationPreference.PreferenceChange += VibrationPreference_PreferenceChange;
 
-            // Priority Pref.
+            //Priority Pref.
             priorityPreference = FindPreference("priority_preference");
             priorityPreference.SetDefaultValue(config.mSettings.priority);
             priorityPreference.PreferenceChange += PriorityPreference_PreferenceChange;
 
-            // Light/Dark Theme Pref.
             themePreference = FindPreference("theme_preference");
             themePreference.SetDefaultValue(DataHandler.GetDarkThemePref(Activity));
             themePreference.PreferenceChange += ThemePreference_PreferenceChange;
 
-            advSettingsPreference = FindPreference("advsettings_preference");
-            advSettingsPreference.Intent = new Intent(Activity, typeof(Activities.AdvancedPreferenceActivity));
+            urlPreference = FindPreference("urlsource_preference");
+            urlPreference.PreferenceClick += UrlPreference_PreferenceClick;
 
             var licensePreference = FindPreference("license_preference");
             licensePreference.Intent = new Intent(Activity, typeof(Activities.LicenseActivity));
+
         }
+
+        private void UrlPreference_PreferenceClick(object sender, Preference.PreferenceClickEventArgs e)
+        {
+            if (mSourceDialog == null || !mSourceDialog.IsShowing)
+            {
+                var mBuilder = new AlertDialog.Builder(Activity);
+                var view = LayoutInflater.Inflate(Resource.Layout.source_alert_dialog, null);
+                var urlPartOne = view.FindViewById<EditText>(Resource.Id.part1);
+                var urlPartTwo = view.FindViewById<EditText>(Resource.Id.part2);
+                var urlPartThree = view.FindViewById<EditText>(Resource.Id.part3);
+                //.SetTitle("Quelle ändern")
+                mBuilder.SetMessage("Infogeblabber hier *")
+                    .SetPositiveButton("Save", (o, ev) =>
+                    {
+
+                    })
+                    .SetNeutralButton("Default", (o, ev) =>
+                    {
+
+                    })
+                    .SetNegativeButton("Abbrechen", (o, ev) =>
+                    {
+
+                    });
+                mBuilder.SetView(view);
+                mSourceDialog = mBuilder.Create();
+                mSourceDialog.Show();
+            }
+        }
+
+        //private void SchedulePreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
+        //{
+        //    //var mProgressDialog = ProgressDialog.Show(Activity, "", "Stundenplan wird geladen...", true);
+        //    //new Thread(new ThreadStart(delegate
+        //    //{
+        //    //    StartActivity(new Intent(Activity, typeof(Activities.TimetableWeekActivity)));
+        //    //    Activity.RunOnUiThread(() => mProgressDialog.Cancel());
+        //    //})).Start();
+        //}
 
         private void SchedulePreference_PreferenceClick(object sender, Preference.PreferenceClickEventArgs e)
         {
             if (!mProgressDialog.IsShowing)
+            {
+
                 new InnerScheduleLoader(Activity, mProgressDialog).Execute();
+            }
+
+            //mProgressBar.Visibility = ViewStates.Visible;
+            //if (!mProgressDialog.IsShowing)
+            //{
+            //    mProgressDialog.Show();
+            //    new Thread(new ThreadStart(delegate
+            //    {
+            //        StartActivity(new Intent(Activity, typeof(Activities.TimetableWeekActivity)));
+            //        Activity.RunOnUiThread(() => mProgressDialog.Cancel());
+            //    })).Start();
+            //}
+
         }
 
         private class InnerScheduleLoader : AsyncTask
         {
             private Activity activity;
             private ProgressDialog progressDialog;
-
             public InnerScheduleLoader(Activity activity, ProgressDialog progress)
             {
                 this.activity = activity;
@@ -109,9 +152,14 @@ namespace ScheduleApp.Fragments
             }
             protected override Object DoInBackground(params Object[] @params)
             {
+                //    new Thread(new ThreadStart(delegate
+                //    {
+                //        StartActivity(new Intent(Activity, typeof(Activities.TimetableWeekActivity)));
+                //        Activity.RunOnUiThread(() => mProgressDialog.Cancel());
+                //    })).Start();
                 var editor = activity.GetSharedPreferences("TableSetup", FileCreationMode.Private).Edit();
-                editor.PutInt("classIndex", -1).Apply();
-
+                editor.PutInt("classIndex", -1);
+                editor.Apply();
                 activity.StartActivity(new Intent(activity, typeof(Activities.TimetableWeekActivity)));
                 return true;
             }
@@ -127,6 +175,33 @@ namespace ScheduleApp.Fragments
             }
         }
 
+        //private class InnerScheduleLoader : Intent
+        //{
+        //    //private Activity mBaseActivity;
+
+        //    public InnerScheduleLoader(Activity activity)
+        //    {
+        //        var mProgressDialog = ProgressDialog.Show(activity, "", "Stundenplan wird geladen...", true);
+        //        new Thread(new ThreadStart(delegate
+        //        {
+        //            activity.StartActivity(new Intent(activity, typeof(Activities.TimetableWeekActivity)));
+        //            activity.RunOnUiThread(() => mProgressDialog.Cancel());
+        //        })).Start();
+        //    }
+        //    //override  
+
+        //    //protected override void OnHandleIntent(Intent intent)
+        //    //{
+        //    //    var mProgressDialog = ProgressDialog.Show(mBaseActivity, "", "Stundenplan wird geladen...", true);
+        //    //    new Thread(new ThreadStart(delegate
+        //    //    {
+        //    //        StartActivity(new Intent(mBaseActivity, typeof(Activities.TimetableWeekActivity)));
+        //    //        mBaseActivity.RunOnUiThread(() => mProgressDialog.Cancel());
+        //    //    })).Start();
+        //    //}
+        //}
+
+
         private void ThemePreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
         {
             Activity.GetSharedPreferences("Config", FileCreationMode.Private).Edit().PutBoolean("DarkTheme", (bool)e.NewValue).Apply();
@@ -139,14 +214,14 @@ namespace ScheduleApp.Fragments
         private void PriorityPreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
         {
             var config = DataHandler.GetConfig();
-            config.mSettings.priority = (bool) e.NewValue;
+            config.mSettings.priority = (bool)e.NewValue;
             DataHandler.SaveConfig(config);
         }
 
         private void VibrationPreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
         {
             var config = DataHandler.GetConfig();
-            config.mSettings.vibration = (bool) e.NewValue;
+            config.mSettings.vibration = (bool)e.NewValue;
             DataHandler.SaveConfig(config);
         }
 
