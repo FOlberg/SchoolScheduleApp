@@ -1,41 +1,40 @@
-﻿using System;
+﻿using ScheduleApp.Objects;
+using System;
 using System.Globalization;
 
-namespace Helper.Header
+namespace ScheduleApp.Handler
 {
-    public enum Semester { winter_semester, summer_semester };
-    public enum Hours {first, second, third, fourth, fifth, sixth, MP, seventh, eighth, ninth, tenth};
-    public enum Days {Montag, Dienstag, Mittwoch, Donnerstag, Freitag };
 
     public class TimeHandler
     {
-        DateTimeFormatInfo dfi;
-        public DateTime today { get; set; }
-        Calendar cal;
+        DateTimeFormatInfo  mDfi;
+        Calendar            mCal;
+        public DateTime     mToday { get; set; }
+        
         public static readonly string[] HourName = { "1.", "2.", "3.", "4.", "5.", "6.", "MP", "7.", "8.", "9.", "10." };
         public static readonly string[] HourIndex = { "1", "2", "3", "4", "5", "6", "MP", "7", "8", "9", "10" };
 
         public TimeHandler()
         {
-            dfi = DateTimeFormatInfo.CurrentInfo;
-            today = System.DateTime.UtcNow;
-            cal = dfi.Calendar;
+            mDfi    = DateTimeFormatInfo.CurrentInfo;
+            mToday  = System.DateTime.UtcNow;
+            mCal    = mDfi.Calendar;
         }
         public TimeHandler(DateTime date)
         {
-            dfi = DateTimeFormatInfo.CurrentInfo;
-            today = date;
-            cal = dfi.Calendar;
+            mDfi    = DateTimeFormatInfo.CurrentInfo;
+            mToday  = date;
+            mCal    = mDfi.Calendar;
         }
 
         public void update()
         {
-            today = System.DateTime.UtcNow;
+            mToday = System.DateTime.UtcNow;
         }
 
         public void SetTime(DateTime date)
         {
-            today = date;
+            mToday = date;
         }
         
         public static int GetCurrentWeek()
@@ -46,17 +45,17 @@ namespace Helper.Header
 
         public int GetWeekOfYear()
         {
-            return cal.GetWeekOfYear(System.DateTime.UtcNow, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+            return mCal.GetWeekOfYear(System.DateTime.UtcNow, mDfi.CalendarWeekRule, mDfi.FirstDayOfWeek);
         }
 
         public int GetNextWeek()
         {
-            return cal.GetWeekOfYear(System.DateTime.UtcNow.AddDays(7), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+            return mCal.GetWeekOfYear(System.DateTime.UtcNow.AddDays(7), mDfi.CalendarWeekRule, mDfi.FirstDayOfWeek);
         }
 
         public int GetNextWeek(bool early)
         {
-            return cal.GetWeekOfYear(System.DateTime.UtcNow.AddDays(14), dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+            return mCal.GetWeekOfYear(System.DateTime.UtcNow.AddDays(14), mDfi.CalendarWeekRule, mDfi.FirstDayOfWeek);
         }
 
         public int GetWeekIndex(int week)
@@ -78,13 +77,9 @@ namespace Helper.Header
         {
             DateTime t = DateTime.Now.Date;
             if (week == 1)
-            {
                 t = t.AddDays(7);        
-            }
             else if(week != 0)
-            {
                 throw new Exception("Time: Week out of Range!");
-            }
             ChangeToMonday(ref t);
             return t;
         }

@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Android.OS;
 using Android.Support.V4.Widget;
 using Android.Views;
 using Android.Widget;
 using ScheduleApp.Handler;
 using ScheduleApp.Helpers;
+using ScheduleApp.Objects;
 using Android.Support.V7.Widget;
 using Android.Content;
 using System.Threading.Tasks;
-using Helper.Header;
 using Android.App;
 using Newtonsoft.Json;
 using Android.Support.Design.Widget;
@@ -22,22 +20,17 @@ namespace ScheduleApp.Fragments
 {
     public class PlanSelect : Android.Support.V4.App.Fragment
     {
-        RecyclerView mRecyclerView;
         public RecyclerViewAdapter mRecyclerViewAdapter;
-        SwipeRefreshLayout mSwipeRefresh;
-        LinearLayout mLinearLayout, mProgLayout;
-        TextView mTextMid;
-        List<Card> mList;
-        DateTime mLastUpdate;
-        Spinner mSpinner;
-        int mClassIndex = -1;
-        bool updateIsRunning = true;
+        bool mUpdateIsRunning = true;
+        int mClassIndex     = -1;
 
-        public override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-            // Create your fragment here
-        }
+        RecyclerView        mRecyclerView;
+        SwipeRefreshLayout  mSwipeRefresh;
+        LinearLayout        mLinearLayout, mProgLayout;
+        TextView            mTextMid;
+        List<Card>          mList;
+        DateTime            mLastUpdate;
+        Spinner             mSpinner;
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
@@ -55,14 +48,17 @@ namespace ScheduleApp.Fragments
         {
             base.OnViewCreated(view, savedInstanceState);
             this.Activity.Title = "Alle Pläne";
-            mLinearLayout = Activity.FindViewById<LinearLayout>(Resource.Id.LinLayout);
-            mProgLayout = Activity.FindViewById<LinearLayout>(Resource.Id.ProgLayout);
-            mRecyclerView = Activity.FindViewById<RecyclerView>(Resource.Id.RecyclerView);
-            mRecyclerView.SetLayoutManager(new LinearLayoutManager(view.Context));
-            mSwipeRefresh = Activity.FindViewById<SwipeRefreshLayout>(Resource.Id.SwipeRefresh);
+
+            mLinearLayout   =   Activity.FindViewById<LinearLayout>(Resource.Id.LinLayout);
+            mProgLayout     =   Activity.FindViewById<LinearLayout>(Resource.Id.ProgLayout);
+            mRecyclerView   =   Activity.FindViewById<RecyclerView>(Resource.Id.RecyclerView);
+            mSwipeRefresh   =   Activity.FindViewById<SwipeRefreshLayout>(Resource.Id.SwipeRefresh);
+            mTextMid        =   Activity.FindViewById<TextView>(Resource.Id.TextMid);
+            mSpinner        =   Activity.FindViewById<Spinner>(Resource.Id.spinner);
+
             mSwipeRefresh.Refresh += MSwipeRefresh_Refresh;
-            mTextMid = Activity.FindViewById<TextView>(Resource.Id.TextMid);
-            mSpinner = Activity.FindViewById<Spinner>(Resource.Id.spinner);
+            mRecyclerView.SetLayoutManager(new LinearLayoutManager(view.Context));
+
             if (mSpinner != null)
             {
                 mClassIndex = Application.Context.GetSharedPreferences("PlanSelect", FileCreationMode.Private).GetInt("ClassIndex", -1);
@@ -71,14 +67,12 @@ namespace ScheduleApp.Fragments
             }
             mSwipeRefresh.SetColorSchemeResources(Resource.Color.accent_color);
             if (DataHandler.GetDarkThemePref(Activity))
-            {
                 mSwipeRefresh.SetProgressBackgroundColorSchemeResource(Resource.Color.dark_spinner_bgd);
-            }
         }
 
         private void MSpinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
-            if (!updateIsRunning && mClassIndex != e.Position - 1)
+            if (!mUpdateIsRunning && mClassIndex != e.Position - 1)
             {
                 mClassIndex = e.Position - 1;
                 mSpinner.Enabled = false;
@@ -89,9 +83,7 @@ namespace ScheduleApp.Fragments
         private void MSwipeRefresh_Refresh(object sender, EventArgs e)
         {
             if (mClassIndex >= 0)
-            {
                 UpdateList();
-            }
         }
 
         private async void UpdateList()
@@ -156,7 +148,7 @@ namespace ScheduleApp.Fragments
                 if (firstBuild)
                 {
                     menu.LoadLastList();
-                    menu.updateIsRunning = menu.mClassIndex > -1;
+                    menu.mUpdateIsRunning = menu.mClassIndex > -1;
                     menu.mRecyclerViewAdapter = menu.GetRecyclerAdapter();
                     menu.Activity.RunOnUiThread(() => menu.mRecyclerView.SetAdapter(menu.mRecyclerViewAdapter));
                 }
@@ -189,7 +181,7 @@ namespace ScheduleApp.Fragments
                 base.OnPostExecute(result);
 
                 menu.UpdateView();
-                menu.updateIsRunning = false;
+                menu.mUpdateIsRunning = false;
                 if (firstBuild && menu.mClassIndex > -1)
                 {
                     var time = System.DateTime.UtcNow - menu.mLastUpdate;
@@ -212,18 +204,16 @@ namespace ScheduleApp.Fragments
                             break;
                     }
                     var snackbar = Snackbar.Make(menu.View, msg, Snackbar.LengthShort);
-                    //snackbar.View.SetBackgroundColor(Android.Graphics.Color.Argb(200, 103, 58, 183));
                     snackbar.Show();
-                    //Toast.MakeText(menu.Activity, msg, ToastLength.Short).Show();
                 }
             }
 
             protected override void OnPreExecute()
             {
                 base.OnPreExecute();
-                menu.mSwipeRefresh.Enabled = false;
-                menu.mProgLayout.Visibility = ViewStates.Visible;
-                menu.mLinearLayout.Visibility = ViewStates.Gone;
+                menu.mSwipeRefresh.Enabled      = false;
+                menu.mProgLayout.Visibility     = ViewStates.Visible;
+                menu.mLinearLayout.Visibility   = ViewStates.Gone;
             }
         }
 
@@ -249,29 +239,23 @@ namespace ScheduleApp.Fragments
                 mLinearLayout.Visibility = ViewStates.Gone;
                 mRecyclerView.Visibility = ViewStates.Visible;
                 int itemCount = mRecyclerViewAdapter.ItemCount;
-                //mRecyclerViewAdapter.mList = new List<Card>();
-                //mRecyclerViewAdapter.NotifyItemRangeRemoved(0, itemCount + 2);
-                //mRecyclerViewAdapter.mList = mList;
-                //mRecyclerViewAdapter.NotifyItemRangeInserted(0, mList.Count - 1);
                 mRecyclerViewAdapter.NotifyDataSetChanged();
-                //mRecyclerViewAdapter.NotifyItemRangeRemoved(0, mRecyclerViewAdapter.mList.Count - 1);
                 mSwipeRefresh.Enabled = true;
-                //mRecyclerView.SetAdapter(mRecyclerViewAdapter);
-                //mRecyclerViewAdapter.NotifyDataSetChanged();
             }
-            if (mSpinner != null) mSpinner.Enabled = true;
+            if (mSpinner != null)
+                mSpinner.Enabled = true;
         }
 
         private void LoadLastList()
         {
             try
             {
-                var sharedPref = Application.Context.GetSharedPreferences("PlanSelect", FileCreationMode.Private);
-                string source = sharedPref.GetString("CardList", string.Empty);
-                var date = sharedPref.GetString("LastUpdate", string.Empty);
-                //mClassIndex = sharedPref.GetInt("ClassIndex", -1);
-                if (date.Length > 5) mLastUpdate = JsonConvert.DeserializeObject<DateTime>(date);
-                mList = JsonConvert.DeserializeObject<List<Card>>(source);
+                var sharedPref  = Application.Context.GetSharedPreferences("PlanSelect", FileCreationMode.Private);
+                string source   = sharedPref.GetString("CardList", string.Empty);
+                var date        = sharedPref.GetString("LastUpdate", string.Empty);
+                if (date.Length > 5)
+                    mLastUpdate = JsonConvert.DeserializeObject<DateTime>(date);
+                mList           = JsonConvert.DeserializeObject<List<Card>>(source);
             }
             catch (Exception) { }
         }
@@ -280,9 +264,7 @@ namespace ScheduleApp.Fragments
         {
             var snackbar = Snackbar.Make(View, Activity.GetString(Resource.String.toast_no_internet_connection), Snackbar.LengthIndefinite); //.SetAction("OK", (v) => { })
             snackbar.SetAction("OK", (v) => { });
-            //snackbar.View.SetBackgroundColor(Android.Graphics.Color.Argb(200, 103, 58, 183));
             snackbar.Show();
-            //Toast.MakeText(Activity, Activity.GetString(Resource.String.toast_no_internet_connection), ToastLength.Short).Show();
         }
 
         private void SaveList()

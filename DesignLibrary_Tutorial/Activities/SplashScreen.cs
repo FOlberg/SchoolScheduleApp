@@ -1,6 +1,5 @@
 ﻿using Android.App;
 using Android.OS;
-using Helper.Header;
 using System.Threading.Tasks;
 using Android.Support.V7.App;
 using Android.Support.V4.View;
@@ -11,18 +10,18 @@ using Android.Content;
 using AlertDialog = Android.Support.V7.App.AlertDialog;
 using System;
 using System.Threading;
+using ScheduleApp.Handler;
 
 namespace ScheduleApp.Activities
 {
     [Activity(Label = "@string/app_name", Icon = "@drawable/icon", MainLauncher = true, Theme = "@style/Theme.DesignDemo.CenterAnimation")]
     public class SplashScreen : AppCompatActivity
     {
-        public static int STARTUP_DELAY = 300;
-        public static int ANIM_ITEM_DURATION = 1000;
-        public static int ITEM_DELAY = 300;
-        bool firstStartUp = false;
-
-        private bool animationStarted = false;
+        public const int STARTUP_DELAY         = 300;
+        public const int ITEM_DELAY            = 300;
+        public const int ANIM_ITEM_DURATION    = 1000;
+        private bool mFirstStart        = false;
+        private bool mAnimationStarted  = false;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -36,19 +35,19 @@ namespace ScheduleApp.Activities
         protected override void OnStart()
         {
             base.OnStart();
-            firstStartUp = DataHandler.GetConfig().IsEmpty();
+            mFirstStart = DataHandler.GetConfig().IsEmpty();
         }
 
         private void ButtonU_Click(object sender, System.EventArgs e)
         {
-            if (firstStartUp)
+            if (mFirstStart)
             {
                 new Thread(new ThreadStart(delegate
                 {
-                    firstStartUp = !GetDataAsync();
+                    mFirstStart = !GetDataAsync();
                 })).Start();
             }
-            if (!firstStartUp)
+            if (!mFirstStart)
             {
                 Intent i = new Intent(this, typeof(Activities.TimetableSetupActivity));
                 i.PutExtra("StartMain", true);
@@ -59,40 +58,37 @@ namespace ScheduleApp.Activities
         protected override void OnResume()
         {
             base.OnResume();
-            if (firstStartUp)
+            if (mFirstStart)
             {
                 new Thread(new ThreadStart(delegate
                 {
-                    firstStartUp = !GetDataAsync();
+                    mFirstStart = !GetDataAsync();
                 })).Start();
             }
         }
 
         public override void OnWindowFocusChanged(bool hasFocus)
         {
-            if (!hasFocus || animationStarted)
-            {
+            if (!hasFocus || mAnimationStarted)
                 return;
-            }
+
             StartUpAnimation();
             base.OnWindowFocusChanged(hasFocus);
         }
 
         private void StartUpAnimation()
         {
-            ImageView logoImageView = FindViewById<ImageView>(Resource.Id.img_logo);
             ViewGroup container;
-            animationStarted = true;
+            ImageView logoImageView = FindViewById<ImageView>(Resource.Id.img_logo); 
+            mAnimationStarted       = true;
 
-            if (firstStartUp)
+            if (mFirstStart)
             {
-                container = FindViewById<ViewGroup>(Resource.Id.container_first);
-                firstStartUp = !GetDataAsync(true);
+                container   = FindViewById<ViewGroup>(Resource.Id.container_first);
+                mFirstStart = !GetDataAsync(true);
             }
             else
-            {
-                container = FindViewById<ViewGroup>(Resource.Id.container_norm);
-            }
+                container   = FindViewById<ViewGroup>(Resource.Id.container_norm);
 
             ViewCompat.Animate(logoImageView)
                 .TranslationY(-220) //-250 / -160

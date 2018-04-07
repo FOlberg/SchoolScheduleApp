@@ -1,22 +1,19 @@
 ﻿using Android.App;
 using Newtonsoft.Json;
+using ScheduleApp.Objects;
 using System.IO;
 
-namespace Helper.Header
+namespace ScheduleApp.Handler
 {
     public class JsonHandler
     {
-        public static string codepath = Application.Context.FilesDir.Path;//System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-
-        public JsonHandler(){}
+        public static string codepath = Application.Context.FilesDir.Path;
 
         public static int countFiles(string folder, string filename, string format)
         {
-            if(folder.Length > 0) folder = "/" + folder;
-            if(Directory.Exists(codepath + folder))
-            {
+            if (folder.Length > 0) folder = "/" + folder;
+            if (Directory.Exists(codepath + folder))
                 return Directory.GetFiles(codepath + folder, filename + "*." + format, SearchOption.TopDirectoryOnly).Length;
-            }
             return -1;
         }
 
@@ -24,14 +21,16 @@ namespace Helper.Header
         public static void saveObject<T>(T obj, string folder, string filename)
         {
             CheckFolder(folder);
-            if (folder.Length > 0) folder = "/" + folder;
+            if (folder.Length > 0)
+                folder = "/" + folder;
             File.WriteAllText(codepath + folder + "/" + filename, JsonConvert.SerializeObject(obj));
         }
 
         public static void saveObjects<T>(string[] info, T obj, string folder, string filename)
         {
             CheckFolder(folder);
-            if (folder.Length > 0) folder = "/" + folder;
+            if (folder.Length > 0)
+                folder = "/" + folder;
             string source = JsonConvert.SerializeObject(info) + System.Environment.NewLine;
             source += JsonConvert.SerializeObject(obj);
             File.WriteAllText(codepath + folder + "/" + filename, source);
@@ -40,7 +39,8 @@ namespace Helper.Header
         public static void saveObjects<T, U>(U objTop, T obj, string folder, string filename)
         {
             CheckFolder(folder);
-            if (folder.Length > 0) folder = "/" + folder;
+            if (folder.Length > 0)
+                folder = "/" + folder;
             string source = JsonConvert.SerializeObject(objTop) + System.Environment.NewLine;
             source += JsonConvert.SerializeObject(obj);
             File.WriteAllText(codepath + folder + "/" + filename, source);
@@ -48,21 +48,21 @@ namespace Helper.Header
 
         public static T GetObject<T>(string folder, string filename, string format)
         {
-            if (folder.Length > 0) folder = "/" + folder;
+            if (folder.Length > 0)
+                folder = "/" + folder;
             if (File.Exists(codepath + folder + "/" + filename + "." + format))
-            {
-                return JsonConvert.DeserializeObject<T>( File.ReadAllText(codepath + folder + "/" + filename + "." + format) );
-            }
+                return JsonConvert.DeserializeObject<T>(File.ReadAllText(codepath + folder + "/" + filename + "." + format));
             return default(T);
         }
 
         public static T GetObjects<T>(string folder, string filename, string format, out string[] fileInfo)
         {
-            if (folder.Length > 0) folder = "/" + folder;
+            if (folder.Length > 0)
+                folder = "/" + folder;
             if (File.Exists(codepath + folder + "/" + filename + "." + format))
             {
                 string[] source = File.ReadAllText(codepath + folder + "/" + filename + "." + format).Split('\n');
-                fileInfo = JsonConvert.DeserializeObject<string[]>(source[0]);
+                fileInfo        = JsonConvert.DeserializeObject<string[]>(source[0]);
                 return JsonConvert.DeserializeObject<T>(source[1]);
             }
             fileInfo = null;
@@ -71,11 +71,12 @@ namespace Helper.Header
 
         public static T GetObjects<T, U>(string folder, string filename, string format, out U objTop)
         {
-            if (folder.Length > 0) folder = "/" + folder;
+            if (folder.Length > 0)
+                folder = "/" + folder;
             if (File.Exists(codepath + folder + "/" + filename + "." + format))
             {
                 string[] source = File.ReadAllText(codepath + folder + "/" + filename + "." + format).Split('\n');
-                objTop = JsonConvert.DeserializeObject<U>(source[0]);
+                objTop          = JsonConvert.DeserializeObject<U>(source[0]);
                 return JsonConvert.DeserializeObject<T>(source[1]);
             }
             objTop = default(U);
@@ -84,14 +85,14 @@ namespace Helper.Header
 
         public static Timetable GetTimetable(string folder, string filename, string format, Semester sem)
         {
-            if (folder.Length > 0) folder = "/" + folder;
+            if (folder.Length > 0)
+                folder = "/" + folder;
             if (File.Exists(codepath + folder + "/" + filename + "." + format))
             {
                 string[] source = File.ReadAllText(codepath + folder + "/" + filename + "." + format).Split('\n');
-                if(source[0].Length > 0 && JsonConvert.DeserializeObject<Semester>(source[0]) == sem)
-                {
+                if (source[0].Length > 0 && JsonConvert.DeserializeObject<Semester>(source[0]) == sem)
                     return JsonConvert.DeserializeObject<Timetable>(source[1]);
-                }
+
                 File.Delete(codepath + folder + "/" + filename + "." + format);
             }
             return null;
@@ -99,10 +100,8 @@ namespace Helper.Header
 
         private static void CheckFolder(string name)
         {
-            if(!Directory.Exists(codepath + "/" + name))
-            {
+            if (!Directory.Exists(codepath + "/" + name))
                 Directory.CreateDirectory(codepath + "/" + name);
-            }
         }
 
         public static bool FileExists(string folder, string filename, string format)

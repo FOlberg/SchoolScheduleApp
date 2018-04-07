@@ -2,24 +2,22 @@
 using Android.OS;
 using Android.Views;
 using Android.Support.V7.Preferences;
-using Helper.Header;
+using ScheduleApp.Handler;
 using Android.App;
-using Android.Widget;
 using Java.Lang;
 
 namespace ScheduleApp.Fragments
 {
     public class Properties : Android.Support.V7.Preferences.PreferenceFragmentCompat
     {
-        ListPreference syncIntPreference;
-        Preference schedulePreference;
-        Preference classPreference;
-        Preference vibrationPreference;
-        Preference priorityPreference;
-        Preference themePreference;
-        Preference advSettingsPreference;
+        ListPreference mSyncIntPreference;
+        Preference mSchedulePreference;
+        Preference mClassPreference;
+        Preference mVibrationPreference;
+        Preference mPriorityPreference;
+        Preference mThemePreference;
+        Preference mAdvSettingsPreference;
         ProgressDialog mProgressDialog;
-        FrameLayout mFrameLayout;
 
         public override void OnCreatePreferences(Bundle savedInstanceState, string rootKey)
         {
@@ -31,18 +29,6 @@ namespace ScheduleApp.Fragments
         {
             base.OnViewCreated(view, savedInstanceState);
             Activity.Title = "Einstellungen";
-
-            //Calculating padding in dp
-            //float scale = Resources.DisplayMetrics.Density;
-            //int dpAsPixels = (int)(8 * scale + 0.5f);
-            //mFrameLayout = Activity.FindViewById<FrameLayout>(Resource.Id.content_frame);
-            //mFrameLayout.SetPadding(dpAsPixels, 0, dpAsPixels, 0);
-        }
-
-        public override void OnDestroy()
-        {
-            base.OnDestroy();
-            //mFrameLayout.SetPadding(0, 0, 0, 0);
         }
 
         public override void OnStart()
@@ -51,42 +37,42 @@ namespace ScheduleApp.Fragments
             var config = DataHandler.GetConfig();
 
             // Change Schedule Pref.
-            classPreference = FindPreference("ChangeClass");
-            classPreference.Intent = new Intent(Activity, typeof(Activities.TimetableSetupActivity));
-            classPreference.Summary = "Aktuell ausgewählt: " + config.GetClassName();
+            mClassPreference            = FindPreference("ChangeClass");
+            mClassPreference.Intent     = new Intent(Activity, typeof(Activities.TimetableSetupActivity));
+            mClassPreference.Summary    = "Aktuell ausgewählt: " + config.GetClassName();
 
             // mProgressBar = Activity.FindViewById<RelativeLayout>(Resource.Id.stripeProBar);
             mProgressDialog = new ProgressDialog(Activity);
 
             // Change Schedule Pref.
-            schedulePreference = FindPreference("ChangeSchedule");
-            schedulePreference.PreferenceClick += SchedulePreference_PreferenceClick;
+            mSchedulePreference = FindPreference("ChangeSchedule");
+            mSchedulePreference.PreferenceClick += SchedulePreference_PreferenceClick;
 
             // Update Sequence Pref.
-            syncIntPreference = (ListPreference)FindPreference("SyncIntervall_preference");
-            syncIntPreference.SetDefaultValue(config.mSettings.updateSequence);
-            syncIntPreference.PreferenceChange += SyncIntPreference_PreferenceChange;
+            mSyncIntPreference = (ListPreference)FindPreference("SyncIntervall_preference");
+            mSyncIntPreference.SetDefaultValue(config.mSettings.mUpdateSequence);
+            mSyncIntPreference.PreferenceChange += SyncIntPreference_PreferenceChange;
 
             // Vibration Pref.
-            vibrationPreference = FindPreference("vibration_preference");
-            vibrationPreference.SetDefaultValue(config.mSettings.vibration);
-            vibrationPreference.PreferenceChange += VibrationPreference_PreferenceChange;
+            mVibrationPreference = FindPreference("vibration_preference");
+            mVibrationPreference.SetDefaultValue(config.mSettings.mVibration);
+            mVibrationPreference.PreferenceChange += VibrationPreference_PreferenceChange;
 
             // Priority Pref.
-            priorityPreference = FindPreference("priority_preference");
-            priorityPreference.SetDefaultValue(config.mSettings.priority);
-            priorityPreference.PreferenceChange += PriorityPreference_PreferenceChange;
+            mPriorityPreference = FindPreference("priority_preference");
+            mPriorityPreference.SetDefaultValue(config.mSettings.mPriority);
+            mPriorityPreference.PreferenceChange += PriorityPreference_PreferenceChange;
 
             // Light/Dark Theme Pref.
-            themePreference = FindPreference("theme_preference");
-            themePreference.SetDefaultValue(DataHandler.GetDarkThemePref(Activity));
-            themePreference.PreferenceChange += ThemePreference_PreferenceChange;
+            mThemePreference = FindPreference("theme_preference");
+            mThemePreference.SetDefaultValue(DataHandler.GetDarkThemePref(Activity));
+            mThemePreference.PreferenceChange += ThemePreference_PreferenceChange;
 
-            advSettingsPreference = FindPreference("advsettings_preference");
-            advSettingsPreference.Intent = new Intent(Activity, typeof(Activities.AdvancedPreferenceActivity));
+            mAdvSettingsPreference          = FindPreference("advsettings_preference");
+            mAdvSettingsPreference.Intent   = new Intent(Activity, typeof(Activities.AdvancedPreferenceActivity));
 
-            var licensePreference = FindPreference("license_preference");
-            licensePreference.Intent = new Intent(Activity, typeof(Activities.LicenseActivity));
+            var licensePreference           = FindPreference("license_preference");
+            licensePreference.Intent        = new Intent(Activity, typeof(Activities.LicenseActivity));
         }
 
         private void SchedulePreference_PreferenceClick(object sender, Preference.PreferenceClickEventArgs e)
@@ -97,33 +83,32 @@ namespace ScheduleApp.Fragments
 
         private class InnerScheduleLoader : AsyncTask
         {
-            private Activity activity;
-            private ProgressDialog progressDialog;
+            private Activity mActivity;
+            private ProgressDialog mProgressDialog;
 
             public InnerScheduleLoader(Activity activity, ProgressDialog progress)
             {
-                this.activity = activity;
-                progressDialog = progress;
-                progressDialog.SetMessage("Stundenplan wird geladen...");
-                progressDialog.Indeterminate = true;
+                this.mActivity  = activity;
+                mProgressDialog = progress;
+                mProgressDialog.SetMessage("Stundenplan wird geladen...");
+                mProgressDialog.Indeterminate = true;
             }
             protected override Object DoInBackground(params Object[] @params)
             {
-                var editor = activity.GetSharedPreferences("TableSetup", FileCreationMode.Private).Edit();
+                var editor = mActivity.GetSharedPreferences("TableSetup", FileCreationMode.Private).Edit();
                 editor.PutInt("classIndex", -1).Apply();
-
-                activity.StartActivity(new Intent(activity, typeof(Activities.TimetableWeekActivity)));
+                mActivity.StartActivity(new Intent(mActivity, typeof(Activities.TimetableWeekActivity)));
                 return true;
             }
             protected override void OnPreExecute()
             {
                 base.OnPreExecute();
-                activity.RunOnUiThread(() => progressDialog.Show());
+                mActivity.RunOnUiThread(() => mProgressDialog.Show());
             }
             protected override void OnPostExecute(Object result)
             {
                 base.OnPostExecute(result);
-                activity.RunOnUiThread(() => progressDialog.Cancel());
+                mActivity.RunOnUiThread(() => mProgressDialog.Cancel());
             }
         }
 
@@ -139,14 +124,14 @@ namespace ScheduleApp.Fragments
         private void PriorityPreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
         {
             var config = DataHandler.GetConfig();
-            config.mSettings.priority = (bool) e.NewValue;
+            config.mSettings.mPriority = (bool) e.NewValue;
             DataHandler.SaveConfig(config);
         }
 
         private void VibrationPreference_PreferenceChange(object sender, Preference.PreferenceChangeEventArgs e)
         {
             var config = DataHandler.GetConfig();
-            config.mSettings.vibration = (bool) e.NewValue;
+            config.mSettings.mVibration = (bool) e.NewValue;
             DataHandler.SaveConfig(config);
         }
 
@@ -155,10 +140,10 @@ namespace ScheduleApp.Fragments
             var config = DataHandler.GetConfig();
             int.TryParse(e.NewValue.ToString().Replace("{", "").Replace("}", ""), out int newValue);
             //log
-            if (newValue > 0 && newValue != config.mSettings.updateSequence)
+            if (newValue > 0 && newValue != config.mSettings.mUpdateSequence)
             {
-                Background.AlarmReceiver.mOldSequence = config.mSettings.updateSequence;
-                config.mSettings.updateSequence = newValue;
+                Background.AlarmReceiver.mOldSequence   = config.mSettings.mUpdateSequence;
+                config.mSettings.mUpdateSequence         = newValue;
                 DataHandler.SaveConfig(config);
             }
         }

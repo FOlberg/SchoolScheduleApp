@@ -7,7 +7,7 @@ using SupportActionBar = Android.Support.V7.App.ActionBar;
 using Android.Support.V7.App;
 using Android.Widget;
 using System.Collections.Generic;
-using Helper.Header;
+using ScheduleApp.Handler;
 using Android.Runtime;
 using System.Threading;
 
@@ -16,12 +16,12 @@ namespace ScheduleApp.Activities
     [Activity(Label = "Klassen")]
     public class TimetableSetupActivity : AppCompatActivity
     {
-        private List<string> mItems;
-        private ListView mListView;
-        public DataHandler mDataHandler;
-        ISharedPreferences preferences;
-        ISharedPreferencesEditor editor;
-        ProgressDialog mProgressDialog;
+        private List<string>        mItems;
+        private ListView            mListView;
+        public DataHandler          mDataHandler;
+        ISharedPreferences          mPreference;
+        ISharedPreferencesEditor    mEditor;
+        ProgressDialog              mProgressDialog;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -40,7 +40,6 @@ namespace ScheduleApp.Activities
             ab.SetDisplayHomeAsUpEnabled(true);
             ab.SetHomeButtonEnabled(true);
 
-            // Create your application here
             mListView = FindViewById<ListView>(Resource.Id.listView);
 
             //Loading mData
@@ -54,7 +53,6 @@ namespace ScheduleApp.Activities
 
             ArrayAdapter<string> adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, mItems);
             mListView.Adapter = adapter;
-
             mListView.ItemClick += MListView_ItemClick;
         }
 
@@ -72,20 +70,18 @@ namespace ScheduleApp.Activities
             new Thread(new ThreadStart(delegate
             {
                 //LOAD METHOD     
-                preferences = Application.GetSharedPreferences("TableSetup", FileCreationMode.Private);
-                editor = preferences.Edit();
-                editor.PutInt("classIndex", e.Position);
-                editor.Apply();
+                mPreference = Application.GetSharedPreferences("TableSetup", FileCreationMode.Private);
+                mEditor = mPreference.Edit();
+                mEditor.PutInt("classIndex", e.Position);
+                mEditor.Apply();
                 mDataHandler.GetTimetable(e.Position);
-                Intent iActivity = new Intent(this, typeof(Activities.TimetableWeekActivity)); //Activities.TimetableWeekActivity
+                Intent iActivity = new Intent(this, typeof(Activities.TimetableWeekActivity));
                 StartActivityForResult(iActivity, 1);              
-                //RunOnUiThread(() => progressDialog.Hide());
             })).Start();
         }
 
         protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {
-            //base.OnActivityResult(requestCode, resultCode, data);
             if (requestCode == 1 && resultCode == Result.Ok)
             {    
                 if (Intent.GetBooleanExtra("StartMain", false))
@@ -100,9 +96,7 @@ namespace ScheduleApp.Activities
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             if (item.ItemId == Android.Resource.Id.Home)
-            {
                 Finish();
-            }
             return base.OnOptionsItemSelected(item);
         }
 

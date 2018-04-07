@@ -1,84 +1,76 @@
 ﻿using System.Net;
-using System.Web;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Text;
-using System.IO;
-using System.IO.Compression;
 
-namespace Helper.Header
+namespace ScheduleApp.Handler
 {
     public class URLClient
     {
-        private WebClient webClient;
+        private WebClient       mWebClient;
         [JsonProperty]
-        public int early = 0;
-        public static string[] classes;
+        public int              mEarlyWeek = 0; //If information is already published on the weekend before the week starts
+        public static string[]  mClasses;
 
         public URLClient()
         {
-            webClient = new WebClient();
-            webClient.Encoding = Encoding.GetEncoding(1252);
+            mWebClient = new WebClient
+            {
+                Encoding = Encoding.GetEncoding(1252)
+            };
         }
 
         public string GetRawCode(string url)
         {
-            webClient.Encoding = Encoding.GetEncoding(1252);
+            mWebClient.Encoding = Encoding.GetEncoding(1252);
             if (url.Length == 0)
                 return null;
+
+            //Downloading htm source from website 
             string source;
             try
             {
-                source = webClient.DownloadString(url);
+                source = mWebClient.DownloadString(url);
             }
             catch (System.Net.WebException e)
             {
-                if (e.Message.Contains("Remote"))
-                {
-                    //pop-up
-                }
                 return null;
             }
-            return source;//.HttpUtility.HtmlDecode(source);
+            return source;
         }
 
         public string GetRawCode(string[] urlParts, int week, int classIndex)
         {
             CheckEarly(urlParts);
-            string url = LinkURL(urlParts, week + early, classIndex + 1);
+            var url = LinkURL(urlParts, week + mEarlyWeek, classIndex + 1);
             if (url.Length == 0)
                 return null;
-            string source = GetRawCode(url);
+
+            var source = GetRawCode(url);
             if (source == null)
-            {
-                early = 1;
-            }
+                mEarlyWeek = 1;
+
             return source;
         }
 
         public string GetRawCode(string[] urlParts, int week)
         {
             CheckEarly(urlParts);
-            string url = LinkURL(urlParts, week + early);
+            var url = LinkURL(urlParts, week + mEarlyWeek);
             if (url.Length == 0)
                 return null;
-            string source = GetRawCode(url);
+
+            var source = GetRawCode(url);
             if (source == null)
-            {
-                early = 1;
-            }
+                mEarlyWeek = 1;
+
             return source;
         }
 
         private void CheckEarly(string[] urlParts)
         {
-            if (early == 1)
-            {
-                if (GetRawCode(LinkURL(urlParts, TimeHandler.GetCurrentWeek(), 1)) != null)
-                {
-                    early = 0;
-                }
-            }
+            if (mEarlyWeek == 1 && GetRawCode(LinkURL(urlParts, TimeHandler.GetCurrentWeek(), 1)) != null)
+                mEarlyWeek = 0;
         }
 
         public static string GetRawCodeFile( string path )
@@ -88,26 +80,25 @@ namespace Helper.Header
 
         public static string GetClass(string source)
         {
-            string[] s = source.Split('\n');
+            var classSource = source.Split('\n');
             try
             {
-                return s[15].Substring(3, s[15].Substring(3).IndexOf('<'));
+                return classSource[15].Substring(3, classSource[15].Substring(3).IndexOf('<'));
             }catch
             {
-                return "";
+                return string.Empty;
             }
         }
 
 
-        public string[][] GetAllClasses(int week) //Unfinished
+        public string[][] GetAllClasses(int week, string[] urlPart)
         {
-            List<string> dNames = new List<string>();
-            List<string> dSource = new List<string>();
-            string p1 = "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/";
-            int errc = 0;
-            for(int i = 1; errc < 2; i++)
+            List<string> dNames     = new List<string>();
+            List<string> dSource    = new List<string>();
+            var errc    = 0;
+            for (int i = 1; errc < 2; i++)
             {
-                string source = GetRawCode(p1 + week.ToString("D2") + "/c/c" + i.ToString("D5") + ".htm"); //t.GetWeekOfYear()
+                var source = GetRawCode(urlPart[0] + week.ToString("D2") + urlPart[1] + i.ToString("D5") + urlPart[2]); //t.GetWeekOfYear()
                 if (source != null)
                 {
                     errc = 0;
@@ -116,29 +107,23 @@ namespace Helper.Header
                 }
                 else errc++;
             }
-            if(dNames.Count > 0)
-            {
+            if (dNames.Count > 0)
                 return new string[][] { dNames.ToArray(), dSource.ToArray() };
-            }
             return null;
         }
 
         public string LinkURL(string[] urlParts, int week)
         {
             if (urlParts.Length == 2)
-            {
                 return urlParts[0] + week.ToString("D2") + urlParts[1];
-            }
-            return "";
+            return string.Empty;
         }
 
         public string LinkURL(string[] urlParts, int week, int classIndex)
         {
             if(urlParts.Length > 2)
-            {
                 return urlParts[0] + week.ToString("D2") + urlParts[1] + classIndex.ToString("D5") + urlParts[2];
-            }
-            return "";
+            return string.Empty;
         }
     }
 }

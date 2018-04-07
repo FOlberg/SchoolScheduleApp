@@ -1,38 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
-using Helper.Header;
 using Android.App;
 using Android.Content;
 using System.Threading.Tasks;
+using ScheduleApp.Objects;
 
-namespace Helper.Header
+namespace ScheduleApp.Handler
 {
     public class DataHandler
     {
-        //public Config mConfig;
-        string[,] mSource;
+        string[,]           mSource;
 
         [JsonProperty]
-        string[] mClassNames;
+        string[]            mClassNames;
         [JsonProperty]
-        URLClient mClientURL; //Handler ? Save? -> What is faster initializing or deserializing
-        TimeHandler mTimeHandler; // -""-
-        InformationHandler mInfoHandler; // -""-
+        URLClient           mClientURL; //Handler ? Save? -> What is faster initializing or deserializing
+        TimeHandler         mTimeHandler; // -""-
+        InformationHandler  mInfoHandler; // -""-
         [JsonProperty]
-        Week[,] weekStack;
+        Week[,]             mWeekStack;
         [JsonProperty]
-        List<Timetable> mTimetables;
+        List<Timetable>     mTimetables;
 
         public DataHandler()
         {
-            mClientURL = new URLClient();
-            mTimeHandler = new TimeHandler();
-            mInfoHandler = new InformationHandler();
-            mTimetables = new List<Timetable>();
-            //LoadCfg();
+            mClientURL      = new URLClient();
+            mTimeHandler    = new TimeHandler();
+            mInfoHandler    = new InformationHandler();
+            mTimetables     = new List<Timetable>();
             GetClassData();
         }
 
@@ -44,41 +40,31 @@ namespace Helper.Header
         /// <returns></returns>
         public Week GetWeek(int classNameIndex, int week, bool newDload = false)
         {
-            //Maybe Dictionary check depending on update peroid in settings
             DateTime mondayDate = TimeHandler.GetMonday(week);
-            var config = GetConfig();
-            if (classNameIndex == -1)
-            {
-                //log
+            var config  = GetConfig();
+            if (classNameIndex == -1) //log
                 return null;
-            }
-            if (weekStack == null)
-            {
-                weekStack = new Week[mClassNames.Length, 2];
-            }
-            if (weekStack[classNameIndex, week] != null && weekStack[classNameIndex, week].tMon.Date == mondayDate.Date && !newDload)
-            {
-                return weekStack[classNameIndex, week];
-            }
+
+            if (mWeekStack == null)
+                mWeekStack = new Week[mClassNames.Length, 2];
+
+            if (mWeekStack[classNameIndex, week] != null && mWeekStack[classNameIndex, week].mMonDate.Date == mondayDate.Date && !newDload)
+                return mWeekStack[classNameIndex, week];
 
             if (mSource == null)
-            {
                 mSource = new string[mClassNames.Length, 2];
-            }
+
             if (mSource[classNameIndex, week] == null || newDload)
             {
                 mSource[classNameIndex, week] = mClientURL.GetRawCode(config.urlSourceClass, mTimeHandler.GetWeekIndex(week), classNameIndex);
                 if (mSource[classNameIndex, week] == null)
-                {
                     mSource[classNameIndex, week] = mClientURL.GetRawCode(config.urlSourceClass, mTimeHandler.GetWeekIndex(week), classNameIndex);
-                }
             }
-            if (mClientURL.early == 1)
-            {
+            if (mClientURL.mEarlyWeek == 1)
                 mondayDate = mondayDate.AddDays(7);
-            }
+
             Week w = mInfoHandler.ClassSourceToWeek(mSource[classNameIndex, week], mClassNames[classNameIndex], mondayDate);
-            weekStack[classNameIndex, week] = w;
+            mWeekStack[classNameIndex, week] = w;
             return w;
         }
 
@@ -86,21 +72,19 @@ namespace Helper.Header
         {
             return Task.Factory.StartNew(() =>
             {
-                if (weekStack != null)
+                if (mWeekStack == null)
+                    return;
+
+                DateTime[] date = new DateTime[] { TimeHandler.GetMonday(0), TimeHandler.GetMonday(1) };
+                for (int i = 0; i < mWeekStack.Length; i++)
                 {
-                    DateTime[] date = new DateTime[] { TimeHandler.GetMonday(0), TimeHandler.GetMonday(1) };
-                    for (int i = 0; i < weekStack.Length; i++)
+                    for (int j = 0; j < 2; j++)
                     {
-                        for (int j = 0; j < 2; j++)
-                        {
-                            if (weekStack[i, j] != null)
-                            {
-                                if (weekStack[i, j].tMon.Date != date[j].Date)
-                                {
-                                    weekStack[i, j] = null;
-                                }
-                            }
-                        }
+                        if (mWeekStack[i, j] == null)
+                            continue;
+
+                        if (mWeekStack[i, j].mMonDate.Date != date[j].Date)
+                            mWeekStack[i, j] = null;
                     }
                 }
             });
@@ -108,16 +92,16 @@ namespace Helper.Header
 
         public Week GetDetailedWeek(int week, bool newDload = false)
         {
-            var config = GetConfig();
-            Week w = GetWeek(GetClassIndex(config.GetClassName()), week, newDload);
-            string source = mClientURL.GetRawCode(config.urlSourceAll, mTimeHandler.GetWeekIndex(week));
+            var config      = GetConfig();
+            Week w          = GetWeek(GetClassIndex(config.GetClassName()), week, newDload);
+            string source   = mClientURL.GetRawCode(config.urlSourceAll, mTimeHandler.GetWeekIndex(week));
             mInfoHandler.ApplyChanges(w, mInfoHandler.GetDetailedInfo(source));
             return w;
         }
 
         public Week GetDetailedWeek(int className, int week)
         {
-            Week w = GetWeek(className, week, true);
+            Week w  = GetWeek(className, week, true);
             string detailedSource = mClientURL.GetRawCode(GetConfig().urlSourceAll, mTimeHandler.GetWeekIndex(week));
             mInfoHandler.ApplyChanges(w, mInfoHandler.GetDetailedInfo(detailedSource));
             return w;
@@ -128,9 +112,7 @@ namespace Helper.Header
             for (int i = 0; i < mClassNames.Length; i++)
             {
                 if (mClassNames[i] == className)
-                {
                     return i;
-                }
             }
             //log
             return -1;
@@ -142,7 +124,7 @@ namespace Helper.Header
             {
                 foreach (var tTable in mTimetables)
                 {
-                    if (tTable.mClassIndex == mClassNames[classIndex] && tTable.sem == mTimeHandler.GetSemester())
+                    if (tTable.mClassIndex == mClassNames[classIndex] && tTable.mSem == mTimeHandler.GetSemester())
                     {
                         return CheckTimetable(tTable, classIndex);
                     }
@@ -165,8 +147,10 @@ namespace Helper.Header
         {
             if (table == null)
                 return null;
+
             if (!table.IsLeaking())
                 return table;
+
             table.Update(GetWeek(classIndex, 1)); //Which week?
             JsonHandler.saveObjects<Timetable, Semester>(mTimeHandler.GetSemester(), table, "Data", "Timetable" + mClassNames[classIndex] + ".json");
             return table;
@@ -174,7 +158,8 @@ namespace Helper.Header
 
         public string[] GetClasses()
         {
-            if (mClassNames == null || mClassNames.Length == 0) GetClassData();
+            if (mClassNames == null || mClassNames.Length == 0)
+                GetClassData();
             return mClassNames;
         }
 
@@ -182,8 +167,10 @@ namespace Helper.Header
         {
             if (mSource == null)
                 GetClassData();
+
             if (index < 0 || index >= mClassNames.Length)
                 return null;
+
             return mClassNames[index];
         }
 
@@ -194,9 +181,7 @@ namespace Helper.Header
             {
                 string[] temp = JsonHandler.GetObjects<string[], Semester>("Data", "classes", "json", out Semester sem);
                 if (sem == mTimeHandler.GetSemester())
-                {
                     mClassNames = temp;
-                }
                 else DownloadClassInfromation();
             }
             else DownloadClassInfromation();
@@ -204,20 +189,18 @@ namespace Helper.Header
 
         private void DownloadClassInfromation()
         {
-            var source = mClientURL.GetAllClasses(mTimeHandler.GetWeekOfYear());
+            var url = GetConfig().urlSourceClass;
+            var source = mClientURL.GetAllClasses(mTimeHandler.GetWeekOfYear(), url);
             if (source == null)
             {
-                mClientURL.early = 1;
-                source = mClientURL.GetAllClasses(mTimeHandler.GetNextWeek());  
+                mClientURL.mEarlyWeek = 1;
+                source = mClientURL.GetAllClasses(mTimeHandler.GetNextWeek(), url);  
             }
             if (source == null)
-            {
-                source = mClientURL.GetAllClasses(mTimeHandler.GetNextWeek() + 1);
-            }
+                source = mClientURL.GetAllClasses(mTimeHandler.GetNextWeek() + 1, url);
 
             if (source != null)
             {
-                //Save the Source to classes.json
                 mSource = new string[source[1].Length, 2];
                 for (int i = 0; i < source[1].Length; i++)
                 {
@@ -232,25 +215,11 @@ namespace Helper.Header
                 throw new Exception("TimeException: At the moment is no information online!");
         }
 
-        //public void LoadCfg()
-        //{
-        //    if (JsonHandler.FileExists("Data", "Config", "json"))
-        //    {
-        //        mConfig = JsonHandler.GetObject<Config>("Data", "Config", "json");
-        //    }
-        //    else if (mConfig == null)
-        //    {
-        //        mConfig = new Config();
-        //    }
-        //    mConfig.OnConfigChanged += MConfig_OnConfigChanged;
-        //}
-
         public static Config GetConfig()
         {
             if (JsonHandler.FileExists("Data", "Config", "json"))
-            {
                 return JsonHandler.GetObject<Config>("Data", "Config", "json");
-            }
+
             var config = new Config();
             SaveConfig(config);
             return config;
@@ -261,21 +230,14 @@ namespace Helper.Header
             JsonHandler.saveObject<Config>(config, "Data", "Config.json");
         }
 
-        //private void MConfig_OnConfigChanged(object sender, EventArgs e)
-        //{
-        //    JsonHandler.saveObject<Config>(mConfig, "Data", "Config.json");
-        //}
-
         public static DataHandler GetDataHandler()
         {
             string HandlerSource = Application.Context.GetSharedPreferences("DataHandler", FileCreationMode.Private).GetString("mData", null);
             if (HandlerSource != null)
-            {
                 return JsonConvert.DeserializeObject<DataHandler>(HandlerSource);
-            }
-            //preferences = Application.Context.GetSharedPreferences("DataHandler", FileCreationMode.Private);
+
             var dataHandler = new DataHandler();
-            var editor = Application.Context.GetSharedPreferences("DataHandler", FileCreationMode.Private).Edit();
+            var editor      = Application.Context.GetSharedPreferences("DataHandler", FileCreationMode.Private).Edit();
             editor.PutString("mData", JsonConvert.SerializeObject(dataHandler));
             editor.Apply();
             return dataHandler;

@@ -12,24 +12,23 @@ using Android.Support.V4.App;
 using System.Collections.Generic;
 using Android.Content;
 using ScheduleApp.Fragments;
-using Helper.Header;
+using ScheduleApp.Handler;
 using Newtonsoft.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Android.Support.V4.Content;
+using ScheduleApp.Objects;
 
 namespace ScheduleApp.Activities
 {
     [Activity(Label = "Stundenplan")]
     public class TimetableWeekActivity : AppCompatActivity
     {
-        TabLayout mTabs;
-        TabAdapter mAdapter;
-        FloatingActionButton mFab;
-        ViewPager viewPager;
+        static int mDayCounter = 0;
 
-        static int countDay = 0;
-
+        TabLayout               mTabs;
+        TabAdapter              mAdapter;
+        ViewPager               mViewPager;
+        FloatingActionButton    mFabBtn;
+        
         protected override void OnCreate(Bundle savedInstanceState)
         {
             if (DataHandler.GetDarkThemePref(this))
@@ -41,65 +40,54 @@ namespace ScheduleApp.Activities
                 SetContentView(Resource.Layout.Activity_Week);
             else
                 SetContentView(Resource.Layout.BL_Activity_Week);
+
             OverridePendingTransition(Resource.Animation.slide_from_right, Resource.Animation.slide_to_left);
-            SupportToolbar toolBar = FindViewById<SupportToolbar>(Resource.Id.toolBarW);
-            mFab = FindViewById<FloatingActionButton>(Resource.Id.fabW);
-            mTabs = FindViewById<TabLayout>(Resource.Id.tabLayoutW);
+            SupportToolbar toolBar  = FindViewById<SupportToolbar>(Resource.Id.toolBarW);
+            mFabBtn                 = FindViewById<FloatingActionButton>(Resource.Id.fabW);
+            mTabs                   = FindViewById<TabLayout>(Resource.Id.tabLayoutW);
             SetSupportActionBar(toolBar);
 
             SupportActionBar ab = SupportActionBar;
             ab.SetDisplayHomeAsUpEnabled(true);
             ab.SetHomeButtonEnabled(true);
 
-            viewPager = FindViewById<ViewPager>(Resource.Id.viewPagerW);
-            SetUpViewPager(viewPager);
-            mTabs.SetupWithViewPager(viewPager);
+            mViewPager = FindViewById<ViewPager>(Resource.Id.viewPagerW);
+            SetUpViewPager(mViewPager);
+            mTabs.SetupWithViewPager(mViewPager);
 
-            viewPager.PageSelected += ViewPager_PageSelected;
-            mFab.Click += Fab_Click;
+            mViewPager.PageSelected += ViewPager_PageSelected;
+            mFabBtn.Click += Fab_Click;
         }
 
         private void ViewPager_PageSelected(object sender, ViewPager.PageSelectedEventArgs e)
         {
             if (e.Position == 4)
-            {
-                mFab.SetImageDrawable(ContextCompat.GetDrawable(this, Resource.Drawable.ic_done));
-            }
+                mFabBtn.SetImageDrawable(ContextCompat.GetDrawable(this, Resource.Drawable.ic_done));
             else
-            {
-                mFab.SetImageDrawable(ContextCompat.GetDrawable(this, Resource.Drawable.ic_arrow_forward));
-            }
+                mFabBtn.SetImageDrawable(ContextCompat.GetDrawable(this, Resource.Drawable.ic_arrow_forward));
         }
 
         public static int GetDay()
         {
-            return countDay++ % 5;
+            return mDayCounter++ % 5;
         }
 
         private void Fab_Click(object sender, System.EventArgs e)
         {
             if (mTabs.SelectedTabPosition < 4)
-            {
-                //Wrong doesnt change the view!
                 mTabs.GetTabAt(mTabs.SelectedTabPosition + 1).Select();
-            }
             else
-            {
                 FinishSetup();
-                //FinishSetup();
-            }
-
         }
 
         private void FinishSetup()
         {
             //Get Data from Children Fragments via SharedPreferences -> Delete Fragments -> Destructor passes Data -> Data will be gathered by:
             var prog = ProgressDialog.Show(this, "", GetString(Resource.String.progressdialog_schedule_changed), true);
-            ISharedPreferences preferences = Application.Context.GetSharedPreferences("TableSetup", FileCreationMode.Private);
+            ISharedPreferences preferences  = Application.Context.GetSharedPreferences("TableSetup", FileCreationMode.Private);
             ISharedPreferencesEditor editor = preferences.Edit();
             int[][] tempSel = new int[5][];
-            string s;
-            int classIndex = preferences.GetInt("classIndex", -1);
+            int classIndex  = preferences.GetInt("classIndex", -1);
 
             //Destroy Fragments
             for (int i = mAdapter.Fragments.Count - 1; i >= 0; i--)
@@ -107,27 +95,26 @@ namespace ScheduleApp.Activities
                 mAdapter.Fragments[i].OnDestroy();
             }
 
+            string tableSource;
             for (int i = 0; i < 5; i++)
             {
-                s = preferences.GetString("table" + i, string.Empty);
-                if (s != string.Empty)
-                {
-                    tempSel[i] = JsonConvert.DeserializeObject<int[]>(s);
-                }
+                tableSource = preferences.GetString("table" + i, string.Empty);
+                if (tableSource != string.Empty)
+                    tempSel[i] = JsonConvert.DeserializeObject<int[]>(tableSource);
             }
             //Delete Preference TableSetup
             editor.Clear();
             editor.Apply();
 
             //Update mDataHandler
-            var data = DataHandler.GetDataHandler();
-            var config = DataHandler.GetConfig();
-            var className = data.GetClassName(classIndex);
+            var data        = DataHandler.GetDataHandler();
+            var config      = DataHandler.GetConfig();
+            var className   = data.GetClassName(classIndex);
             config.AddTableConf(className, tempSel);
             DataHandler.SaveConfig(config);
 
             preferences = Application.GetSharedPreferences("Config", FileCreationMode.Private);
-            editor = preferences.Edit();
+            editor      = preferences.Edit();
             editor.PutString("className", className);
             editor.PutBoolean("Changed", true);
             editor.Apply();
@@ -140,7 +127,7 @@ namespace ScheduleApp.Activities
         {
             if (item.ItemId == Android.Resource.Id.Home)
             {
-                countDay = 0;
+                mDayCounter = 0;
                 SetResult(Result.Canceled);
                 Finish();
             }
@@ -156,7 +143,6 @@ namespace ScheduleApp.Activities
 
         private void SetUpViewPager(ViewPager viewPager)
         {
-            //mDataHandler = DataHandler.GetDataHandler();
             mAdapter = new TabAdapter(SupportFragmentManager);
             for (int i = 0; i < 5; i++)
             {
@@ -173,8 +159,8 @@ namespace ScheduleApp.Activities
 
             public TabAdapter(SupportFragmentManager sfm) : base(sfm)
             {
-                Fragments = new List<SupportFragment>();
-                FragmentNames = new List<string>();
+                Fragments       = new List<SupportFragment>();
+                FragmentNames   = new List<string>();
             }
 
             public void AddFragment(SupportFragment fragment, string name)

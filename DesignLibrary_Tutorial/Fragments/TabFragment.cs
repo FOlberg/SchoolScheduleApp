@@ -1,44 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
 using ScheduleApp.Helpers;
-using Helper.Header;
+using ScheduleApp.Handler;
 using Newtonsoft.Json;
 using ScheduleApp.Activities;
-using System.Threading;
+using ScheduleApp.Objects;
 
 namespace ScheduleApp.Fragments
 {
     public class TabFragment : Android.Support.V4.App.Fragment
     {
-        ExpandableListViewAdapter mAdapter;
-        ExpandableListView mExpandableListView;
-        ISharedPreferences preferences;
-        ISharedPreferencesEditor editor;
-        DataHandler mDataHandler;
-        int classIndex, day, previousGroup;
+        ExpandableListViewAdapter   mAdapter;
+        ExpandableListView          mExpandableListView;
+        ISharedPreferences          mPreferences;
+        ISharedPreferencesEditor    mEditor;
+        DataHandler                 mDataHandler;
+        int mClassIndex, mDay, mPreviousGroup;
         int[] selected = new int[11];
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            day = TimetableWeekActivity.GetDay();
+            mDay = TimetableWeekActivity.GetDay();
             Array.Fill<int>(selected, -1);
             LoadSharedPreferences();
-            //Do not handle events here! like button click etc -> because OnCreate will be called before OnCreatedView
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            // Use this to return your custom view for this Fragment
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
                 return inflater.Inflate(Resource.Layout.Fragment_Tab, container, false);
             else
@@ -54,9 +48,9 @@ namespace ScheduleApp.Fragments
 
             SetData(out mAdapter);
             mExpandableListView.SetAdapter(mAdapter);
-            mExpandableListView.ChildClick += ExpandableListView_ChildClick;
-            mExpandableListView.GroupExpand += MExpandableListView_GroupExpand;
-            mExpandableListView.ItemLongClick += MExpandableListView_ItemLongClick;
+            mExpandableListView.ChildClick      += ExpandableListView_ChildClick;
+            mExpandableListView.GroupExpand     += MExpandableListView_GroupExpand;
+            mExpandableListView.ItemLongClick   += MExpandableListView_ItemLongClick;
         }
 
         private void MExpandableListView_ItemLongClick(object sender, AdapterView.ItemLongClickEventArgs e)
@@ -78,28 +72,24 @@ namespace ScheduleApp.Fragments
             for (int i = 0; i < position; i++)
             {
                 if (mExpandableListView.IsGroupExpanded(i)) //If a Group is expanded
-                {
                     children += mAdapter.GetChildrenCount(i); // Add them to range
-                    //break; -> only if one group at time is expandable
-                }
             }
             return position - children;
         }
 
         private void MExpandableListView_GroupExpand(object sender, ExpandableListView.GroupExpandEventArgs e)
         {
-            if (e.GroupPosition != previousGroup)
-                mExpandableListView.CollapseGroup(previousGroup);
-            previousGroup = e.GroupPosition;
+            if (e.GroupPosition != mPreviousGroup)
+                mExpandableListView.CollapseGroup(mPreviousGroup);
+            mPreviousGroup = e.GroupPosition;
         }
 
         public override void OnDestroy()
         {
-            preferences = Application.Context.GetSharedPreferences("TableSetup", FileCreationMode.Private);
-            editor = preferences.Edit();
-            editor.PutString("table" + day, JsonConvert.SerializeObject(mAdapter.GetSelectedItems()));
-            editor.Apply();
-
+            mPreferences    = Application.Context.GetSharedPreferences("TableSetup", FileCreationMode.Private);
+            mEditor         = mPreferences.Edit();
+            mEditor.PutString("table" + mDay, JsonConvert.SerializeObject(mAdapter.GetSelectedItems()));
+            mEditor.Apply();
             base.OnDestroy();
         }
 
@@ -123,44 +113,41 @@ namespace ScheduleApp.Fragments
                 mAdapter.mParentList[e.GroupPosition - 1].mSelected = e.ChildPosition;
             }
 
-            //slow down collapse animation or wait couple of millisec.
             mExpandableListView.CollapseGroup(e.GroupPosition);
         }
 
         private void SetData(out ExpandableListViewAdapter mAdapter)
         {
             List<Parent> list = new List<Parent>();
-            Timetable table = mDataHandler.GetTimetable(classIndex);
+            Timetable table = mDataHandler.GetTimetable(mClassIndex);
             for (int h = 0; h < 11; h++)
             {
-                list.Add(new Parent(table.list[day, h], selected[h])); //Add Selected Item
+                list.Add(new Parent(table.mSubNames[mDay, h], selected[h])); //Add Selected Item
             }
             mAdapter = new ExpandableListViewAdapter(Activity, list);
         }
 
         private void LoadSharedPreferences()
         {
-            mDataHandler = DataHandler.GetDataHandler();
-            preferences = Application.Context.GetSharedPreferences("TableSetup", FileCreationMode.Private);
-            editor = preferences.Edit();
+            mDataHandler    = DataHandler.GetDataHandler();
+            mPreferences    = Application.Context.GetSharedPreferences("TableSetup", FileCreationMode.Private);
+            mEditor         = mPreferences.Edit();
+            mClassIndex     = mPreferences.GetInt("classIndex", -1);
+            var config      = DataHandler.GetConfig();
 
-            classIndex = preferences.GetInt("classIndex", -1);
-            //loadCfg = preferences.GetBoolean("LoadConfig", false);
-            var config = DataHandler.GetConfig();
-            if (classIndex > -1 && config.GetClassName() == mDataHandler.GetClassName(classIndex))
-            {
-                selected = config.GetTableConf()[day];
-            }
-            else if (classIndex == -1)
+            if (mClassIndex > -1 && config.GetClassName() == mDataHandler.GetClassName(mClassIndex))
+                selected = config.GetTableConf()[mDay];
+
+            else if (mClassIndex == -1)
             {
                 for (int i = 0; i < mDataHandler.GetClasses().Length; i++)
                 {
                     if (mDataHandler.GetClasses()[i] == config.GetClassName())
                     {
-                        selected = config.GetTableConf()[day];
-                        classIndex = i;
-                        editor.PutInt("classIndex", i);
-                        editor.Apply();
+                        selected    = config.GetTableConf()[mDay];
+                        mClassIndex = i;
+                        mEditor.PutInt("classIndex", i);
+                        mEditor.Apply();
                         break;
                     }
                 }
@@ -169,14 +156,14 @@ namespace ScheduleApp.Fragments
             {
                 for (int i = 0; i < config.GetConfigCount(); i++)
                 {
-                    if (config.GetClassName(i) == mDataHandler.GetClasses()[classIndex])
+                    if (config.GetClassName(i) == mDataHandler.GetClasses()[mClassIndex])
                     {
-                        selected = config.GetTableConf(i)[day];
+                        selected = config.GetTableConf(i)[mDay];
                         break;
                     }
                 }
             }
-            Activity.Title = mDataHandler.GetClassName(classIndex);
+            Activity.Title = mDataHandler.GetClassName(mClassIndex);
         }
     }
 }

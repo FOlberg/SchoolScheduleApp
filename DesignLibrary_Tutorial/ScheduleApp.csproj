@@ -145,15 +145,17 @@
     <Compile Include="Fragments\TabFragment.cs" />
     <Compile Include="Fragments\Dashboard.cs" />
     <Compile Include="Fragments\Debug_Fragment.cs" />
-    <Compile Include="Handler\Config.cs" />
+    <Compile Include="Objects\Config.cs" />
     <Compile Include="Handler\DataHandler.cs" />
     <Compile Include="Handler\InformationHandler.cs" />
     <Compile Include="Handler\JsonHandler.cs" />
     <Compile Include="Handler\MessageHandler.cs" />
-    <Compile Include="Handler\Subject.cs" />
-    <Compile Include="Handler\Time.cs" />
+    <Compile Include="Objects\Subject.cs" />
+    <Compile Include="Handler\TimeHandler.cs" />
+    <Compile Include="Objects\Timetable.cs" />
     <Compile Include="Handler\URLClient.cs" />
     <Compile Include="Background\AlarmReceiver.cs" />
+    <Compile Include="Objects\Week.cs" />
     <Compile Include="Helpers\ExpandableListViewAdapter.cs" />
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Helpers\Parent.cs" />
@@ -554,6 +556,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\ic_open_link.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\LicenseText.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

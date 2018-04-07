@@ -7,12 +7,6 @@ namespace ScheduleApp.Fragments
 {
     public class Debug_Fragment : Android.Support.V4.App.Fragment
     {
-        public override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-            // Create your fragment here
-        }
-
         private void B_Click(object sender, System.EventArgs e)
         {
             Intent background = new Intent(Activity, typeof(Background.BackgroundService));
@@ -29,8 +23,8 @@ namespace ScheduleApp.Fragments
         {
             base.OnViewCreated(view, savedInstanceState);
             this.Activity.Title = "Wochenansicht";
-            Button b = Activity.FindViewById<Button>(Resource.Id.buttonTest);
-            b.Click += B_Click;
+            Button b            = Activity.FindViewById<Button>(Resource.Id.buttonTest);
+            b.Click             += B_Click;
         }
     }
 }

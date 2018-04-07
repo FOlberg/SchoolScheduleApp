@@ -9,7 +9,7 @@ using Android.Support.V7.App;
 using Android.Support.V7.Preferences;
 using Android.Views;
 using Android.Widget;
-using Helper.Header;
+using ScheduleApp.Handler;
 
 namespace ScheduleApp.Activities
 {
@@ -53,21 +53,21 @@ namespace ScheduleApp.Activities
 
         private class PreferenceFragment : PreferenceFragmentCompat
         {
-            Preference mInfoText, mSourceClass, mSourcePlan;
-            EditText mTextPartOne, mTextPartTwo, mTextPartThree;
+            Preference  mInfoText, mSourceClass, mSourcePlan;
+            EditText    mTextPartOne, mTextPartTwo, mTextPartThree;
             AlertDialog mSourceDialog;
-            TextView mAssembledText;
-            ImageView mLinkIcon;
-            bool mSourceAll;
+            TextView    mAssembledText;
+            ImageView   mLinkIcon;
+            bool        mSourceAll;
 
             public override void OnCreatePreferences(Bundle savedInstanceState, string rootKey)
             {
                 AddPreferencesFromResource(Resource.Layout.App_Adv_Preferences);
 
-                mInfoText = FindPreference("info_text");
-                mSourceClass = FindPreference("class_source_preference");
+                mInfoText       = FindPreference("info_text");
+                mSourceClass    = FindPreference("class_source_preference");
+                mSourcePlan     = FindPreference("all_source_preference");
                 mSourceClass.PreferenceClick += SourcePreferenceClick;
-                mSourcePlan = FindPreference("all_source_preference");
                 mSourcePlan.PreferenceClick += SourcePreferenceClick;
             }
 
@@ -75,26 +75,26 @@ namespace ScheduleApp.Activities
             {
                 if (mSourceDialog == null || !mSourceDialog.IsShowing)
                 {
-                    var mBuilder = new AlertDialog.Builder(Activity);
-                    var view = LayoutInflater.Inflate(Resource.Layout.source_alert_dialog, null);
-                    var config = DataHandler.GetConfig();
+                    var mBuilder    = new AlertDialog.Builder(Activity);
+                    var view        = LayoutInflater.Inflate(Resource.Layout.source_alert_dialog, null);
+                    var config      = DataHandler.GetConfig();
                     string[] urlParts;
                     if (e.Preference.Key == "class_source_preference")
                     {
-                        mSourceAll = false;
-                        urlParts = config.urlSourceClass;
+                        mSourceAll  = false;
+                        urlParts    = config.urlSourceClass;
                     }         
                     else
                     {
-                        mSourceAll = true;
-                        urlParts = config.urlSourceAll;
+                        mSourceAll  = true;
+                        urlParts    = config.urlSourceAll;
                     }
 
-                    mTextPartOne = view.FindViewById<EditText>(Resource.Id.part1);
-                    mTextPartTwo = view.FindViewById<EditText>(Resource.Id.part2);
-                    mTextPartThree = view.FindViewById<EditText>(Resource.Id.part3);
-                    mAssembledText = view.FindViewById<TextView>(Resource.Id.endText);
-                    mLinkIcon = view.FindViewById<ImageView>(Resource.Id.icon_open_link);
+                    mTextPartOne    = view.FindViewById<EditText>(Resource.Id.part1);
+                    mTextPartTwo    = view.FindViewById<EditText>(Resource.Id.part2);
+                    mTextPartThree  = view.FindViewById<EditText>(Resource.Id.part3);
+                    mAssembledText  = view.FindViewById<TextView>(Resource.Id.endText);
+                    mLinkIcon       = view.FindViewById<ImageView>(Resource.Id.icon_open_link);
 
                     mTextPartOne.Text = urlParts[0];
                     mTextPartTwo.Text = urlParts[1];
@@ -103,12 +103,11 @@ namespace ScheduleApp.Activities
                     else mTextPartThree.Text = urlParts[2];
                     mAssembledText.Text = AssembleUrl();
 
-                    mTextPartOne.AfterTextChanged += AfterTextChanged;
-                    mTextPartTwo.AfterTextChanged += AfterTextChanged;
+                    mTextPartOne.AfterTextChanged   += AfterTextChanged;
+                    mTextPartTwo.AfterTextChanged   += AfterTextChanged;
                     mTextPartThree.AfterTextChanged += AfterTextChanged;
-                    mLinkIcon.Click += MLinkIcon_Click;
+                    mLinkIcon.Click                 += MLinkIcon_Click;
 
-                    //.SetTitle("Quelle ändern")
                     mBuilder.SetTitle(e.Preference.Title)
                         .SetPositiveButton("Save", (o, ev) =>
                         {
@@ -136,7 +135,7 @@ namespace ScheduleApp.Activities
             private void MLinkIcon_Click(object sender, EventArgs e)
             {
                 Intent browserIntent = new Intent(Intent.ActionView, Android.Net.Uri.Parse(mAssembledText.Text));
-                StartActivity(Intent.CreateChooser(browserIntent, "Wähle einen Browser"));//StartActivity(browserIntent);
+                StartActivity(Intent.CreateChooser(browserIntent, "Wähle einen Browser"));
             }
 
             private string AssembleUrl()

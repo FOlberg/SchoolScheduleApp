@@ -1,42 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Android.App;
 using Android.Content;
-using Helper.Header;
 using ScheduleApp.Helpers;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using ScheduleApp.Objects;
 
 namespace ScheduleApp.Handler
 {
     public class MessageHandler
     {
-        Week[] mWeek;
-        List<LData> mMsgListOld;
-        DataHandler mDataHandler;
-        public List<Card> mList;
+        Week[]              mWeek;
+        List<LData>         mMsgListOld;
+        DataHandler         mDataHandler;
+        public List<Card>   mList;
         [JsonProperty]
-        List<LData> mMsgList;
+        List<LData>         mMsgList;
+
         public event EventHandler OnDataChanged;
 
         [JsonConstructor]
         public MessageHandler(List<Card> list, List<LData> msgList)
         {
-            mDataHandler = DataHandler.GetDataHandler();
-            mList = list;
-            mMsgList = msgList;
-            mMsgListOld = new List<LData>();
-            mWeek = new Week[2];
+            mDataHandler    = DataHandler.GetDataHandler();
+            mList           = list;
+            mMsgList        = msgList;
+            mMsgListOld     = new List<LData>();
+            mWeek           = new Week[2];
             DeleteOutdatedData();
         }
 
         public MessageHandler()
         {
-            mDataHandler = DataHandler.GetDataHandler();
-            mWeek = new Week[2];
-            mMsgList = new List<LData>();
-            mMsgListOld = new List<LData>();
+            mDataHandler    = DataHandler.GetDataHandler();
+            mWeek           = new Week[2];
+            mMsgList        = new List<LData>();
+            mMsgListOld     = new List<LData>();
             Update();
             DeleteOutdatedData();
         }
@@ -53,10 +53,9 @@ namespace ScheduleApp.Handler
 
         public bool Update()
         {
-            //mDataHandler.LoadCfg();
             mWeek[0] = mDataHandler.GetDetailedWeek(0, true);
             mWeek[1] = mDataHandler.GetDetailedWeek(1, true);
-            if ((mWeek[0] != null || mWeek[1] != null)) //to avoid resetting data if there is no internet connection
+            if (mWeek[0] != null || mWeek[1] != null) //to avoid resetting data if there is no internet connection
             {
                 mList = DataToList();
                 Check();
@@ -68,106 +67,86 @@ namespace ScheduleApp.Handler
 
         private void DeleteOutdatedData()
         {
-            if (mList != null)
+            if (mList == null)
+                return;
+
+            for (int i = mList.Count - 1; i >= 0; i--)
             {
-                for (int i = mList.Count - 1; i >= 0; i--)
-                {
-                    if (mList[i].mTime.Date < DateTime.Now.Date)
-                    {
-                        mList.RemoveAt(i);
-                    }
-                    //else
-                    //{
-                    //    for (int j = mList[i].mCardList.Count - 1; j >= 0; j--)
-                    //    {
-                    //        if (DataHandler.GetConfig().GetTableConf()[(int)mList[i].mTime.Date.DayOfWeek - 1 % 7][(int)mList[i].mCardList[j].h[0]] == -1)
-                    //        {
-                    //            mList[i].mCardList.RemoveAt(j);
-                    //        }
-                    //    }
-                    //    if (mList[i].mCardList.Count < 1)
-                    //    {
-                    //        mList.RemoveAt(i);
-                    //    }
-                    //}
-                }
+                if (mList[i].mTime.Date < DateTime.Now.Date)
+                    mList.RemoveAt(i);
             }
         }
 
         public List<Card> DataToList()
         {
-            List<Card> tList = new List<Card>();
-            int[][] config = DataHandler.GetConfig().GetTableConf();
+            List<Card> tList    = new List<Card>();
+            int[][] config      = DataHandler.GetConfig().GetTableConf();
 
             if (mMsgList != null) //to avoid resetting data if there is no internet connection
             {
                 mMsgListOld = mMsgList;
-                mMsgList = new List<LData>();
+                mMsgList    = new List<LData>();
             }
 
             for (int wp = 0; mWeek != null && wp < mWeek.Length; wp++)
             {
-                if (mWeek[wp] != null)
-                {
-                    for (int day = 0; day < 5; day++)
-                    {
-                        List<CardList> tCardList = new List<CardList>();
-                        for (int hour = 0; hour < 11; hour++)
-                        {
-                            if (config[day][hour] != -1 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour].Length > config[day][hour])
-                            {
-                                Subject temp = mWeek[wp].week[day].list[hour][config[day][hour]];
-                                if (temp.omitted || temp.change != null || temp.ev != null)
-                                {
+                if (mWeek[wp] == null)
+                    continue;
 
-                                    if (temp.ev != null)
-                                    {
-                                        CardList cList = new CardList(temp, new Hours[] { temp.ev.Hour, temp.ev.Number });
-                                        tCardList.Add(cList);
-                                        hour = (int)temp.ev.Number; //Check
-                                    }
-                                    else
-                                    {
-                                        if (tCardList.Count > 0 && tCardList[tCardList.Count - 1].mSubject.room == temp.room && tCardList[tCardList.Count - 1].mSubject.name == temp.name
-                                            && tCardList[tCardList.Count - 1].h.Length == 1 && (int)tCardList[tCardList.Count - 1].h[0] + 1 == hour)
-                                        {
-                                            tCardList[tCardList.Count - 1].h = new Hours[] { tCardList[tCardList.Count - 1].h[0], (Hours)hour };
-                                        }
-                                        else
-                                        {
-                                            CardList cList = new CardList(temp, new Hours[] { (Hours)hour });
-                                            tCardList.Add(cList);
-                                        }
-                                    }
-                                }
-                            }
-                            else if (mWeek[wp].mEvents.Count > 0 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour][0].ev != null)
+                for (int day = 0; day < 5; day++)
+                {
+                    List<CardList> tCardList = new List<CardList>();
+                    for (int hour = 0; hour < 11; hour++)
+                    {
+                        if (config[day][hour] != -1 && mWeek[wp].mWeek[day].mSubs[hour] != null && mWeek[wp].mWeek[day].mSubs[hour].Length > config[day][hour])
+                        {
+                            Subject temp = mWeek[wp].mWeek[day].mSubs[hour][config[day][hour]];
+                            if (temp.mOmitted || temp.mChange != null || temp.mEvent != null)
                             {
-                                Subject temp = mWeek[wp].week[day].list[hour][0];
-                                for (int h = (int)temp.ev.Hour; h <= (int)temp.ev.Number; h++)
+                                if (temp.mEvent != null)
                                 {
-                                    if (config[day][h] != -1)
-                                    {
-                                        tCardList.Add(new CardList(temp, new Hours[] { temp.ev.Hour, temp.ev.Number }));
-                                        hour = (int)temp.ev.Number; //Check
-                                        break;
-                                    }
+                                    CardList cList  = new CardList(temp, new Hours[] { temp.mEvent.mHour, temp.mEvent.mNumber });
+                                    hour            = (int)temp.mEvent.mNumber;
+                                    tCardList.Add(cList);
                                 }
-                            }
-                            else if (config[day][hour] != -1 && mWeek[wp].week[day].list[hour] != null && mWeek[wp].week[day].list[hour].Length == 1) //Check
-                            {
-                                Subject temp = mWeek[wp].week[day].list[hour][0];
-                                temp.ev = new Event((Days)day, (Hours)hour, (Hours)hour, temp.name);
-                                tCardList.Add(new CardList(temp, new Hours[] { temp.ev.Hour }));
+                                else if (tCardList.Count > 0 && tCardList[tCardList.Count - 1].mSubject.mRoom == temp.mRoom && tCardList[tCardList.Count - 1].mSubject.mName == temp.mName
+                                        && tCardList[tCardList.Count - 1].mHour.Length == 1 && (int)tCardList[tCardList.Count - 1].mHour[0] + 1 == hour)
+                                {
+                                    tCardList[tCardList.Count - 1].mHour = new Hours[] { tCardList[tCardList.Count - 1].mHour[0], (Hours)hour };
+                                }
+                                else
+                                {
+                                    CardList cList = new CardList(temp, new Hours[] { (Hours)hour });
+                                    tCardList.Add(cList);
+                                }
                             }
                         }
-                        if (tCardList.Count > 0)
+                        else if (mWeek[wp].mEvents.Count > 0 && mWeek[wp].mWeek[day].mSubs[hour] != null && mWeek[wp].mWeek[day].mSubs[hour][0].mEvent != null)
                         {
-                            tList.Add(new Card(tCardList, mWeek[wp].tMon.AddDays(day)));
-                            foreach (var item in tCardList)
+                            Subject temp = mWeek[wp].mWeek[day].mSubs[hour][0];
+                            for (int h = (int)temp.mEvent.mHour; h <= (int)temp.mEvent.mNumber; h++)
                             {
-                                mMsgList.Add(new LData(mWeek[wp].tMon.AddDays(day).Date, item));
+                                if (config[day][h] == -1)
+                                    continue;
+
+                                tCardList.Add(new CardList(temp, new Hours[] { temp.mEvent.mHour, temp.mEvent.mNumber }));
+                                hour = (int)temp.mEvent.mNumber; //Check
+                                break;
                             }
+                        }
+                        else if (config[day][hour] != -1 && mWeek[wp].mWeek[day].mSubs[hour] != null && mWeek[wp].mWeek[day].mSubs[hour].Length == 1) //Check
+                        {
+                            Subject temp    = mWeek[wp].mWeek[day].mSubs[hour][0];
+                            temp.mEvent     = new Event((Days)day, (Hours)hour, (Hours)hour, temp.mName);
+                            tCardList.Add(new CardList(temp, new Hours[] { temp.mEvent.mHour }));
+                        }
+                    }
+                    if (tCardList.Count > 0)
+                    {
+                        tList.Add(new Card(tCardList, mWeek[wp].mMonDate.AddDays(day)));
+                        foreach (var item in tCardList)
+                        {
+                            mMsgList.Add(new LData(mWeek[wp].mMonDate.AddDays(day).Date, item));
                         }
                     }
                 }
@@ -181,66 +160,67 @@ namespace ScheduleApp.Handler
 
             for (int wp = 0; week != null && wp < week.Length; wp++)
             {
-                if (week[wp] != null)
+                if (week[wp] == null)
+                    continue;
+
+                for (int day = 0; day < 5; day++)
                 {
-                    for (int day = 0; day < 5; day++)
+                    if (week[wp].mMonDate.AddDays(day).Date >= System.DateTime.UtcNow.Date)
                     {
-                        if (week[wp].tMon.AddDays(day).Date >= System.DateTime.UtcNow.Date)
+                        List<CardList> tCardList    = new List<CardList>();
+                        int[] count                 = { 0, 0, 0, 0 };
+                        for (int hour = 0; hour < 11; hour++)
                         {
-                            List<CardList> tCardList = new List<CardList>();
-                            int[] count = { 0, 0, 0 };
-                            for (int hour = 0; hour < 11; hour++)
+                            if (week[wp].mWeek[day].mSubs[hour] == null)
+                                continue;
+
+                            count[0] = count[1] - count[2];
+                            count[1] = 0;
+                            count[2] = 0;
+                            //count[3] = 0;
+
+                            for (int index = 0; index < week[wp].mWeek[day].mSubs[hour].Length; index++)
                             {
-                                if (week[wp].week[day].list[hour] != null)
+                                Subject temp = null;
+                                if (week[wp].mWeek[day].mSubs[hour][index] != null)
+                                    temp = week[wp].mWeek[day].mSubs[hour][index];
+                                if (temp != null && (temp.mOmitted || temp.mChange != null || temp.mEvent != null))
                                 {
-                                    count[0] = count[1];
-                                    count[1] = 0;
-                                    count[2] = 0;
-                                    for (int index = 0; index < week[wp].week[day].list[hour].Length; index++)
+                                    if (temp.mEvent != null)
                                     {
-                                        Subject temp = null;
-                                        if (week[wp].week[day].list[hour][index] != null)
-                                            temp = week[wp].week[day].list[hour][index];
-                                        if (temp != null && (temp.omitted || temp.change != null || temp.ev != null))
+                                        CardList cList  = new CardList(temp, new Hours[] { temp.mEvent.mHour, temp.mEvent.mNumber });
+                                        hour            = (int)temp.mEvent.mNumber; //Check
+                                        tCardList.Add(cList);
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        int counter = count[0] + count[1] - count[2];
+                                        if (counter > 0 && tCardList.Count >= counter && tCardList[tCardList.Count - counter].mSubject.mRoom == temp.mRoom && tCardList[tCardList.Count - counter].mSubject.mName == temp.mName
+                                            && tCardList[tCardList.Count - counter].mHour.Length == 1 && (int)tCardList[tCardList.Count - counter].mHour[0] + 1 == hour)
                                         {
-                                            if (temp.ev != null)
-                                            {
-                                                CardList cList = new CardList(temp, new Hours[] { temp.ev.Hour, temp.ev.Number });
-                                                tCardList.Add(cList);
-                                                hour = (int)temp.ev.Number; //Check
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                int counter = count[0] + count[1] - count[2];
-                                                //if (tCardList.Count > 0 && tCardList[tCardList.Count - 1].mSubject.room == temp.room && tCardList[tCardList.Count - 1].mSubject.name == temp.name
-                                                //    && tCardList[tCardList.Count - 1].h.Length == 1 && (int)tCardList[tCardList.Count - 1].h[0] + 1 == hour)
-                                                //{
-                                                //    count[2]++;
-                                                //    tCardList[tCardList.Count - 1].h = new Hours[] { tCardList[tCardList.Count - 1].h[0], (Hours)hour };
-                                                //}
-                                                if (counter > 0 && tCardList.Count >= counter && tCardList[tCardList.Count - counter].mSubject.room == temp.room && tCardList[tCardList.Count - counter].mSubject.name == temp.name
-                                                    && tCardList[tCardList.Count - counter].h.Length == 1 && (int)tCardList[tCardList.Count - counter].h[0] + 1 == hour)
-                                                {
-                                                    count[2]++;
-                                                    tCardList[tCardList.Count - counter].h = new Hours[] { tCardList[tCardList.Count - counter].h[0], (Hours)hour };
-                                                }
-                                                else
-                                                {
-                                                    CardList cList = new CardList(temp, new Hours[] { (Hours)hour });
-                                                    tCardList.Add(cList);
-                                                    count[1]++;
-                                                }
-                                            }
+                                            count[2]++;
+                                            tCardList[tCardList.Count - counter].mHour = new Hours[] { tCardList[tCardList.Count - counter].mHour[0], (Hours)hour };
                                         }
+                                        else if (count[3] > 0 && tCardList.Count >= count[3] && tCardList[tCardList.Count - count[3]].mSubject.mRoom == temp.mRoom && tCardList[tCardList.Count - count[3]].mSubject.mName == temp.mName
+                                            && tCardList[tCardList.Count - count[3]].mHour.Length == 1 && (int)tCardList[tCardList.Count - count[3]].mHour[0] + 1 == hour)
+                                        {
+                                            count[2]++;
+                                            tCardList[tCardList.Count - count[3]].mHour = new Hours[] { tCardList[tCardList.Count - count[3]].mHour[0], (Hours)hour };
+                                        }
+                                        else
+                                        {
+                                            CardList cList = new CardList(temp, new Hours[] { (Hours)hour });
+                                            tCardList.Add(cList);
+                                            count[1]++;
+                                        }
+                                        count[3] = counter;
                                     }
                                 }
                             }
-                            if (tCardList.Count > 0)
-                            {
-                                tList.Add(new Card(tCardList, week[wp].tMon.AddDays(day)));
-                            }
                         }
+                        if (tCardList.Count > 0)
+                            tList.Add(new Card(tCardList, week[wp].mMonDate.AddDays(day)));
                     }
                 }
             }
@@ -262,9 +242,7 @@ namespace ScheduleApp.Handler
                 {
                     //list are new messages that will be displayed in refresh or as notification
                     if (OnDataChanged != null)
-                    {
                         OnDataChanged(list, new MessageArgs(mMsgListOld.Count == 0));
-                    }
                 }
 
                 //Delete outdated Messages
@@ -291,9 +269,7 @@ namespace ScheduleApp.Handler
                     }
                 }
                 if (!exists)
-                {
                     output.Add(aItem);
-                }
             }
             return output;
         }
@@ -334,13 +310,13 @@ namespace ScheduleApp.Handler
 
     public struct LData
     {
-        public DateTime date;
-        public CardList item;
+        public DateTime mDate;
+        public CardList mItem;
 
         public LData(DateTime dateTime, CardList cardList)
         {
-            date = dateTime;
-            item = cardList;
+            mDate = dateTime;
+            mItem = cardList;
         }
         public override bool Equals(object obj)
         {
@@ -356,47 +332,29 @@ namespace ScheduleApp.Handler
                 return false;
             }
 
-            bool a = date.Date == ob.date.Date;
-            bool b2 = item.h[0] == ob.item.h[0] && item.h.Length == ob.item.h.Length;
-            if (b2 && item.h.Length == 2)
+            bool a = mDate.Date == ob.mDate.Date;
+            bool b2 = mItem.mHour[0] == ob.mItem.mHour[0] && mItem.mHour.Length == ob.mItem.mHour.Length;
+            if (b2 && mItem.mHour.Length == 2)
             {
-                b2 = item.h[1] == ob.item.h[1];
+                b2 = mItem.mHour[1] == ob.mItem.mHour[1];
             }
-            bool b1 = item.mSubject.name == ob.item.mSubject.name;
-            bool b3 = item.mSubject.room == ob.item.mSubject.room;
-            bool b4 = item.mSubject.omitted == ob.item.mSubject.omitted;
+            bool b1 = mItem.mSubject.mName == ob.mItem.mSubject.mName;
+            bool b3 = mItem.mSubject.mRoom == ob.mItem.mSubject.mRoom;
+            bool b4 = mItem.mSubject.mOmitted == ob.mItem.mSubject.mOmitted;
             return a && b2 && b1 && b3 && b4;
-
-            //Extension in Future if problems are appeareing
-            //bool b5 = item.mSubject.ev == ob.item.mSubject.ev;
-            //if (!b5 && item.mSubject.ev != null)
-            //{
-            //    bool b7 = item.mSubject.ev.Describtion == ob.item.mSubject.ev.Describtion;
-            //    bool b8 = item.mSubject.ev.Hour == ob.item.mSubject.ev.Hour;
-            //    b5 = b7 && b8;
-            //}
-            //bool b9 = item.mSubject.change == ob.item.mSubject.change;
-            //if (!b9 && item.mSubject.change != null)
-            //{
-            //    bool b10 = item.mSubject.change.newRoom == ob.item.mSubject.change.newRoom;
-            //    bool b11 = item.mSubject.change.newSubject == ob.item.mSubject.change.newSubject;
-            //    b9 = b10 && b11;
-            //}
-
-            //return a && b2 && b1 && b3 && b4 && b5 && b9;
         }
     }
 
     public class MessageArgs : EventArgs
     {
-        private bool oldListisEmpty;
+        private bool mOldListisEmpty;
         public MessageArgs(bool isEmpty)
         {
-            oldListisEmpty = isEmpty;
+            mOldListisEmpty = isEmpty;
         }
         public bool EmptyList
         {
-            get { return oldListisEmpty; }
+            get { return mOldListisEmpty; }
         }
     }
 }

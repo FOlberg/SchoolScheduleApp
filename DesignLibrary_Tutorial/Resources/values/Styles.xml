@@ -20,7 +20,7 @@
     <item name="colorAccent">#039be5</item><!--#FF4081-->
     <item name="colorControlHighlight">#242424</item>
     <item name="android:listDivider">@style/android:drawable/divider_horizontal_dim_dark</item> 
-    <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    <item name="preferenceTheme">@style/PreferenceTheme</item>
   </style>
 
 

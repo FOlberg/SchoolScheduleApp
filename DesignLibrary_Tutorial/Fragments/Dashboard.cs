@@ -2,18 +2,12 @@
 using Android.Views;
 using Android.Support.V7.Widget;
 using ScheduleApp.Helpers;
-using System.Threading;
 using SwipeRefresh = Android.Support.V4.Widget.SwipeRefreshLayout;
 using System;
 using ScheduleApp.Handler;
 using ScheduleApp.Background;
-using Void = Java.Lang.Void;
 using Android.Widget;
-using Java.Lang;
 using Android.Content;
-using Android.App;
-using Helper.Header;
-using Android.Graphics;
 using Android.Support.Design.Widget;
 //using RecyclerViewAnimators.Animators;
 //using Android.Views.Animations;
@@ -22,22 +16,14 @@ namespace ScheduleApp.Fragments
 {
     public class Dashboard : Android.Support.V4.App.Fragment
     {
-        RecyclerView mRecyclerView;
         public RecyclerViewAdapter mRecyclerViewAdapter;
-        SwipeRefresh mSwipeRefresh;
-        MessageHandler mMsgHandler;
-        AlarmReceiver mAlarmReceiver;
-        LinearLayout mLinearLayout, mProgLayout;
-        //ProgressBar progressBar;
 
-        public override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
+        RecyclerView    mRecyclerView;
+        SwipeRefresh    mSwipeRefresh;
+        MessageHandler  mMsgHandler;
+        AlarmReceiver   mAlarmReceiver;
+        LinearLayout    mLinearLayout, mProgLayout;
 
-            //progressBar = Activity.FindViewById<ProgressBar>(Resource.Id.loading_spinner);
-            // Create your fragment here
-            //Do not handle events here! like button click etc -> because OnCreate will be called before OnCreatedView
-        }
         public override void OnStart()
         {
             base.OnStart();
@@ -56,18 +42,21 @@ namespace ScheduleApp.Fragments
 
             protected override Java.Lang.Object DoInBackground(params Java.Lang.Object[] @params)
             {
-                menu.mMsgHandler = MessageHandler.GetMsgHandler();
-                menu.mMsgHandler.OnDataChanged += menu.MUpdater_OnDataChanged;
+                menu.mMsgHandler    = MessageHandler.GetMsgHandler();
                 menu.mAlarmReceiver = new AlarmReceiver();
+
+                menu.mMsgHandler.OnDataChanged += menu.MUpdater_OnDataChanged;
                 menu.mAlarmReceiver.SetUpAlarmService(menu.Activity);
                 menu.Activity.RegisterReceiver(menu.mAlarmReceiver, new IntentFilter());
+
                 if (menu.Activity.GetSharedPreferences("Config", FileCreationMode.Private).GetBoolean("Changed", false))
                 {
                     menu.mMsgHandler.Update();
                     menu.Activity.GetSharedPreferences("Config", FileCreationMode.Private).Edit().PutBoolean("Changed", false).Apply();
                 }
-                menu.mRecyclerViewAdapter = menu.FillAdapter();
+
                 //var animator = new SlideInUpAnimator(new OvershootInterpolator(1f));
+                menu.mRecyclerViewAdapter = menu.FillAdapter();
                 menu.mRecyclerView.SetItemAnimator(new DefaultItemAnimator());
                 return true;
             }
@@ -77,6 +66,7 @@ namespace ScheduleApp.Fragments
                 base.OnPostExecute(result);
                 menu.Activity.Title = "Klasse " + menu.mMsgHandler.GetCurrentClass();
                 menu.mProgLayout.Visibility = ViewStates.Gone;
+
                 if (menu.mRecyclerViewAdapter.mList == null || menu.mRecyclerViewAdapter.mList.Count == 0)
                 {
                     menu.mLinearLayout.Visibility = ViewStates.Visible;
@@ -111,25 +101,20 @@ namespace ScheduleApp.Fragments
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             base.OnViewCreated(view, savedInstanceState);
-            //progressBar = Activity.FindViewById<ProgressBar>(Resource.Id.loading_spinner);
-            mLinearLayout = Activity.FindViewById<LinearLayout>(Resource.Id.LinLayout);
-            mProgLayout = Activity.FindViewById<LinearLayout>(Resource.Id.ProgLayout);
-            mRecyclerView = Activity.FindViewById<RecyclerView>(Resource.Id.RecyclerView);
+            mLinearLayout   = Activity.FindViewById<LinearLayout>(Resource.Id.LinLayout);
+            mProgLayout     = Activity.FindViewById<LinearLayout>(Resource.Id.ProgLayout);
+            mRecyclerView   = Activity.FindViewById<RecyclerView>(Resource.Id.RecyclerView);
+            mSwipeRefresh   = Activity.FindViewById<SwipeRefresh>(Resource.Id.SwipeRefresh);
             mRecyclerView.SetLayoutManager(new LinearLayoutManager(view.Context));
-            mSwipeRefresh = Activity.FindViewById<SwipeRefresh>(Resource.Id.SwipeRefresh);
             mSwipeRefresh.SetColorSchemeResources(Resource.Color.accent_color);
             if (DataHandler.GetDarkThemePref(Activity))
-            {
                 mSwipeRefresh.SetProgressBackgroundColorSchemeResource(Resource.Color.dark_spinner_bgd);
-            }
             mSwipeRefresh.Refresh += MSwipeRefresh_Refresh;
         }
 
         private void MSwipeRefresh_Refresh(object sender, System.EventArgs e)
         {
-            UpdateList();         
-            //mMsgHandler.DeleteOutdatedDataAsync();
-            //MessageHandler.SaveMsgHandler(mMsgHandler);
+            UpdateList();
         }
 
         private async void UpdateList()
@@ -137,10 +122,11 @@ namespace ScheduleApp.Fragments
             bool success = await mMsgHandler.UpdateAsync();
             if (success)
             {
-                mRecyclerViewAdapter.mList = mMsgHandler.mList;
+                mRecyclerViewAdapter.mList  = mMsgHandler.mList;
+                mProgLayout.Visibility      = ViewStates.Gone;
                 mRecyclerViewAdapter.SortOutData();
                 mRecyclerView.SwapAdapter(mRecyclerViewAdapter, false);
-                mProgLayout.Visibility = ViewStates.Gone;
+
                 if (mRecyclerViewAdapter.mList == null || mRecyclerViewAdapter.mList.Count == 0)
                 {
                     mLinearLayout.Visibility = ViewStates.Visible;
@@ -157,7 +143,6 @@ namespace ScheduleApp.Fragments
                 var snackbar = Snackbar.Make(View, Activity.GetString(Resource.String.toast_no_internet_connection), Snackbar.LengthIndefinite);
                 snackbar.SetAction("OK", (v) => { });
                 snackbar.Show();
-                //Toast.MakeText(Activity, Activity.GetString(Resource.String.toast_no_internet_connection), ToastLength.Short).Show();
             }
 
             mSwipeRefresh.Refreshing = false;

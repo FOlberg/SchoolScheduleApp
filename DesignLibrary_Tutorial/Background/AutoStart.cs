@@ -1,8 +1,5 @@
 ﻿using Android.App;
 using Android.Content;
-using Android.Util;
-using Android.Widget;
-using ScheduleApp.Helpers;
 
 namespace ScheduleApp.Background
 {

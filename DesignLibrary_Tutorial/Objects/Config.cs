@@ -2,61 +2,60 @@
 using Newtonsoft.Json;
 using System;
 
-namespace Helper.Header
+namespace ScheduleApp.Objects
 {
-    public class cTimetable
+    public class ConfigTimetable
     {
-        public string mClassName { get; set; }
-        public int[][] mTimetable { get; set; }
+        public string   mClassName { get; set; }
+        public int[][]  mTimetable { get; set; }
 
-        public cTimetable() { }
-        public cTimetable(string className)
+        public ConfigTimetable() { }
+        public ConfigTimetable(string className)
         {
             mClassName = className;
             mTimetable = new int[5][];
         }
 
-        public cTimetable(string className, int[][] timetable)
+        public ConfigTimetable(string className, int[][] timetable)
         {
             mClassName = className;
             mTimetable = timetable;
         }
 
-        public cTimetable(string className, int day, int[] selectTable)
+        public ConfigTimetable(string className, int day, int[] selectTable)
         {
-            mClassName = className;
-            mTimetable = new int[5][];
+            mClassName      = className;
+            mTimetable      = new int[5][];
             mTimetable[day] = selectTable;
         }
     }
 
     public class Settings
     {
-        public bool vibration;
-        public bool priority;
-        public int updateSequence;
+        public bool mVibration;
+        public bool mPriority;
+        public int  mUpdateSequence;
 
         public Settings()
         {
-            vibration = false;
-            updateSequence = 120;
-            priority = false;
+            mVibration      = false;
+            mPriority       = false;
+            mUpdateSequence = 120; 
         }
     }
 
     public class Config
     {
         [JsonProperty]
-        List<cTimetable> mCfgList;
-        public int mConfigSel;
-        public Settings mSettings;
-
-        public string[] urlSourceClass, urlSourceAll;
+        List<ConfigTimetable>    mCfgList;
+        public int          mConfigSel;
+        public Settings     mSettings;
+        public string[]     urlSourceClass, urlSourceAll;
 
         public Config()
         {
-            mCfgList = new List<cTimetable>();
-            mSettings = new Settings();
+            mCfgList    = new List<ConfigTimetable>();
+            mSettings   = new Settings();
             ResetSourceAll();
             ResetSourceClass();
         }
@@ -70,7 +69,7 @@ namespace Helper.Header
             }
             if (mCfgList.Count <= mConfigSel) //Add new 
             {
-                mCfgList.Add(new cTimetable(className, table));
+                mCfgList.Add(new ConfigTimetable(className, table));
                 mConfigSel = mCfgList.Count - 1;
             }
             else if (mCfgList.Count > 0 && mCfgList[mConfigSel].mClassName == className)
@@ -88,7 +87,7 @@ namespace Helper.Header
                         return;
                     }
                 }
-                mCfgList.Add(new cTimetable(className, table));
+                mCfgList.Add(new ConfigTimetable(className, table));
                 mConfigSel = mCfgList.Count - 1;
             }
         }

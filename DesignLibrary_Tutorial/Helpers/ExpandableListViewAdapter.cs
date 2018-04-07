@@ -1,24 +1,22 @@
 using System;
 using System.Collections.Generic;
-using Android.App;
 using Android.Content;
 using Android.Views;
 using Android.Widget;
-using Helper.Header;
-using ScheduleApp.Helpers;
+using ScheduleApp.Handler;
 
 namespace ScheduleApp.Helpers
 {
     public class ExpandableListViewAdapter : BaseExpandableListAdapter
     {
-        private Context mContext;
-        public List<Parent> mParentList { get; set; }
-        public View.IOnClickListener mListener;
-        public int mImageViewId { get; }
+        private Context                 mContext;
+        public int                      mImageViewId    { get; }
+        public List<Parent>             mParentList     { get; set; }
+        public View.IOnClickListener    mListener;
 
         public ExpandableListViewAdapter(Context context, List<Parent> ParentList)
         {
-            mContext = context;
+            mContext    = context;
             mParentList = ParentList;
         }
 
@@ -58,12 +56,12 @@ namespace ScheduleApp.Helpers
             if (convertView == null)
             {
                 LayoutInflater inflater = (LayoutInflater)mContext.GetSystemService(Context.LayoutInflaterService);
-                convertView = inflater.Inflate(Resource.Layout.item_layout, null);
+                convertView             = inflater.Inflate(Resource.Layout.item_layout, null);
             }
-            TextView txtRoom = convertView.FindViewById<TextView>(Resource.Id.itemRoom);
-            TextView txtSub = convertView.FindViewById<TextView>(Resource.Id.itemSub);
-            txtRoom.Text = mParentList[groupPosition].mChildren[childPosition].Item1;
-            txtSub.Text = mParentList[groupPosition].mChildren[childPosition].Item2;
+            TextView txtRoom    = convertView.FindViewById<TextView>(Resource.Id.itemRoom);
+            TextView txtSub     = convertView.FindViewById<TextView>(Resource.Id.itemSub);
+            txtRoom.Text        = mParentList[groupPosition].mChildren[childPosition].Item1;
+            txtSub.Text         = mParentList[groupPosition].mChildren[childPosition].Item2;
             return convertView;
         }
 
@@ -82,53 +80,54 @@ namespace ScheduleApp.Helpers
             if (convertView == null)
             {
                 LayoutInflater inflater = (LayoutInflater)mContext.GetSystemService(Context.LayoutInflaterService);
-                convertView = inflater.Inflate(Resource.Layout.group_item, null);
+                convertView             = inflater.Inflate(Resource.Layout.group_item, null);
             }
-            Parent tParent = mParentList[groupPosition];
-            TextView txtIndex = convertView.FindViewById<TextView>(Resource.Id.Index);
-            TextView txtRoom = convertView.FindViewById<TextView>(Resource.Id.groupRoom);
-            TextView txtClass = convertView.FindViewById<TextView>(Resource.Id.groupClass);
-            ImageView indicatorIcon = convertView.FindViewById<ImageView>(Resource.Id.imageView1);
-            RelativeLayout relativeLayout = convertView.FindViewById<RelativeLayout>(Resource.Id.groupItemLayout);
+            Parent tParent                  = mParentList[groupPosition];
+            TextView txtIndex               = convertView.FindViewById<TextView>(Resource.Id.Index);
+            TextView txtRoom                = convertView.FindViewById<TextView>(Resource.Id.groupRoom);
+            TextView txtClass               = convertView.FindViewById<TextView>(Resource.Id.groupClass);
+            ImageView indicatorIcon         = convertView.FindViewById<ImageView>(Resource.Id.imageView1);
+            RelativeLayout relativeLayout   = convertView.FindViewById<RelativeLayout>(Resource.Id.groupItemLayout);
+
             if (isExpanded && mParentList[groupPosition].mEnabled)
                 indicatorIcon.SetImageResource(Resource.Drawable.chevron_up);
             else
                 indicatorIcon.SetImageResource(Resource.Drawable.chevron_down);
             txtIndex.Text = TimeHandler.HourName[groupPosition];
+
             if (tParent.mSelected != -1)
             {
-                txtRoom.Text = tParent.mChildren[tParent.mSelected].Item1;
-                txtClass.Text = tParent.mChildren[tParent.mSelected].Item2;
+                txtRoom.Text        = tParent.mChildren[tParent.mSelected].Item1;
+                txtClass.Text       = tParent.mChildren[tParent.mSelected].Item2;
                 txtClass.Visibility = ViewStates.Visible;
-                txtRoom.Visibility = ViewStates.Visible;
+                txtRoom.Visibility  = ViewStates.Visible;
             }
             else
             {
                 txtClass.Visibility = ViewStates.Invisible;
-                txtRoom.Visibility = ViewStates.Invisible;
+                txtRoom.Visibility  = ViewStates.Invisible;
             }
             //TestSpace
 
             if(mParentList[groupPosition].mEditMode)
             {
-                indicatorIcon.SetImageResource(Resource.Drawable.ic_close);
                 indicatorIcon.Clickable = true;
                 indicatorIcon.Focusable = true;
-                indicatorIcon.SetTag(Resource.Id.TAG_IMGVIEW_ID, groupPosition);
                 indicatorIcon.Click += IndicatorIcon_Click;
+                indicatorIcon.SetImageResource(Resource.Drawable.ic_close);
+                indicatorIcon.SetTag(Resource.Id.TAG_IMGVIEW_ID, groupPosition);
             }
             else
             {
                 indicatorIcon.Clickable = false;
                 indicatorIcon.Focusable = false;
             }     
-
             return convertView;
         }
 
         private void IndicatorIcon_Click(object sender, EventArgs e)
         {
-            int groupPosition = 0;
+            var groupPosition = 0;
             try
             {
                 groupPosition = (int)((ImageView)sender).GetTag(Resource.Id.TAG_IMGVIEW_ID);
