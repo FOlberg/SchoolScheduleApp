@@ -14,7 +14,7 @@ using ScheduleApp.Handler;
 
 namespace ScheduleApp.Activities
 {
-    [Activity(Label = "@string/app_name", Icon = "@drawable/icon", MainLauncher = true, Theme = "@style/Theme.DesignDemo.CenterAnimation")]
+    [Activity(Label = "@string/app_name", Icon = "@drawable/icon", MainLauncher = true, Theme = "@style/Theme.Light.CenterAnimation")]
     public class SplashScreen : AppCompatActivity
     {
         public const int STARTUP_DELAY         = 300;
@@ -25,7 +25,7 @@ namespace ScheduleApp.Activities
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            SetTheme(Resource.Style.Theme_DesignDemo);
+            SetTheme(Resource.Style.Theme_Light);
             Window.DecorView.SystemUiVisibility = StatusBarVisibility.Hidden;
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.splash);

@@ -4223,9 +4223,6 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f080013
 			public const int Base_Theme_AppCompat_Light_DialogWhenLarge = 2131230739;
 			
-			// aapt resource value: 0x7f0801a5
-			public const int Base_Theme_DesignDemo = 2131231141;
-			
 			// aapt resource value: 0x7f0800ba
 			public const int Base_ThemeOverlay_AppCompat = 2131230906;
 			
@@ -4628,8 +4625,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f080173
 			public const int Preference_SwitchPreferenceCompat_Material = 2131231091;
 			
-			// aapt resource value: 0x7f0801ad
-			public const int PreferenceCategoryStyle = 2131231149;
+			// aapt resource value: 0x7f0801ab
+			public const int PreferenceCategoryStyle = 2131231147;
 			
 			// aapt resource value: 0x7f080000
 			public const int PreferenceFragment = 2131230720;
@@ -4643,8 +4640,8 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f080167
 			public const int PreferenceFragmentList_Material = 2131231079;
 			
-			// aapt resource value: 0x7f0801ac
-			public const int PreferenceTheme = 2131231148;
+			// aapt resource value: 0x7f0801aa
+			public const int PreferenceTheme = 2131231146;
 			
 			// aapt resource value: 0x7f08000c
 			public const int PreferenceThemeOverlay = 2131230732;
@@ -4970,8 +4967,11 @@ namespace ScheduleApp
 			// aapt resource value: 0x7f080117
 			public const int Theme_AppCompat_NoActionBar = 2131230999;
 			
+			// aapt resource value: 0x7f0801a4
+			public const int Theme_DarkTheme = 2131231140;
+			
 			// aapt resource value: 0x7f0801a6
-			public const int Theme_DarkTheme = 2131231142;
+			public const int Theme_DarkTheme_KitKat = 2131231142;
 			
 			// aapt resource value: 0x7f08018c
 			public const int Theme_Design = 2131231116;
@@ -4992,19 +4992,13 @@ namespace ScheduleApp
 			public const int Theme_Design_NoActionBar = 2131231121;
 			
 			// aapt resource value: 0x7f0801a3
-			public const int Theme_DesignDemo = 2131231139;
-			
-			// aapt resource value: 0x7f0801aa
-			public const int Theme_DesignDemo_AppBarOverlay = 2131231146;
+			public const int Theme_Light = 2131231139;
 			
 			// aapt resource value: 0x7f0801a7
-			public const int Theme_DesignDemo_CenterAnimation = 2131231143;
+			public const int Theme_Light_CenterAnimation = 2131231143;
 			
-			// aapt resource value: 0x7f0801ab
-			public const int Theme_DesignDemo_PopupOverlay = 2131231147;
-			
-			// aapt resource value: 0x7f0801a4
-			public const int Theme_DesignDemo2 = 2131231140;
+			// aapt resource value: 0x7f0801a5
+			public const int Theme_Light_KitKat = 2131231141;
 			
 			// aapt resource value: 0x7f080118
 			public const int ThemeOverlay_AppCompat = 2131231000;

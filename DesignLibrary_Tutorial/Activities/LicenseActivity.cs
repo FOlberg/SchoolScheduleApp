@@ -20,7 +20,7 @@ namespace ScheduleApp.Activities
             if (DataHandler.GetDarkThemePref(this))
                 SetTheme(Resource.Style.Theme_DarkTheme);
             else
-                SetTheme(Resource.Style.Theme_DesignDemo);
+                SetTheme(Resource.Style.Theme_Light);
             base.OnCreate(savedInstanceState);
             OverridePendingTransition(Resource.Animation.slide_from_right, Resource.Animation.slide_to_left);
             SetContentView(Resource.Layout.Activity_License);

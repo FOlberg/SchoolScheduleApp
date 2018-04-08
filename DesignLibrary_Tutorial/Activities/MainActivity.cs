@@ -16,7 +16,7 @@ using System.Linq;
 
 namespace ScheduleApp.Activities
 {
-    [Activity(Label = "@string/app_name", Icon = "@drawable/icon", Theme = "@style/Theme.DesignDemo")]
+    [Activity(Label = "@string/app_name", Icon = "@drawable/icon", Theme = "@style/Theme.Light")]
     public class MainActivity : AppCompatActivity
     {
         private DrawerLayout    mDrawerLayout;
@@ -29,10 +29,20 @@ namespace ScheduleApp.Activities
         protected override void OnCreate(Bundle bundle)
         {
             mDarkTheme = DataHandler.GetDarkThemePref(this);
-            if (mDarkTheme)
-                SetTheme(Resource.Style.Theme_DarkTheme);
+            if (Build.VERSION.SdkInt < BuildVersionCodes.Lollipop)
+            {
+                if (mDarkTheme)
+                    SetTheme(Resource.Style.Theme_DarkTheme_KitKat);
+                else
+                    SetTheme(Resource.Style.Theme_Light_KitKat);
+            }
             else
-                SetTheme(Resource.Style.Theme_DesignDemo);
+            {
+                if (mDarkTheme)
+                    SetTheme(Resource.Style.Theme_DarkTheme);
+                else
+                    SetTheme(Resource.Style.Theme_Light);
+            }
             base.OnCreate(bundle);
 
             // Set our view from the "main" layout resource

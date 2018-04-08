@@ -34,7 +34,7 @@ namespace ScheduleApp.Activities
             if (DataHandler.GetDarkThemePref(this))
                 SetTheme(Resource.Style.Theme_DarkTheme);
             else
-                SetTheme(Resource.Style.Theme_DesignDemo);
+                SetTheme(Resource.Style.Theme_Light);
             base.OnCreate(savedInstanceState);
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Lollipop)
                 SetContentView(Resource.Layout.Activity_Week);

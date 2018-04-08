@@ -1,17 +1,9 @@
 ﻿<resources>
-
-  <style name="Theme.DesignDemo" parent="Base.Theme.DesignDemo">
-  </style>
-
-  <style name="Theme.DesignDemo2" parent="Base.Theme.DesignDemo">
-  </style>
-
-  <style name="Base.Theme.DesignDemo" parent="Theme.AppCompat.Light.NoActionBar">
+  
+  <style name="Theme.Light" parent="Theme.AppCompat.Light.NoActionBar">
     <item name="colorPrimary">#673AB7</item>
     <item name="colorPrimaryDark">#512DA8</item>
     <item name="colorAccent">#039be5</item> <!--#FF4081 #448AFF-->
-    <item name="preferenceTheme">@style/PreferenceTheme</item>
-    <!--<item name="android:popupTheme">@style/ThemeOverlay.Material.Light"</item>-->
   </style>
   
   <style name="Theme.DarkTheme" parent="Theme.AppCompat.NoActionBar">
@@ -22,9 +14,20 @@
     <item name="android:listDivider">@style/android:drawable/divider_horizontal_dim_dark</item> 
     <item name="preferenceTheme">@style/PreferenceTheme</item>
   </style>
+  
+  <!--For android version API 20 or less-->
 
+  <style name="Theme.Light.KitKat" parent="Theme.Light">
+    <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+  </style>
 
-  <style name="Theme.DesignDemo.CenterAnimation">
+  <style name="Theme.DarkTheme.KitKat" parent="Theme.DarkTheme">
+    <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+  </style>
+  
+  <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+  <style name="Theme.Light.CenterAnimation">
     <item name="android:windowBackground">@drawable/splash_logo</item>
   </style>
 
@@ -41,21 +44,11 @@
     <item name="android:orientation">vertical</item>
   </style>
 
-  <style name="Theme.DesignDemo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-  <style name="Theme.DesignDemo.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
   <style name="PreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
     <item name="preferenceCategoryStyle">@style/PreferenceCategoryStyle</item>
-    <!--<item name="preferenceFragmentListStyle">@style/preferenceStyle</item>-->
   </style>
 
   <style name="PreferenceCategoryStyle" parent="@style/Preference.Category.Material">
     <item name="android:layout">@layout/preference_category</item>
   </style>
-
-  <!--<style name="preferenceStyle" parent="@style/PreferenceFragmentList.Material">
-    <item name="android:paddingLeft">8dp</item>
-    <item name="android:paddingRight">8dp</item>
-  </style>-->
 </resources>

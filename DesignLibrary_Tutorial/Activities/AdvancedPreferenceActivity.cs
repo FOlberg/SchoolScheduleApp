@@ -18,10 +18,20 @@ namespace ScheduleApp.Activities
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            if (DataHandler.GetDarkThemePref(this))
-                SetTheme(Resource.Style.Theme_DarkTheme);
+            if (Build.VERSION.SdkInt < BuildVersionCodes.Lollipop)
+            {
+                if (DataHandler.GetDarkThemePref(this))
+                    SetTheme(Resource.Style.Theme_DarkTheme_KitKat);
+                else
+                    SetTheme(Resource.Style.Theme_Light_KitKat);
+            }
             else
-                SetTheme(Resource.Style.Theme_DesignDemo);
+            {
+                if (DataHandler.GetDarkThemePref(this))
+                    SetTheme(Resource.Style.Theme_DarkTheme);
+                else
+                    SetTheme(Resource.Style.Theme_Light);
+            }
             base.OnCreate(savedInstanceState);
             OverridePendingTransition(Resource.Animation.slide_from_right, Resource.Animation.slide_to_left);
             SetContentView(Resource.Layout.Activity_Adv_Preference);
