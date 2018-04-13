@@ -12,4 +12,5 @@
   <string name="progressdialog_schedule_changed">Stundenplan wird gespeichert...</string>
   <string name="source_dialog_warning">Veränderungen der Internetadressen können zu Fehlern bei der Datenabfrage führen.\nDurch das Betätigen von <b>Default</b> im Bearbeitungsdialog können die Einstellungen wieder zurückgesetzt werden.</string>
   <string name="source_dialog_info">Die Unterteilung der Internetadresse dient der Einbindung notwendiger Daten, wie der aktuellen Woche.</string>
+  <string name="timetable_alert_dialog_info">Bei einem ausgweählten Fach kann durch langanhaltendes Drücken ein Kreuz in Erscheinung gebracht werden. Das Betätigen dieses entfernt die dortige Auswahl.</string>
 </resources>

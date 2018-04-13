@@ -4,6 +4,7 @@
     <item name="colorPrimary">#673AB7</item>
     <item name="colorPrimaryDark">#512DA8</item>
     <item name="colorAccent">#039be5</item> <!--#FF4081 #448AFF-->
+    <item name="preferenceTheme">@style/PreferenceTheme</item>
   </style>
   
   <style name="Theme.DarkTheme" parent="Theme.AppCompat.NoActionBar">

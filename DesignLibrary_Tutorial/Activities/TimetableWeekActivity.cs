@@ -59,6 +59,12 @@ namespace ScheduleApp.Activities
             mFabBtn.Click += Fab_Click;
         }
 
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.appbar_information, menu);
+            return base.OnCreateOptionsMenu(menu);
+        }
+
         private void ViewPager_PageSelected(object sender, ViewPager.PageSelectedEventArgs e)
         {
             if (e.Position == 4)
@@ -125,13 +131,29 @@ namespace ScheduleApp.Activities
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            if (item.ItemId == Android.Resource.Id.Home)
+            switch (item.ItemId)
             {
-                mDayCounter = 0;
-                SetResult(Result.Canceled);
-                Finish();
+                case Android.Resource.Id.Home:
+                    mDayCounter = 0;
+                    SetResult(Result.Canceled);
+                    Finish();
+                    break;
+                case Resource.Id.action_info:
+                    ShowInformationDialog();
+                    break;
             }
             return base.OnOptionsItemSelected(item);
+        }
+
+        private void ShowInformationDialog()
+        {
+            var builder = new Android.App.AlertDialog.Builder(this);
+            var view = LayoutInflater.Inflate(Resource.Layout.alert_dialog_info, null);
+            builder.SetView(view)
+                .SetTitle("Hilfe")
+                .SetPositiveButton("Ok", (o, ev) => { })
+                .Create()
+                .Show();
         }
 
         public override void Finish()

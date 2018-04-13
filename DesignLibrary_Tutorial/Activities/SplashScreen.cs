@@ -142,18 +142,24 @@ namespace ScheduleApp.Activities
             catch (Exception)
             {
                 if (!start)
-                    RunOnUiThread(() => BuildAlertDialog(this).Show());
+                    RunOnUiThread(() => BuildAlertDialog(this));
                 return false;
             }
             return true;
         }
-        private AlertDialog BuildAlertDialog(Context context)
+        private void BuildAlertDialog(Context context)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.SetTitle("Keine Internetverbindung")
                 .SetMessage("Um fortzufahren, muss eine Verbindung über WLAN oder Mobile Daten sichergestellt werden")
-                .SetPositiveButton("Ok", (o, e) => {});
-            return builder.Create();
+                .SetPositiveButton("Ok", (o, e) => { })
+                .SetNeutralButton("Einstellungen", (o, e) =>
+                {
+                    Intent settings = new Intent(this, typeof(AdvancedPreferenceActivity));
+                    StartActivity(settings);
+                })
+                .Create()
+                .Show();
         }
 
         private DataHandler GetDataHandler()

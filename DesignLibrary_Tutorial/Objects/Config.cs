@@ -62,6 +62,8 @@ namespace ScheduleApp.Objects
 
         public void AddTableConf(string className, int[][] table)
         {
+            if (className == null)
+                return;
             if (mCfgList.Count > 45)
             {
                 //log
@@ -134,6 +136,17 @@ namespace ScheduleApp.Objects
         public void ResetSourceAll()
         {
             urlSourceAll = new string[] { "https://iserv.thg-goettingen.de/idesk/plan/public.php/Sch%C3%BCler-Vertretungsplan/e1fca97ce9638341/", "/w/w00000.htm" };
+        }
+
+        public void RemoveCurrentConfig()
+        {
+            mCfgList.RemoveAt(mConfigSel);
+            mConfigSel--;
+            if (mConfigSel < 0)
+            {
+                mCfgList.Clear();
+                mConfigSel = 0;
+            }
         }
     }
 }

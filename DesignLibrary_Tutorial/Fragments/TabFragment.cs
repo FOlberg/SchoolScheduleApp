@@ -140,16 +140,11 @@ namespace ScheduleApp.Fragments
 
             else if (mClassIndex == -1)
             {
-                for (int i = 0; i < mDataHandler.GetClasses().Length; i++)
+                FindClassIndex(ref config);
+                if (mClassIndex == -1 && (config.GetClassName() == null || config.mConfigSel > 0))
                 {
-                    if (mDataHandler.GetClasses()[i] == config.GetClassName())
-                    {
-                        selected    = config.GetTableConf()[mDay];
-                        mClassIndex = i;
-                        mEditor.PutInt("classIndex", i);
-                        mEditor.Apply();
-                        break;
-                    }
+                    config.RemoveCurrentConfig();
+                    FindClassIndex(ref config);
                 }
             }
             else
@@ -164,6 +159,21 @@ namespace ScheduleApp.Fragments
                 }
             }
             Activity.Title = mDataHandler.GetClassName(mClassIndex);
+        }
+
+        private void FindClassIndex(ref Config config)
+        {
+            for (int i = 0; i < mDataHandler.GetClasses().Length; i++)
+            {
+                if (mDataHandler.GetClasses()[i] == config.GetClassName())
+                {
+                    selected = config.GetTableConf()[mDay];
+                    mClassIndex = i;
+                    mEditor.PutInt("classIndex", i);
+                    mEditor.Apply();
+                    break;
+                }
+            }
         }
     }
 }

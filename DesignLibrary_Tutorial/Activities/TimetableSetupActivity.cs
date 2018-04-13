@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using ScheduleApp.Handler;
 using Android.Runtime;
 using System.Threading;
+using System;
 
 namespace ScheduleApp.Activities
 {
@@ -95,8 +96,12 @@ namespace ScheduleApp.Activities
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            if (item.ItemId == Android.Resource.Id.Home)
-                Finish();
+            switch (item.ItemId)
+            {
+                case Android.Resource.Id.Home:
+                    Finish();
+                    break;
+            }
             return base.OnOptionsItemSelected(item);
         }
 
