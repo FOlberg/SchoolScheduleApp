@@ -3,6 +3,6 @@
   <item
       android:id="@+id/action_info"
       android:icon="@drawable/ic_filled_info"
-      android:title="Hilfe"
+      android:title="@string/timetable_alert_dialog_help"
       app:showAsAction="ifRoom"/>
 </menu>

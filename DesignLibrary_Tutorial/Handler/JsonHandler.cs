@@ -113,5 +113,13 @@ namespace ScheduleApp.Handler
             catch (FileNotFoundException) { } // Add to Log
             return false;
         }
+
+        public static void DeleteFiles(string folder)
+        {
+            if (!Directory.Exists(codepath + "/" + folder))
+                return;
+
+            Directory.Delete(codepath + "/" + folder, true);
+        }
     }
 }

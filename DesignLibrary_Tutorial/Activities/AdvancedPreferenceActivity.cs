@@ -10,10 +10,11 @@ using Android.Support.V7.Preferences;
 using Android.Views;
 using Android.Widget;
 using ScheduleApp.Handler;
+using System.Threading;
 
 namespace ScheduleApp.Activities
 {
-    [Activity(Label = "Erweiterte Einstellungen")]
+    [Activity(Label = "@string/act_label_adv_pref")]
     public class AdvancedPreferenceActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
@@ -63,7 +64,7 @@ namespace ScheduleApp.Activities
 
         private class PreferenceFragment : PreferenceFragmentCompat
         {
-            Preference  mInfoText, mSourceClass, mSourcePlan;
+            Preference  mInfoText, mSourceClass, mSourcePlan, mSourceDelete;
             EditText    mTextPartOne, mTextPartTwo, mTextPartThree;
             AlertDialog mSourceDialog;
             TextView    mAssembledText;
@@ -77,15 +78,41 @@ namespace ScheduleApp.Activities
                 mInfoText       = FindPreference("info_text");
                 mSourceClass    = FindPreference("class_source_preference");
                 mSourcePlan     = FindPreference("all_source_preference");
-                mSourceClass.PreferenceClick += SourcePreferenceClick;
-                mSourcePlan.PreferenceClick += SourcePreferenceClick;
+                mSourceDelete   = FindPreference("delete_temp_data_preference");
+                mSourceClass.PreferenceClick    += SourcePreferenceClick;
+                mSourcePlan.PreferenceClick     += SourcePreferenceClick;
+                mSourceDelete.PreferenceClick   += SourceDelete_PreferenceClick;
+            }
+
+            private void SourceDelete_PreferenceClick(object sender, Preference.PreferenceClickEventArgs e)
+            {
+                var builder = new AlertDialog.Builder(Activity);
+                var view = LayoutInflater.Inflate(Resource.Layout.alert_dialog_cache, null);
+                builder.SetView(view)
+                    .SetTitle("Cache leeren")
+                    .SetPositiveButton("Löschen", (o, ev) => {
+                        DeleteTempData();
+                    })
+                    .SetNegativeButton("Abbrechen", (o, ev) => { })
+                    .Create()
+                    .Show();
+            }
+
+            private void DeleteTempData()
+            {
+                var dataHandler = DataHandler.GetDataHandler();
+                dataHandler.DeleteCache();
+                new Thread(new ThreadStart(delegate
+                {
+                    dataHandler.GetClasses();
+                })).Start();
             }
 
             private void SourcePreferenceClick(object sender, Preference.PreferenceClickEventArgs e)
             {
                 if (mSourceDialog == null || !mSourceDialog.IsShowing)
                 {
-                    var mBuilder    = new AlertDialog.Builder(Activity);
+                    var builder     = new AlertDialog.Builder(Activity);
                     var view        = LayoutInflater.Inflate(Resource.Layout.source_alert_dialog, null);
                     var config      = DataHandler.GetConfig();
                     string[] urlParts;
@@ -118,7 +145,7 @@ namespace ScheduleApp.Activities
                     mTextPartThree.AfterTextChanged += AfterTextChanged;
                     mLinkIcon.Click                 += MLinkIcon_Click;
 
-                    mBuilder.SetTitle(e.Preference.Title)
+                    builder.SetTitle(e.Preference.Title)
                         .SetPositiveButton("Save", (o, ev) =>
                         {
                             if (mSourceAll)
@@ -136,8 +163,8 @@ namespace ScheduleApp.Activities
                         {
                             mSourceDialog.Cancel();
                         });
-                    mBuilder.SetView(view);
-                    mSourceDialog = mBuilder.Create();
+                    builder.SetView(view);
+                    mSourceDialog = builder.Create();
                     mSourceDialog.Show();
                 }
             }
@@ -145,7 +172,7 @@ namespace ScheduleApp.Activities
             private void MLinkIcon_Click(object sender, EventArgs e)
             {
                 Intent browserIntent = new Intent(Intent.ActionView, Android.Net.Uri.Parse(mAssembledText.Text));
-                StartActivity(Intent.CreateChooser(browserIntent, "Wähle einen Browser"));
+                StartActivity(Intent.CreateChooser(browserIntent, Resources.GetString(Resource.String.broswer_intent_selection)));
             }
 
             private string AssembleUrl()

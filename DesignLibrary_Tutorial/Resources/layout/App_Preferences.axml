@@ -3,45 +3,45 @@
 <!--<Preference 
     android:widgetLayout="@layout/progress_widget"/>-->
     <android.support.v7.preference.PreferenceCategory
-        android:title="Benutzer">
+        android:title="@string/pref_cat_one_title">
       <Preference
-            android:key="ChangeClass"
-            android:title="Klasse"
-            android:summary="Summary" />
+            android:key="change_class"
+            android:title="@string/pref_change_class_title"
+            android:summary="Error" />
         <Preference
-            android:key="ChangeSchedule"
-            android:title="Stundenplan" />
+            android:key="change_schedule"
+            android:title="@string/pref_change_schedule_title" />
         <android.support.v7.preference.SwitchPreferenceCompat
             android:key="theme_preference"
-            android:title="Nachtmodus"
+            android:title="@string/pref_theme_preference_title"
             android:defaultValue="false" />
     </android.support.v7.preference.PreferenceCategory>
   <android.support.v7.preference.PreferenceCategory
-        android:title="Benachrichtigungen">
+        android:title="@string/pref_cat_two_title">
         <ListPreference
-            android:key="SyncIntervall_preference"
-            android:title="Update Intervall"
-            android:summary="Alle %s"
+            android:key="sync_intervall_preference"
+            android:title="@string/pref_sync_intervall_preference_title"
+            android:summary="@string/pref_sync_intervall_preference_sum"
             android:entries="@array/update_intervall"
             android:entryValues="@array/update_intervall_values"
             android:defaultValue="120" />
         <android.support.v7.preference.SwitchPreferenceCompat
             android:key="vibration_preference"
-            android:title="Vibration"
+            android:title="@string/pref_vibration_preference_title"
             android:defaultValue="false" />
         <android.support.v7.preference.SwitchPreferenceCompat
             android:key="priority_preference"
-            android:title="Hohe Priorität"
+            android:title="@string/pref_priority_preference_title"
             android:defaultValue="false" />
     </android.support.v7.preference.PreferenceCategory>
     <android.support.v7.preference.PreferenceCategory
-        android:title="App">
+        android:title="@string/pref_cat_three_title">
     <!--Über die App-->
         <Preference
             android:key="advsettings_preference"
-            android:title="Erweiterte Einstellungen" />
+            android:title="@string/pref_advsettings_preference_title" />
         <Preference
             android:key="license_preference"
-            android:title="Rechtliche Hinweise" />
+            android:title="@string/pref_license_preference_title" />
     </android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>

@@ -14,7 +14,7 @@ using System;
 
 namespace ScheduleApp.Activities
 {
-    [Activity(Label = "Klassen")]
+    [Activity(Label = "@string/act_label_ttable_setup")]
     public class TimetableSetupActivity : AppCompatActivity
     {
         private List<string>        mItems;

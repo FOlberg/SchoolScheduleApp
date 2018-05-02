@@ -10,7 +10,7 @@ using ScheduleApp.Handler;
 
 namespace ScheduleApp.Activities
 {
-    [Activity(Label = "Rechtliche Hinweise")]
+    [Activity(Label = "@string/act_label_license")]
     public class LicenseActivity : AppCompatActivity
     {
         TextView mTextView;

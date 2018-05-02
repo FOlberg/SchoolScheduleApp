@@ -65,6 +65,10 @@ namespace ScheduleApp.Helpers
                 else if (mType == Type.USER)
                 {
                     var table = config.GetTableConf();
+
+                    if (table == null)
+                        return;
+
                     for (int j = mList[i].mCardList.Count - 1; j >= 0; j--)
                     {
                         if (table[(int)mList[i].mTime.Date.DayOfWeek - 1 % 7][(int)mList[i].mCardList[j].mHour[0]] != -1)

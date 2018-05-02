@@ -19,7 +19,7 @@ using ScheduleApp.Objects;
 
 namespace ScheduleApp.Activities
 {
-    [Activity(Label = "Stundenplan")]
+    [Activity(Label = "@string/act_label_ttable_week")]
     public class TimetableWeekActivity : AppCompatActivity
     {
         static int mDayCounter = 0;

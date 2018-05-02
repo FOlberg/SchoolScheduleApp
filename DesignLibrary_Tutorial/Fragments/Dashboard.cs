@@ -27,8 +27,14 @@ namespace ScheduleApp.Fragments
         public override void OnStart()
         {
             base.OnStart();
-            Activity.Title = "Klasse " + Activity.GetSharedPreferences("Config", FileCreationMode.Private).GetString("className", "");
-            new BckTask(this).Execute();
+            Activity.Title = 
+                Activity.GetString( Resource.String.frag_label_dashboard ) + " " +
+                Activity.GetSharedPreferences("Config", FileCreationMode.Private).GetString("className", "");
+
+            if (DataHandler.GetConfig().mConfigSel < 0)
+                ShowErrorBar();
+            else
+                new BckTask(this).Execute();
         }
 
         private class BckTask : AsyncTask
@@ -95,7 +101,7 @@ namespace ScheduleApp.Fragments
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // Use this to return your custom view for this Fragment
-            return inflater.Inflate(Resource.Layout.menu1, container, false);
+            return inflater.Inflate(Resource.Layout.frag_dashboard, container, false);
         }
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
@@ -152,6 +158,16 @@ namespace ScheduleApp.Fragments
         {
             bool potraitModeActive = Activity.Resources.Configuration.Orientation == Android.Content.Res.Orientation.Portrait;
             return new RecyclerViewAdapter(mMsgHandler.mList, Helpers.Type.USER, DataHandler.GetDarkThemePref(Activity), potraitModeActive);
+        }
+
+        private void ShowErrorBar()
+        {
+            Activity.Title = "Keine Auswahl";
+            mSwipeRefresh.Enabled = false;
+
+            var snackbar = Snackbar.Make(View, Activity.GetString(Resource.String.toast_no_class_sel), Snackbar.LengthIndefinite);
+            snackbar.SetAction("OK", (v) => { });
+            snackbar.Show();
         }
     }
 }

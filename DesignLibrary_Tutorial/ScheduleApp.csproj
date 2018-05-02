@@ -177,16 +177,13 @@
     <AndroidResource Include="Resources\menu\drawer_view.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\menu\sample_actions.axml">
+    <AndroidResource Include="Resources\layout\frag_debug.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\old_menu2.axml">
+    <AndroidResource Include="Resources\layout\frag_plan_sel.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\menu3.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\menu1.axml">
+    <AndroidResource Include="Resources\layout\frag_dashboard.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\Activity_Setup.axml">
@@ -203,9 +200,6 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\cardView.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\old_cardListItem.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\App_Preferences.axml">
@@ -228,9 +222,6 @@
     <AndroidResource Include="Resources\layout\cardListItem_plan.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\old_cardListItem_plan2.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
     <AndroidResource Include="Resources\layout\source_alert_dialog.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -244,6 +235,9 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\alert_dialog_info.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\alert_dialog_cache.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

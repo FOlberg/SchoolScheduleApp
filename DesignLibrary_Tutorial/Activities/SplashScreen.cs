@@ -150,8 +150,8 @@ namespace ScheduleApp.Activities
         private void BuildAlertDialog(Context context)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.SetTitle("Keine Internetverbindung")
-                .SetMessage("Um fortzufahren, muss eine Verbindung über WLAN oder Mobile Daten sichergestellt werden")
+            builder.SetTitle(Resources.GetString(Resource.String.internet_disconnect))
+                .SetMessage(Resources.GetString(Resource.String.internet_solve_connection_manual))
                 .SetPositiveButton("Ok", (o, e) => { })
                 .SetNeutralButton("Einstellungen", (o, e) =>
                 {

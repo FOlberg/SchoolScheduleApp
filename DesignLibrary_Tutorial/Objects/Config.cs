@@ -96,25 +96,25 @@ namespace ScheduleApp.Objects
 
         public int[][] GetTableConf()
         {
-            if (mCfgList.Count <= mConfigSel) return null;
+            if (mCfgList.Count <= mConfigSel || mConfigSel < 0) return null;
             return mCfgList[mConfigSel].mTimetable;
         }
 
         public int[][] GetTableConf(int configIndex)
         {
-            if (mCfgList.Count <= configIndex) return null;
+            if (mCfgList.Count <= configIndex || mConfigSel < 0) return null;
             return mCfgList[configIndex].mTimetable;
         }
 
         public string GetClassName()
         {
-            if (mCfgList.Count <= mConfigSel) return null;
+            if (mCfgList.Count <= mConfigSel || mConfigSel < 0) return null;
             return mCfgList[mConfigSel].mClassName;
         }
 
         public string GetClassName(int configIndex)
         {
-            if (mCfgList.Count <= mConfigSel) return null;
+            if (mCfgList.Count <= mConfigSel || mConfigSel < 0) return null;
             return mCfgList[configIndex].mClassName;
         }
 
@@ -126,6 +126,15 @@ namespace ScheduleApp.Objects
         public int GetConfigCount()
         {
             return mCfgList.Count;
+        }
+
+        public void RemoveAllConfigs()
+        {
+            if (mCfgList == null)
+                return;
+
+            mCfgList.Clear();
+            mConfigSel = -1;
         }
 
         public void ResetSourceClass()
@@ -140,6 +149,9 @@ namespace ScheduleApp.Objects
 
         public void RemoveCurrentConfig()
         {
+            if (mConfigSel >= mCfgList.Count || mConfigSel < 0)
+                return;
+
             mCfgList.RemoveAt(mConfigSel);
             mConfigSel--;
             if (mConfigSel < 0)

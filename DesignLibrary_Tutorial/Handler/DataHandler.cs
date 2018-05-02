@@ -15,7 +15,7 @@ namespace ScheduleApp.Handler
         [JsonProperty]
         string[]            mClassNames;
         [JsonProperty]
-        URLClient           mClientURL; //Handler ? Save? -> What is faster initializing or deserializing
+        URLClient           mClientURL;
         TimeHandler         mTimeHandler; // -""-
         InformationHandler  mInfoHandler; // -""-
         [JsonProperty]
@@ -246,6 +246,19 @@ namespace ScheduleApp.Handler
         public static bool GetDarkThemePref(Activity activity)
         {
             return activity.GetSharedPreferences("Config", FileCreationMode.Private).GetBoolean("DarkTheme", false);
+        }
+
+        public void DeleteCache()
+        {
+            mSource = null;
+            mClassNames = null;
+            mWeekStack = null;
+            mTimetables.Clear();
+
+            var config = GetConfig();
+            config.RemoveAllConfigs();
+            JsonHandler.DeleteFiles("Data");
+            SaveConfig(config);
         }
     }
 }

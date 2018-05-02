@@ -1,16 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!--<string name="ApplicationName">Vertretungsplan</string>
-  <string name="drawer_open">Opend Navigation Drawer</string>
-  <string name="drawer_close">Closed Navigation Drawer</string>
-  <string name="menu_settings">Settings</string>-->
   <string name="app_name">Vertretungsplan</string>
-  <string name="empty_dashboard">Aktuell liegen keine Änderungen vor</string>
+  
+  <!--Fragment Names-->
+  <string name="frag_label_dashboard">Klasse</string>
+  <string name="frag_label_plan_sel">Alle Pläne</string>
+  <string name="frag_label_properties">Einstellungen</string>
+  
+  <!--Activity Names-->
+  <string name="act_label_adv_pref">Erweiterte Einstellungen</string>
+  <string name="act_label_license">Rechtliche Hinweise</string>
+  <string name="act_label_ttable_setup">Alle Klassen</string>
+  <string name="act_label_ttable_week">Stundenplan</string>
+  
+  <!--SPLASH Activity-->
+  <string name="splash_maintext">THG Vertretungsplan</string>
+  <string name="splash_starting_message">Willkommen zur THG App</string>
+  <string name="splash_start_config">Starte mit deiner Konfiguration</string>
   <string name="splash_subtext">BETA</string>
-  <string name="planselect_no_class_selected">Aktuell ist keine Klasse ausgewählt</string>
-  <string name="toast_no_internet_connection">Keine Internetverbindung</string>
-  <string name="progressdialog_schedule_changed">Stundenplan wird gespeichert...</string>
+  
+  <!--Preference Activity-->
+  <string name="pref_cat_one_title">Benutzer</string>
+  <string name="pref_change_class_title">Klasse</string>
+  <string name="pref_change_schedule_title">Stundenplan</string>
+  <string name="pref_theme_preference_title">Nachtmodus</string>
+
+  <string name="pref_cat_two_title">Benachrichtigungen</string>
+  <string name="pref_sync_intervall_preference_title">Update Intervall</string>
+  <string name="pref_sync_intervall_preference_sum">Alle %s</string>
+  <string name="pref_vibration_preference_title">Vibration</string>
+  <string name="pref_priority_preference_title">Hohe Priorität</string>
+  
+  <string name="pref_cat_three_title">App</string>
+  <string name="pref_advsettings_preference_title">Erweiterte Einstellungen</string>
+  <string name="pref_license_preference_title">Rechtliche Hinweise</string>
+
+  <!--Adv Preference Activity-->
   <string name="source_dialog_warning">Veränderungen der Internetadressen können zu Fehlern bei der Datenabfrage führen.\nDurch das Betätigen von <b>Default</b> im Bearbeitungsdialog können die Einstellungen wieder zurückgesetzt werden.</string>
   <string name="source_dialog_info">Die Unterteilung der Internetadresse dient der Einbindung notwendiger Daten, wie der aktuellen Woche.</string>
-  <string name="timetable_alert_dialog_info">Bei einem ausgweählten Fach kann durch langanhaltendes Drücken ein Kreuz in Erscheinung gebracht werden. Das Betätigen dieses entfernt die dortige Auswahl.</string>
+  <string name="source_pref_class_title">Klassen</string>
+  <string name="source_pref_class_sum">Internetadresse der einzelnen Klassen</string>
+  <string name="source_pref_all_title">Nachrichten zum Tag</string>
+  <string name="source_pref_all_sum">Internetadresse der Vertretungsübersicht</string>
+  <string name="source_delete_temp_data_title">Cache leeren</string>
+  <string name="source_delete_temp_data_sum">Gespeicherte Stundepläne und Klassen löschen</string>
+  <string name="alert_dialog_cache_msg">Bitte bestätigen Sie, dass Sie ihre Daten löschen wollen.</string>
+  
+  
+  <!--Navigation Drawer-->
+  <string name="nav_header_text">Vertretungsplan</string>
+  <string name="nav_menu_first">Dashboard</string>
+  <string name="nav_menu_sec">Alle Pläne</string>
+  <string name="nav_menu_third">Einstellungen</string>
+  <string name="nav_menu_debug">DEBUG</string>
+  
+  <!--Timetable Week Activity-->
+  <string name="timetable_alert_dialog_info">Bei einem ausgewählten Fach kann durch langanhaltendes Drücken ein Kreuz in Erscheinung gebracht werden. Das Betätigen dieses entfernt die dortige Auswahl.</string>
+  <string name="timetable_alert_dialog_help">Hilfe</string>
+  
+  <!--Dialogs-->
+  <string name="toast_no_class_sel">Aktuell ist keine Klasse ausgewählt</string>
+  <string name="planselect_no_class_selected">Aktuell ist keine Klasse ausgewählt</string>
+  <string name="empty_dashboard">Aktuell liegen keine Änderungen vor</string>
+  
+  <string name="broswer_intent_selection">Wähle einen Browser</string>
+  
+  <string name="internet_disconnect">Keine Internetverbindung</string>
+  <string name="toast_no_internet_connection">Keine Internetverbindung</string>
+  <string name="internet_solve_connection_manual">Um fortzufahren, muss eine Verbindung über WLAN oder Mobile Daten sichergestellt werden</string>
+  
+  <string name="progress_loading_schedule">Stundenplan wird geladen...</string>
+  <string name="progressdialog_schedule_changed">Stundenplan wird gespeichert...</string>
+
 </resources>

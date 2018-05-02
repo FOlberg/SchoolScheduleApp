@@ -1,6 +1,6 @@
 ﻿Vertretungsplan App THG für Android
 
-Copyright © 2017 Frederik Olberg
+Copyright © 2018 Frederik Olberg
 
 Das THG Logo unterliegt den Bildrechten des Theodor-Heuss-Gymnasiums Göttingen / www.thg-goettingen.de
 

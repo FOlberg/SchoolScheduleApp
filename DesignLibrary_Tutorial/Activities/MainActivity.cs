@@ -67,14 +67,14 @@ namespace ScheduleApp.Activities
             {
                 if (mSelectFragment == 3)
                 {
-                    mNavigationView.SetCheckedItem(Resource.Id.nav_menu4);
+                    mNavigationView.SetCheckedItem(Resource.Id.nav_menu_third);
                     ListItemClicked(2);
                     GetSharedPreferences("Config", FileCreationMode.Private).Edit().PutBoolean("ThemeChanged", false).Apply();
                 }
                 else
                 {
                     ListItemClicked(0);
-                    mNavigationView.SetCheckedItem(Resource.Id.nav_menu1);
+                    mNavigationView.SetCheckedItem(Resource.Id.nav_menu_first);
                 }
             }
         }
@@ -129,18 +129,18 @@ namespace ScheduleApp.Activities
                 mPreviousItem = e.MenuItem;
                 switch (e.MenuItem.ItemId)
                 {
-                    case Resource.Id.nav_menu1:
+                    case Resource.Id.nav_menu_first:
                         mSelectFragment = 1;
                         break;
-                    //case Resource.Id.nav_menu2:
-                    //    ListItemClicked(1);
-                    //    break;
-                    case Resource.Id.nav_menu3:
+                    case Resource.Id.nav_menu_sec:
                         mSelectFragment = 2;
                         break;
-                    case Resource.Id.nav_menu4:
+                    case Resource.Id.nav_menu_third:
                         mSelectFragment = 3;
                         break;
+                        //case Resource.Id.nav_debug:
+                        //    mSelectFragment = 4;
+                        //    break;
                 }
                 InvalidateOptionsMenu();
                 ListItemClicked(mSelectFragment - 1);
@@ -157,15 +157,15 @@ namespace ScheduleApp.Activities
                 case 0:
                     fragment = new Dashboard();
                     break;
-                //case 1:
-                //    fragment = new Menu2();
-                //    break;
                 case 1:
                     fragment = new PlanSelect();
                     break;
                 case 2:
                     fragment = new Properties();
                     break;
+                    //case 3:
+                    //    fragment = new Debug_Fragment();
+                    //    break;
             }
 
             SupportFragmentManager.BeginTransaction()

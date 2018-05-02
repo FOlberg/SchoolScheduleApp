@@ -35,7 +35,7 @@ namespace ScheduleApp.Fragments
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // Use this to return your custom view for this Fragment
-            return inflater.Inflate(Resource.Layout.menu3, container, false);
+            return inflater.Inflate(Resource.Layout.frag_plan_sel, container, false);
         }
 
         public override void OnStart()
@@ -47,7 +47,7 @@ namespace ScheduleApp.Fragments
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             base.OnViewCreated(view, savedInstanceState);
-            this.Activity.Title = "Alle Pläne";
+            this.Activity.Title = Activity.GetString(Resource.String.frag_label_plan_sel);
 
             mLinearLayout   =   Activity.FindViewById<LinearLayout>(Resource.Id.LinLayout);
             mProgLayout     =   Activity.FindViewById<LinearLayout>(Resource.Id.ProgLayout);

@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vertretungsplan"
+        android:text="@string/nav_header_text"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="?android:attr/textColorPrimary"
         android:layout_gravity="bottom|center" />

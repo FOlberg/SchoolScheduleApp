@@ -28,7 +28,7 @@ namespace ScheduleApp.Fragments
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             base.OnViewCreated(view, savedInstanceState);
-            Activity.Title = "Einstellungen";
+            Activity.Title = Activity.GetString(Resource.String.frag_label_properties);
         }
 
         public override void OnStart()
@@ -37,19 +37,18 @@ namespace ScheduleApp.Fragments
             var config = DataHandler.GetConfig();
 
             // Change Schedule Pref.
-            mClassPreference            = FindPreference("ChangeClass");
+            mClassPreference            = FindPreference("change_class");
             mClassPreference.Intent     = new Intent(Activity, typeof(Activities.TimetableSetupActivity));
-            mClassPreference.Summary    = "Aktuell ausgewählt: " + config.GetClassName();
 
             // mProgressBar = Activity.FindViewById<RelativeLayout>(Resource.Id.stripeProBar);
             mProgressDialog = new ProgressDialog(Activity);
 
             // Change Schedule Pref.
-            mSchedulePreference = FindPreference("ChangeSchedule");
+            mSchedulePreference = FindPreference("change_schedule");
             mSchedulePreference.PreferenceClick += SchedulePreference_PreferenceClick;
 
             // Update Sequence Pref.
-            mSyncIntPreference = (ListPreference)FindPreference("SyncIntervall_preference");
+            mSyncIntPreference = (ListPreference)FindPreference("sync_intervall_preference");
             mSyncIntPreference.SetDefaultValue(config.mSettings.mUpdateSequence);
             mSyncIntPreference.PreferenceChange += SyncIntPreference_PreferenceChange;
 
@@ -73,6 +72,13 @@ namespace ScheduleApp.Fragments
 
             var licensePreference           = FindPreference("license_preference");
             licensePreference.Intent        = new Intent(Activity, typeof(Activities.LicenseActivity));
+
+            if (config.mConfigSel < 0) {
+                mSchedulePreference.Enabled = false;
+                mClassPreference.Summary = string.Empty;
+            }
+            else
+                mClassPreference.Summary = "Aktuell ausgewählt: " + config.GetClassName();
         }
 
         private void SchedulePreference_PreferenceClick(object sender, Preference.PreferenceClickEventArgs e)

@@ -4,26 +4,27 @@
   <group android:checkableBehavior="single"
          android:id="@+id/menu_top">
     <item
-        android:id="@+id/nav_menu1"
+        android:id="@+id/nav_menu_first"
         android:icon="@drawable/ic_view_list"
-        android:title="Dashboard" />
-    <!--<item
-        android:id="@+id/nav_menu2"
-        android:icon="@drawable/ic_event"
-        android:title="Wochenansicht"
-        android:enabled="false"/>-->
+        android:title="@string/nav_menu_first" />
     <item
-        android:id="@+id/nav_menu3"
+        android:id="@+id/nav_menu_sec"
         android:icon="@drawable/ic_calendar_multi"
-        android:title="Alle Pläne"
+        android:title="@string/nav_menu_sec"
         android:enabled="true"/>
   </group>
   <group
     android:checkableBehavior="single"
     android:id="@+id/menu_bottom">
     <item
-      android:id="@+id/nav_menu4"
+      android:id="@+id/nav_menu_third"
       android:icon="@drawable/ic_settings"
-      android:title="Einstellungen" />
+      android:title="@string/nav_menu_third" />
+
+    <!--<item
+        android:id="@+id/nav_debug"
+        android:icon="@drawable/ic_event"
+        android:title="@string/nav_menu_debug"
+        android:enabled="false"/>-->
   </group>
 </menu>

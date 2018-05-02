@@ -16,13 +16,13 @@ namespace ScheduleApp.Fragments
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             // Use this to return your custom view for this Fragment
-            return inflater.Inflate(Resource.Layout.old_menu2, container, false);
+            return inflater.Inflate(Resource.Layout.frag_debug, container, false);
         }
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             base.OnViewCreated(view, savedInstanceState);
-            this.Activity.Title = "Wochenansicht";
+            this.Activity.Title = "DEBUG";
             Button b            = Activity.FindViewById<Button>(Resource.Id.buttonTest);
             b.Click             += B_Click;
         }

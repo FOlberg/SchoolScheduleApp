@@ -7,10 +7,10 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:fillViewport="true">
-  <ExpandableListView
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:groupIndicator="@null"
-  android:id="@+id/expandableListView" />
+    <ExpandableListView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:groupIndicator="@null"
+    android:id="@+id/expandableListView" />
   </android.support.v4.widget.NestedScrollView>
 </LinearLayout>
