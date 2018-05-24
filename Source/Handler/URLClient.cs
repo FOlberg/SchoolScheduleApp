@@ -32,7 +32,7 @@ namespace ScheduleApp.Handler
             {
                 source = mWebClient.DownloadString(url);
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 return null;
             }

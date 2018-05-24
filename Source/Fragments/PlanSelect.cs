@@ -126,6 +126,7 @@ namespace ScheduleApp.Fragments
             {
                 mList = MessageHandler.GetCardList(week);
                 mLastUpdate = System.DateTime.UtcNow;
+                mDataHandler.SaveState();
                 SaveList();
                 return true;
             }

@@ -87,7 +87,8 @@ namespace ScheduleApp.Handler
                             mWeekStack[i, j] = null;
                     }
                 }
-            });
+                SaveState();
+            }); 
         }
 
         public Week GetDetailedWeek(int week, bool newDload = false)
@@ -248,6 +249,13 @@ namespace ScheduleApp.Handler
             return activity.GetSharedPreferences("Config", FileCreationMode.Private).GetBoolean("DarkTheme", false);
         }
 
+        public void SaveState()
+        {
+            var editor = Application.Context.GetSharedPreferences("DataHandler", FileCreationMode.Private).Edit();
+            editor.PutString("mData", JsonConvert.SerializeObject(this));
+            editor.Apply();
+        }
+
         public void DeleteCache()
         {
             mSource = null;
@@ -259,6 +267,7 @@ namespace ScheduleApp.Handler
             config.RemoveAllConfigs();
             JsonHandler.DeleteFiles("Data");
             SaveConfig(config);
+            SaveState();
         }
     }
 }

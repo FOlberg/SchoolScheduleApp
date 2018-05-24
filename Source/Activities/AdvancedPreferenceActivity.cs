@@ -105,6 +105,7 @@ namespace ScheduleApp.Activities
                 new Thread(new ThreadStart(delegate
                 {
                     dataHandler.GetClasses();
+                    dataHandler.SaveState();
                 })).Start();
             }
 

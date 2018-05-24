@@ -60,6 +60,7 @@ namespace ScheduleApp.Handler
                 mList = DataToList();
                 Check();
                 SaveMsgHandler(this);
+                mDataHandler.SaveState();
                 return true;
             }
             return false;

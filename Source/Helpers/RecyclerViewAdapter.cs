@@ -215,7 +215,7 @@ namespace ScheduleApp.Helpers
                 if (mList[position].mSubject.mChange.mNewSubject != "" && mList[position].mSubject.mChange.mNewSubject != mList[position].mSubject.mName)
                     subtext += "Neues Fach: " + mList[position].mSubject.mChange.mNewSubject + "  ";
 
-                if (mList[position].mSubject.mChange.mNewRoom != "" && mList[position].mSubject.mChange.mNewRoom != mList[position].mSubject.mRoom) //mList[position].mSubject.change.newRoom != mList[position].mSubject.room
+                if (mList[position].mSubject.mChange.mNewRoom != "" && mList[position].mSubject.mChange.mNewRoom != mList[position].mSubject.mRoom)
                     subtext += "Neuer Raum: " + mList[position].mSubject.mChange.mNewRoom + "  ";
 
                 if (mList[position].mSubject.mChange.mRemarks != null && mList[position].mSubject.mChange.mRemarks != "")
@@ -242,8 +242,14 @@ namespace ScheduleApp.Helpers
             if (subtext != "" && subtext != " ") 
             {
                 viewHolder.mTypeText.TextSize = 20;
-                if (mPotraitMode && subtext.Length > 45) //lower textsize if text is too long
+                var textLength = subtext.Length + (viewHolder.mNameText.Text.Length * 4);
+
+                //lower textsize if text is too long
+                if (mPotraitMode && textLength > 50)
+                {
                     viewHolder.mDescText.TextSize = 9;
+                    if (textLength > 58) subtext = subtext.Substring(0, 40) + "..";
+                }
                 else
                     viewHolder.mDescText.TextSize = 10;
                 viewHolder.mDescText.Text = subtext;

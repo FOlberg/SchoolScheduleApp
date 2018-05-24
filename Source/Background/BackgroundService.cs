@@ -53,14 +53,19 @@ namespace ScheduleApp.Background
             if (messages.Count == 1)
             {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                    .SetAutoCancel(true)                    // Dismiss from the notif. area when clicked
-                    .SetContentIntent(resultPendingIntent)  // Start 2nd activity whenca the intent is clicked.
-                    .SetContentTitle(GetSingleHeadline(messages[0]))      // Set its title
+                    // Dismiss from the notif. area when clicked
+                    .SetAutoCancel(true)
+                    // Start 2nd activity whenca the intent is clicked.
+                    .SetContentIntent(resultPendingIntent)
+                    // Set its title
+                    .SetContentTitle(GetSingleHeadline(messages[0]))      
                     .SetLights(Color.Indigo, 1500, 1500)
                     .SetColor(Color.Indigo)
-                    .SetContentText(GetSingleSubTextLine(messages[0])); // The message to display.
+                    // The message to display.
+                    .SetContentText(GetSingleSubTextLine(messages[0]));
 
-                if (config.mSettings.mPriority) //Priority must be above vibration
+                //Priority must be above vibration
+                if (config.mSettings.mPriority) 
                 {
                     builder.SetVibrate(new long[0]);
                     builder.SetPriority((int)NotificationPriority.High);
@@ -87,7 +92,8 @@ namespace ScheduleApp.Background
                     .SetColor(Color.Indigo)
                     .SetContentTitle(messages.Count + " neue Änderungen");
 
-                if (config.mSettings.mPriority) //Priority must be above vibration
+                //Priority must be above vibration
+                if (config.mSettings.mPriority) 
                 {
                     builder.SetVibrate(new long[0]);
                     builder.SetPriority((int)NotificationPriority.High);
@@ -148,10 +154,14 @@ namespace ScheduleApp.Background
             {
                 line += data.mItem.mSubject.mName + " " + data.mItem.mSubject.mChange.mType;
 
-                if (data.mItem.mSubject.mChange.mNewSubject != null && !data.mItem.mSubject.mChange.mNewSubject.Contains(data.mItem.mSubject.mName)) 
+                if (data.mItem.mSubject.mChange.mNewSubject != null
+                    && data.mItem.mSubject.mChange.mNewSubject != ""
+                    && !data.mItem.mSubject.mChange.mNewSubject.Contains(data.mItem.mSubject.mName)) 
                     line += ": Neues Fach ist " + data.mItem.mSubject.mChange.mNewSubject;
 
-                if (data.mItem.mSubject.mChange.mNewRoom != null && !data.mItem.mSubject.mChange.mNewRoom.Contains(data.mItem.mSubject.mRoom))
+                if (data.mItem.mSubject.mChange.mNewRoom != null
+                    && data.mItem.mSubject.mChange.mNewRoom != ""
+                    && !data.mItem.mSubject.mChange.mNewRoom.Contains(data.mItem.mSubject.mRoom))
                     line += " in Raum " + data.mItem.mSubject.mChange.mNewRoom;
             }
             return line;
@@ -164,10 +174,14 @@ namespace ScheduleApp.Background
                 GetDisplayedHour(data.mItem.mHour) + " Stunde";
             if (data.mItem.mSubject.mChange != null)
             {
-                if (data.mItem.mSubject.mChange.mNewSubject != null && !data.mItem.mSubject.mChange.mNewSubject.Contains(data.mItem.mSubject.mName))
+                if (data.mItem.mSubject.mChange.mNewSubject != null 
+                    && data.mItem.mSubject.mChange.mNewSubject != "" 
+                    && !data.mItem.mSubject.mChange.mNewSubject.Contains(data.mItem.mSubject.mName))
                     line += ": Neues Fach ist " + data.mItem.mSubject.mChange.mNewSubject;
 
-                if (data.mItem.mSubject.mChange.mNewRoom != null && !data.mItem.mSubject.mChange.mNewRoom.Contains(data.mItem.mSubject.mRoom))
+                if (data.mItem.mSubject.mChange.mNewRoom != null
+                    && data.mItem.mSubject.mChange.mNewRoom != ""
+                    && !data.mItem.mSubject.mChange.mNewRoom.Contains(data.mItem.mSubject.mRoom))
                     line += " in Raum " + data.mItem.mSubject.mChange.mNewRoom;
             }
             return line;
