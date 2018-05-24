@@ -42,7 +42,10 @@ namespace ScheduleApp.Activities
             SupportActionBar ab = SupportActionBar;
             ab.SetDisplayHomeAsUpEnabled(true);
 
-            SupportFragmentManager.BeginTransaction().Replace(Resource.Id.preference_frame, new PreferenceFragment()).Commit();
+            SupportFragmentManager
+                .BeginTransaction()
+                .Replace(Resource.Id.preference_frame, new PreferenceFragment())
+                .Commit();
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -64,7 +67,7 @@ namespace ScheduleApp.Activities
 
         private class PreferenceFragment : PreferenceFragmentCompat
         {
-            Preference  mInfoText, mSourceClass, mSourcePlan, mSourceDelete;
+            Preference  mInfoText, mSourceClass, mSourcePlan, mSourceDelete, mDebug;
             EditText    mTextPartOne, mTextPartTwo, mTextPartThree;
             AlertDialog mSourceDialog;
             TextView    mAssembledText;
@@ -79,9 +82,19 @@ namespace ScheduleApp.Activities
                 mSourceClass    = FindPreference("class_source_preference");
                 mSourcePlan     = FindPreference("all_source_preference");
                 mSourceDelete   = FindPreference("delete_temp_data_preference");
+                mDebug          = FindPreference("notification_debug_preference");
+
                 mSourceClass.PreferenceClick    += SourcePreferenceClick;
                 mSourcePlan.PreferenceClick     += SourcePreferenceClick;
                 mSourceDelete.PreferenceClick   += SourceDelete_PreferenceClick;
+                mDebug.PreferenceClick          += Debug_PreferenceClick;
+            }
+
+            private void Debug_PreferenceClick(object sender, Preference.PreferenceClickEventArgs e)
+            {
+                //Starting background service to invoke new notifications
+                Intent background = new Intent(Activity, typeof(Background.BackgroundService));
+                Activity.StartService(background);
             }
 
             private void SourceDelete_PreferenceClick(object sender, Preference.PreferenceClickEventArgs e)

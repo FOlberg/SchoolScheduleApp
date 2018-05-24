@@ -20,11 +20,5 @@
       android:id="@+id/nav_menu_third"
       android:icon="@drawable/ic_settings"
       android:title="@string/nav_menu_third" />
-
-    <!--<item
-        android:id="@+id/nav_debug"
-        android:icon="@drawable/ic_event"
-        android:title="@string/nav_menu_debug"
-        android:enabled="false"/>-->
   </group>
 </menu>

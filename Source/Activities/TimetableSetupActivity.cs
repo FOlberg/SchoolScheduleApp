@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using ScheduleApp.Handler;
 using Android.Runtime;
 using System.Threading;
-using System;
 
 namespace ScheduleApp.Activities
 {
@@ -22,7 +21,8 @@ namespace ScheduleApp.Activities
         public DataHandler          mDataHandler;
         ISharedPreferences          mPreference;
         ISharedPreferencesEditor    mEditor;
-        ProgressDialog              mProgressDialog;
+        //ProgressDialog              mProgressDialog;
+        ProgressBar                 mProgressBar;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -41,7 +41,8 @@ namespace ScheduleApp.Activities
             ab.SetDisplayHomeAsUpEnabled(true);
             ab.SetHomeButtonEnabled(true);
 
-            mListView = FindViewById<ListView>(Resource.Id.listView);
+            mListView       = FindViewById<ListView>(Resource.Id.listView);
+            mProgressBar    = FindViewById<ProgressBar>(Resource.Id.progressbar);
 
             //Loading mData
             mDataHandler = DataHandler.GetDataHandler();
@@ -60,13 +61,18 @@ namespace ScheduleApp.Activities
         protected override void OnResume()
         {
             base.OnResume();
-            if (mProgressDialog != null)
-                mProgressDialog.Hide();
+            if (mProgressBar != null)
+            {
+                mProgressBar.Visibility = ViewStates.Invisible;
+                Window.ClearFlags(WindowManagerFlags.NotTouchable);
+            }       
         }
 
         private void MListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            mProgressDialog = ProgressDialog.Show(this, "", "Stundenplan wird geladen...", true);
+            mProgressBar.Visibility = ViewStates.Visible;
+            Window.SetFlags(WindowManagerFlags.NotTouchable, WindowManagerFlags.NotTouchable);
+            //mProgressDialog = ProgressDialog.Show(this, "", "Stundenplan wird geladen...", true);
 
             new Thread(new ThreadStart(delegate
             {

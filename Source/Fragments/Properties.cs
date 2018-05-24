@@ -3,21 +3,22 @@ using Android.OS;
 using Android.Views;
 using Android.Support.V7.Preferences;
 using ScheduleApp.Handler;
-using Android.App;
-using Java.Lang;
+using Android.Widget;
+using System.Threading;
+using Thread = System.Threading.Thread;
 
 namespace ScheduleApp.Fragments
 {
     public class Properties : Android.Support.V7.Preferences.PreferenceFragmentCompat
     {
-        ListPreference mSyncIntPreference;
-        Preference mSchedulePreference;
-        Preference mClassPreference;
-        Preference mVibrationPreference;
-        Preference mPriorityPreference;
-        Preference mThemePreference;
-        Preference mAdvSettingsPreference;
-        ProgressDialog mProgressDialog;
+        ListPreference  mSyncIntPreference;
+        Preference      mSchedulePreference;
+        Preference      mClassPreference;
+        Preference      mVibrationPreference;
+        Preference      mPriorityPreference;
+        Preference      mThemePreference;
+        Preference      mAdvSettingsPreference;
+        ProgressBar     mProgressBar;
 
         public override void OnCreatePreferences(Bundle savedInstanceState, string rootKey)
         {
@@ -36,12 +37,12 @@ namespace ScheduleApp.Fragments
             base.OnStart();
             var config = DataHandler.GetConfig();
 
-            // Change Schedule Pref.
-            mClassPreference            = FindPreference("change_class");
-            mClassPreference.Intent     = new Intent(Activity, typeof(Activities.TimetableSetupActivity));
+            mProgressBar = Activity.FindViewById<ProgressBar>(Resource.Id.progress_bar);
+            mProgressBar.Visibility = ViewStates.Invisible;
 
-            // mProgressBar = Activity.FindViewById<RelativeLayout>(Resource.Id.stripeProBar);
-            mProgressDialog = new ProgressDialog(Activity);
+            // Change Schedule Pref.
+            mClassPreference = FindPreference("change_class");
+            mClassPreference.Intent = new Intent(Activity, typeof(Activities.TimetableSetupActivity));
 
             // Change Schedule Pref.
             mSchedulePreference = FindPreference("change_schedule");
@@ -83,38 +84,16 @@ namespace ScheduleApp.Fragments
 
         private void SchedulePreference_PreferenceClick(object sender, Preference.PreferenceClickEventArgs e)
         {
-            if (!mProgressDialog.IsShowing)
-                new InnerScheduleLoader(Activity, mProgressDialog).Execute();
-        }
+            if (mProgressBar.Visibility == ViewStates.Invisible || mProgressBar.Visibility == ViewStates.Gone)
+            {
+                mProgressBar.Visibility = ViewStates.Visible;
 
-        private class InnerScheduleLoader : AsyncTask
-        {
-            private Activity mActivity;
-            private ProgressDialog mProgressDialog;
-
-            public InnerScheduleLoader(Activity activity, ProgressDialog progress)
-            {
-                this.mActivity  = activity;
-                mProgressDialog = progress;
-                mProgressDialog.SetMessage("Stundenplan wird geladen...");
-                mProgressDialog.Indeterminate = true;
-            }
-            protected override Object DoInBackground(params Object[] @params)
-            {
-                var editor = mActivity.GetSharedPreferences("TableSetup", FileCreationMode.Private).Edit();
-                editor.PutInt("classIndex", -1).Apply();
-                mActivity.StartActivity(new Intent(mActivity, typeof(Activities.TimetableWeekActivity)));
-                return true;
-            }
-            protected override void OnPreExecute()
-            {
-                base.OnPreExecute();
-                mActivity.RunOnUiThread(() => mProgressDialog.Show());
-            }
-            protected override void OnPostExecute(Object result)
-            {
-                base.OnPostExecute(result);
-                mActivity.RunOnUiThread(() => mProgressDialog.Cancel());
+                new Thread(new ThreadStart(delegate
+                {
+                    var editor = Activity.GetSharedPreferences("TableSetup", FileCreationMode.Private).Edit();
+                    editor.PutInt("classIndex", -1).Apply();
+                    Activity.StartActivity(new Intent(Activity, typeof(Activities.TimetableWeekActivity)));
+                })).Start();
             }
         }
 

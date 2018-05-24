@@ -138,9 +138,6 @@ namespace ScheduleApp.Activities
                     case Resource.Id.nav_menu_third:
                         mSelectFragment = 3;
                         break;
-                        //case Resource.Id.nav_debug:
-                        //    mSelectFragment = 4;
-                        //    break;
                 }
                 InvalidateOptionsMenu();
                 ListItemClicked(mSelectFragment - 1);
@@ -163,9 +160,6 @@ namespace ScheduleApp.Activities
                 case 2:
                     fragment = new Properties();
                     break;
-                    //case 3:
-                    //    fragment = new Debug_Fragment();
-                    //    break;
             }
 
             SupportFragmentManager.BeginTransaction()

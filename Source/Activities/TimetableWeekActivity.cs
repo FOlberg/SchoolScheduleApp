@@ -16,6 +16,7 @@ using ScheduleApp.Handler;
 using Newtonsoft.Json;
 using Android.Support.V4.Content;
 using ScheduleApp.Objects;
+using Android.Widget;
 
 namespace ScheduleApp.Activities
 {
@@ -28,6 +29,7 @@ namespace ScheduleApp.Activities
         TabAdapter              mAdapter;
         ViewPager               mViewPager;
         FloatingActionButton    mFabBtn;
+        ProgressBar             mProgressBar;
         
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -45,18 +47,22 @@ namespace ScheduleApp.Activities
             SupportToolbar toolBar  = FindViewById<SupportToolbar>(Resource.Id.toolBarW);
             mFabBtn                 = FindViewById<FloatingActionButton>(Resource.Id.fabW);
             mTabs                   = FindViewById<TabLayout>(Resource.Id.tabLayoutW);
+            mViewPager              = FindViewById<ViewPager>(Resource.Id.viewPagerW);
+            mProgressBar            = FindViewById<ProgressBar>(Resource.Id.progressbar);
+
             SetSupportActionBar(toolBar);
 
             SupportActionBar ab = SupportActionBar;
             ab.SetDisplayHomeAsUpEnabled(true);
             ab.SetHomeButtonEnabled(true);
-
-            mViewPager = FindViewById<ViewPager>(Resource.Id.viewPagerW);
+            
             SetUpViewPager(mViewPager);
             mTabs.SetupWithViewPager(mViewPager);
 
+            Window.ClearFlags(WindowManagerFlags.NotTouchable);
+
             mViewPager.PageSelected += ViewPager_PageSelected;
-            mFabBtn.Click += Fab_Click;
+            mFabBtn.Click           += Fab_Click;
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -89,7 +95,9 @@ namespace ScheduleApp.Activities
         private void FinishSetup()
         {
             //Get Data from Children Fragments via SharedPreferences -> Delete Fragments -> Destructor passes Data -> Data will be gathered by:
-            var prog = ProgressDialog.Show(this, "", GetString(Resource.String.progressdialog_schedule_changed), true);
+            //var prog = ProgressDialog.Show(this, "", GetString(Resource.String.progressdialog_schedule_changed), true);
+            mProgressBar.Visibility = ViewStates.Visible;
+            Window.SetFlags(WindowManagerFlags.NotTouchable, WindowManagerFlags.NotTouchable);
             ISharedPreferences preferences  = Application.Context.GetSharedPreferences("TableSetup", FileCreationMode.Private);
             ISharedPreferencesEditor editor = preferences.Edit();
             int[][] tempSel = new int[5][];

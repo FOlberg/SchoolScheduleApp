@@ -34,6 +34,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior" />
+        <ProgressBar
+            android:id="@+id/progressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:max="100"
+            android:backgroundTint="@android:color/white"
+            android:layout_below="@+id/framelauout"
+            android:indeterminateTint="#1a09d6"
+            android:visibility="invisible"
+            android:layout_marginTop="-7dp" />
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabW"
             android:layout_width="wrap_content"

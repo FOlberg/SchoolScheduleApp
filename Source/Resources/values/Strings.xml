@@ -45,7 +45,8 @@
   <string name="source_delete_temp_data_title">Cache leeren</string>
   <string name="source_delete_temp_data_sum">Gespeicherte Stundepläne und Klassen löschen</string>
   <string name="alert_dialog_cache_msg">Bitte bestätigen Sie, dass Sie ihre Daten löschen wollen.</string>
-  
+  <string name="debug_pref_notific_title">Debuggen</string>
+  <string name="debug_pref_notific_sum">Neue Notfikationen abrufen</string>
   
   <!--Navigation Drawer-->
   <string name="nav_header_text">Vertretungsplan</string>
@@ -55,7 +56,7 @@
   <string name="nav_menu_debug">DEBUG</string>
   
   <!--Timetable Week Activity-->
-  <string name="timetable_alert_dialog_info">Bei einem ausgewählten Fach kann durch langanhaltendes Drücken ein Kreuz in Erscheinung gebracht werden. Das Betätigen dieses entfernt die dortige Auswahl.</string>
+  <string name="timetable_alert_dialog_info">Bei einem ausgewählten Fach kann durch lang anhaltendes Drücken ein Kreuz in Erscheinung gebracht werden. Das Betätigen dieses entfernt die dortige Auswahl.\n\n <b>N.A.</b>: kein Raum zugeteilt</string>
   <string name="timetable_alert_dialog_help">Hilfe</string>
   
   <!--Dialogs-->

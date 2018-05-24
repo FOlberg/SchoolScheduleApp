@@ -144,7 +144,6 @@
     <Compile Include="Fragments\Properties.cs" />
     <Compile Include="Fragments\TabFragment.cs" />
     <Compile Include="Fragments\Dashboard.cs" />
-    <Compile Include="Fragments\Debug_Fragment.cs" />
     <Compile Include="Objects\Config.cs" />
     <Compile Include="Handler\DataHandler.cs" />
     <Compile Include="Handler\InformationHandler.cs" />
@@ -177,9 +176,6 @@
     <AndroidResource Include="Resources\menu\drawer_view.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\frag_debug.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
     <AndroidResource Include="Resources\layout\frag_plan_sel.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
@@ -206,9 +202,6 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\splash.axml">
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\progress_widget.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\Activity_License.axml">

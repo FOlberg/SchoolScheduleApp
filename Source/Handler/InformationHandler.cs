@@ -40,8 +40,8 @@ namespace ScheduleApp.Handler
                 .Replace("|", "");
             while (source.Contains("<a href=")) //cuts out unnecessary information/ tables etc
             {
-                string sndPart  = source.Substring(source.IndexOf("<a href=")).Substring(source.Substring(source.IndexOf("<a href=")).IndexOf("</table>") + 8);
-                source          = source.Substring(0, source.IndexOf("<a href=")) + sndPart;
+                string sndPart = source.Substring(source.IndexOf("<a href=")).Substring(source.Substring(source.IndexOf("<a href=")).IndexOf("</table>") + 8);
+                source = source.Substring(0, source.IndexOf("<a href=")) + sndPart;
             }
             return XDocument.Parse(source);
         }
@@ -55,13 +55,13 @@ namespace ScheduleApp.Handler
             XmlReader reader = SourceToXmlDoc_all(source).CreateReader();
 
             //other necessary variables
-            Days day                = Days.Montag;
-            string[] tempChanges    = new string[11];
-            int regPosition         = 0;
+            Days day = Days.Montag;
+            string[] tempChanges = new string[11];
+            int regPosition = 0;
 
-            string curr_element     = string.Empty;
+            string curr_element = string.Empty;
 
-            bool readTableRow       = false;
+            bool readTableRow = false;
             List<Tuple<Days, Hours[], string, Subject>> registeredChanges = new List<Tuple<Days, Hours[], string, Subject>>(); //the day, which hours, which class and the changes to the original subject
 
             while (reader.Read())
@@ -126,7 +126,7 @@ namespace ScheduleApp.Handler
                                 room = tempChanges[7];
                             //Checks for unuseful data like dates
                             if ((tempChanges[8].Contains("-") && tempChanges[8].Contains(".") && tempChanges[8].Contains("/")) || tempChanges[8] == tempChanges[0])
-                                tempChanges[8] =  null;
+                                tempChanges[8] = null;
 
                             if ((tempChanges[9].Contains("-") && tempChanges[9].Contains(".") && tempChanges[9].Contains("/")) || tempChanges[9] == tempChanges[0])
                                 tempChanges[9] = null;
@@ -165,13 +165,13 @@ namespace ScheduleApp.Handler
             {
                 if (cls.IndexOf(";") < cls.IndexOf("-"))
                 {
-                    singleCl    = cls.Substring(0, cls.IndexOf(";"));
-                    cls         = cls.Substring(cls.IndexOf(";") + 1);
+                    singleCl = cls.Substring(0, cls.IndexOf(";"));
+                    cls = cls.Substring(cls.IndexOf(";") + 1);
                 }
                 else
                 {
-                    singleCl    = cls.Substring(cls.IndexOf(";") + 1);
-                    cls         = cls.Substring(0, cls.IndexOf(";"));
+                    singleCl = cls.Substring(cls.IndexOf(";") + 1);
+                    cls = cls.Substring(0, cls.IndexOf(";"));
                 }
             }
             int.TryParse(cls.Substring(0, cls.IndexOf('-')), out int start);
@@ -247,19 +247,19 @@ namespace ScheduleApp.Handler
                 return null;
             //to log
 
-            Hours row       = Hours.MP;
-            string colspan  = "";
-            bool startTag   = false;
-            bool endTag     = false;
-            bool[] strike   = new bool[2]; //0 = prev, 1 = current
+            Hours row = Hours.MP;
+            string colspan = "";
+            bool startTag = false;
+            bool endTag = false;
+            bool[] strike = new bool[2]; //0 = prev, 1 = current
             int colspanValue = 0, day = 0, rowspan = -1;
-            int count       = 0, eventDayCount = 0;
+            int count = 0, eventDayCount = 0;
 
             //string t = "";
 
-            Queue<string> elements  = new Queue<string>();
-            Queue<string> endtags   = new Queue<string>();
-            List<Subject> lesson    = new List<Subject>();
+            Queue<string> elements = new Queue<string>();
+            Queue<string> endtags = new Queue<string>();
+            List<Subject> lesson = new List<Subject>();
             List<string> lessonsStack = new List<string>();
             List<string> endTagTemp = new List<string>();
 
@@ -365,7 +365,7 @@ namespace ScheduleApp.Handler
                         if (startTag)
                             AddLesson(ref lesson, ref lessonsStack, ref strike);
 
-                        if (rowspan == 2 && colspan == "" && row != Hours.tenth) //Hinzugefügt: && row != Hours.tenth
+                        if (rowspan == 2 && colspan == "" && row != Hours.tenth) //Added: && row != Hours.tenth
                         {
                             if (reader.Value.Contains("MP"))
                                 row = Hours.MP;
@@ -379,14 +379,24 @@ namespace ScheduleApp.Handler
                             lessonsStack.Clear();
                             startTag = true;
                         }
-                        else if (endTag)
+                        else if (row != Hours.tenth || !(rowspan == 2 && colspan == "" && row == Hours.tenth)) //Fixed issue due to row != Hours.tenth in if statement above
                         {
-                            lessonsStack.Add(reader.Value);
-                            if (startTag)
+                            if (endTag)
+                            {
+                                lessonsStack.Add(reader.Value);
+                                if (startTag)
+                                    endTagTemp.Add(reader.Value);
+                            }
+                            else if (startTag)
                                 endTagTemp.Add(reader.Value);
                         }
-                        else if (startTag)
-                            endTagTemp.Add(reader.Value);
+
+                        //row == Hours.tenth && !reader.Value.Contains("\n10\n")
+                        //if (rowspan == 2 && colspan == "" && row == Hours.tenth)
+                        //{
+                        //    var x = 1;
+                        //}
+
 
                         if (rowspan > 2 && rowspan % 2 == 0) //Adding Events
                         {
@@ -414,7 +424,7 @@ namespace ScheduleApp.Handler
                         if (reader.Name == "strike")
                         {
                             //!(lessonsStack.Count == 2 && strike[1]) ||
-                            if ( lessonsStack.Count == 0 || ( lessonsStack.Count == 2 && lessonsStack[0].Contains("\n") ) ) //It must be only one object inside -> else there appeared blank spaces with "strike" -> incorrect
+                            if (lessonsStack.Count == 0 || (lessonsStack.Count == 2 && lessonsStack[0].Contains("\n"))) //It must be only one object inside -> else there appeared blank spaces with "strike" -> incorrect
                                 strike[0] = false;
                             strike[1] = strike[0];
                             strike[0] = false;
@@ -438,7 +448,7 @@ namespace ScheduleApp.Handler
             }
 
             //Check
-            for (int i = 0; i < 5; i++) 
+            for (int i = 0; i < 5; i++)
             {
                 if (week.mWeek[i].mSubs[6] == null || !week.mWeek[i].mSubs[6][0].mRoom.Contains("N.A."))
                     continue;
@@ -447,7 +457,7 @@ namespace ScheduleApp.Handler
                 {
                     week.mWeek[i].mSubs[5][0].mEvent.mNumber++;
                     week.mWeek[i].mSubs[6][0].mEvent = week.mWeek[i].mSubs[5][0].mEvent;
-                } 
+                }
 
                 else if (week.mWeek[i].mSubs[7] != null && week.mWeek[i].mSubs[7][0].mEvent != null)
                 {

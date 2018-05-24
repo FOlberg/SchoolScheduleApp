@@ -2,21 +2,25 @@
 <android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:orderingFromXml="true"
     android:padding="8dp">
-  <Preference
-      android:key="info_text"
-      android:selectable="false"
-      android:icon="@drawable/ic_info"
-      android:summary="@string/source_dialog_warning" />
-  <Preference
-      android:key="class_source_preference"
-      android:title="@string/source_pref_class_title"
-      android:summary="@string/source_pref_class_sum" />
-  <Preference
-      android:key="all_source_preference"
-      android:title="@string/source_pref_all_title"
-      android:summary="@string/source_pref_all_sum" />
-  <Preference
-      android:key="delete_temp_data_preference"
-      android:title="@string/source_delete_temp_data_title"
-      android:summary="@string/source_delete_temp_data_sum" />
+    <Preference
+        android:key="info_text"
+        android:selectable="false"
+        android:icon="@drawable/ic_info"
+        android:summary="@string/source_dialog_warning" />
+    <Preference
+        android:key="class_source_preference"
+        android:title="@string/source_pref_class_title"
+        android:summary="@string/source_pref_class_sum" />
+    <Preference
+        android:key="all_source_preference"
+        android:title="@string/source_pref_all_title"
+        android:summary="@string/source_pref_all_sum" />
+    <Preference
+        android:key="delete_temp_data_preference"
+        android:title="@string/source_delete_temp_data_title"
+        android:summary="@string/source_delete_temp_data_sum" />
+    <Preference
+        android:key="notification_debug_preference"
+        android:title="@string/debug_pref_notific_title"
+        android:summary="@string/debug_pref_notific_sum" />
 </android.support.v7.preference.PreferenceScreen>

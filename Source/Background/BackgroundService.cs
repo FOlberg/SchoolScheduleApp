@@ -16,8 +16,9 @@ namespace ScheduleApp.Background
     public class BackgroundService : IntentService
     {
         private MessageHandler mMsgHandler;
-        private const int BTN_CLICK_ID  = 1000;
+        private const int BTN_CLICK_ID = 1000;
         private const int VIBRATION_ITV = 500;
+        private const string CHANNEL_ID = "BCKGND_NOTIFICATION_SERVICE";
 
         protected override void OnHandleIntent(Intent intent)
         {
@@ -52,20 +53,20 @@ namespace ScheduleApp.Background
             // Build the notification:
             if (messages.Count == 1)
             {
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                     // Dismiss from the notif. area when clicked
                     .SetAutoCancel(true)
                     // Start 2nd activity whenca the intent is clicked.
                     .SetContentIntent(resultPendingIntent)
                     // Set its title
-                    .SetContentTitle(GetSingleHeadline(messages[0]))      
+                    .SetContentTitle(GetSingleHeadline(messages[0]))
                     .SetLights(Color.Indigo, 1500, 1500)
                     .SetColor(Color.Indigo)
                     // The message to display.
                     .SetContentText(GetSingleSubTextLine(messages[0]));
 
                 //Priority must be above vibration
-                if (config.mSettings.mPriority) 
+                if (config.mSettings.mPriority)
                 {
                     builder.SetVibrate(new long[0]);
                     builder.SetPriority((int)NotificationPriority.High);
@@ -84,7 +85,7 @@ namespace ScheduleApp.Background
             }
             else if (messages.Count > 1)
             {
-                Notification.Builder builder = new Notification.Builder(this)
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .SetAutoCancel(true)
                     .SetSmallIcon(Resource.Drawable.ic_calendar_multi)
                     .SetContentIntent(resultPendingIntent)
@@ -93,7 +94,7 @@ namespace ScheduleApp.Background
                     .SetContentTitle(messages.Count + " neue Änderungen");
 
                 //Priority must be above vibration
-                if (config.mSettings.mPriority) 
+                if (config.mSettings.mPriority)
                 {
                     builder.SetVibrate(new long[0]);
                     builder.SetPriority((int)NotificationPriority.High);
@@ -109,6 +110,7 @@ namespace ScheduleApp.Background
                         subjects.Add(messages[i].mItem.mSubject.mName);
                 }
 
+                //Adding preview of which subjects are affected without redudancy 
                 string contentText;
                 if (subjects.Count > 1)
                     contentText = "Betroffen sind ";
@@ -118,15 +120,15 @@ namespace ScheduleApp.Background
                 for (int i = 0; i < subjects.Count - 1; i++)
                 {
                     contentText += subjects[i];
-                    if (i == messages.Count - 2)
+                    if (i == subjects.Count - 2)
                         contentText += " und ";
                     else
                         contentText += ", ";
                 }
-                contentText += messages[messages.Count - 1].mItem.mSubject.mName;
+                contentText += subjects[subjects.Count - 1];
                 builder.SetContentText(contentText);
 
-                Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
+                NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 for (int i = 0; i < messages.Count; i++)
                 {
                     inboxStyle.AddLine(GetSubTextLine(messages[i]));
@@ -156,7 +158,7 @@ namespace ScheduleApp.Background
 
                 if (data.mItem.mSubject.mChange.mNewSubject != null
                     && data.mItem.mSubject.mChange.mNewSubject != ""
-                    && !data.mItem.mSubject.mChange.mNewSubject.Contains(data.mItem.mSubject.mName)) 
+                    && !data.mItem.mSubject.mChange.mNewSubject.Contains(data.mItem.mSubject.mName))
                     line += ": Neues Fach ist " + data.mItem.mSubject.mChange.mNewSubject;
 
                 if (data.mItem.mSubject.mChange.mNewRoom != null
@@ -174,8 +176,8 @@ namespace ScheduleApp.Background
                 GetDisplayedHour(data.mItem.mHour) + " Stunde";
             if (data.mItem.mSubject.mChange != null)
             {
-                if (data.mItem.mSubject.mChange.mNewSubject != null 
-                    && data.mItem.mSubject.mChange.mNewSubject != "" 
+                if (data.mItem.mSubject.mChange.mNewSubject != null
+                    && data.mItem.mSubject.mChange.mNewSubject != ""
                     && !data.mItem.mSubject.mChange.mNewSubject.Contains(data.mItem.mSubject.mName))
                     line += ": Neues Fach ist " + data.mItem.mSubject.mChange.mNewSubject;
 
@@ -214,8 +216,8 @@ namespace ScheduleApp.Background
             if (date.Date >= now.AddDays(7))
                 nextWeek = " [" + date.Day + "." + date.Month + ".]";
 
-            string preposition  = singleLine ? "Am " : "";
-            var culture         = new System.Globalization.CultureInfo("de-DE");
+            string preposition = singleLine ? "Am " : "";
+            var culture = new System.Globalization.CultureInfo("de-DE");
             return preposition + culture.DateTimeFormat.GetDayName(date.DayOfWeek) + nextWeek;
         }
 
@@ -233,24 +235,30 @@ namespace ScheduleApp.Background
             return "";
         }
 
-        //Can be optimized or shortend
         private void MMsgHandler_OnDataChanged(object sender, EventArgs e)
         {
             var messages = sender as List<LData>;
-            if (messages == null)
+            if (messages == null || messages.Count < 1)
+                return;
+
+            //Delete obsolete messages
+            for (int i = messages.Count - 1; i >= 0; i--)
             {
-                //Log Error
+                if (messages[i].mDate < DateTime.Now.Date)
+                    messages.RemoveAt(i);
             }
-            try
-            {
-                //var arg = e as MessageArgs;
-                //if (arg.EmptyList)
-                //{
-                //    //testS = "*";
-                //}
-            }
-            catch (Exception) { }
+
             StartNotification(messages);
+
+            //try
+            //{
+            //    //var arg = e as MessageArgs;
+            //    //if (arg.EmptyList)
+            //    //{
+            //    //    //testS = "*";
+            //    //}
+            //}
+            //catch (Exception) { }
         }
 
         //private List<LData> GetTempData()
