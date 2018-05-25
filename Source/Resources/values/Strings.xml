@@ -46,7 +46,7 @@
   <string name="source_delete_temp_data_sum">Gespeicherte Stundepläne und Klassen löschen</string>
   <string name="alert_dialog_cache_msg">Bitte bestätigen Sie, dass Sie ihre Daten löschen wollen.</string>
   <string name="debug_pref_notific_title">Debuggen</string>
-  <string name="debug_pref_notific_sum">Neue Notfikationen abrufen</string>
+  <string name="debug_pref_notific_sum">Neue Notifikationen abrufen</string>
   
   <!--Navigation Drawer-->
   <string name="nav_header_text">Vertretungsplan</string>

@@ -95,9 +95,9 @@ namespace ScheduleApp.Activities
         private void FinishSetup()
         {
             //Get Data from Children Fragments via SharedPreferences -> Delete Fragments -> Destructor passes Data -> Data will be gathered by:
-            //var prog = ProgressDialog.Show(this, "", GetString(Resource.String.progressdialog_schedule_changed), true);
             mProgressBar.Visibility = ViewStates.Visible;
             Window.SetFlags(WindowManagerFlags.NotTouchable, WindowManagerFlags.NotTouchable);
+
             ISharedPreferences preferences  = Application.Context.GetSharedPreferences("TableSetup", FileCreationMode.Private);
             ISharedPreferencesEditor editor = preferences.Edit();
             int[][] tempSel = new int[5][];

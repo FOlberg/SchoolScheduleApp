@@ -21,7 +21,6 @@ namespace ScheduleApp.Activities
         public DataHandler          mDataHandler;
         ISharedPreferences          mPreference;
         ISharedPreferencesEditor    mEditor;
-        //ProgressDialog              mProgressDialog;
         ProgressBar                 mProgressBar;
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -47,6 +46,7 @@ namespace ScheduleApp.Activities
             //Loading mData
             mDataHandler = DataHandler.GetDataHandler();
 
+            //Adding Items (classes) to the displayed list
             mItems = new List<string>();
             foreach (var s in mDataHandler.GetClasses())
             {
@@ -63,6 +63,7 @@ namespace ScheduleApp.Activities
             base.OnResume();
             if (mProgressBar != null)
             {
+                //hiding ProgressBar and enable user interaction
                 mProgressBar.Visibility = ViewStates.Invisible;
                 Window.ClearFlags(WindowManagerFlags.NotTouchable);
             }       
@@ -70,9 +71,9 @@ namespace ScheduleApp.Activities
 
         private void MListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
+            //Showing ProgressBar and disable any user interaction to avoid starting multiple instances
             mProgressBar.Visibility = ViewStates.Visible;
             Window.SetFlags(WindowManagerFlags.NotTouchable, WindowManagerFlags.NotTouchable);
-            //mProgressDialog = ProgressDialog.Show(this, "", "Stundenplan wird geladen...", true);
 
             new Thread(new ThreadStart(delegate
             {

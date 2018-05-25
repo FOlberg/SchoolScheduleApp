@@ -319,29 +319,19 @@ namespace ScheduleApp.Handler
             mDate = dateTime;
             mItem = cardList;
         }
-        public override bool Equals(object obj)
-        {
-            //Ensures exceptions
-            LData ob;
-            try
-            {
-                ob = (LData)obj;
-            }
-            catch (Exception)
-            {
-                ob = new LData();
-                return false;
-            }
 
-            bool a = mDate.Date == ob.mDate.Date;
-            bool b2 = mItem.mHour[0] == ob.mItem.mHour[0] && mItem.mHour.Length == ob.mItem.mHour.Length;
+        public bool Equals(LData obj)
+        {
+            //Due to wrong and irritating hashes of LData this function checks if objects of LData are equal
+            bool a = mDate.Date == obj.mDate.Date;
+            bool b2 = mItem.mHour[0] == obj.mItem.mHour[0] && mItem.mHour.Length == obj.mItem.mHour.Length;
             if (b2 && mItem.mHour.Length == 2)
             {
-                b2 = mItem.mHour[1] == ob.mItem.mHour[1];
+                b2 = mItem.mHour[1] == obj.mItem.mHour[1];
             }
-            bool b1 = mItem.mSubject.mName == ob.mItem.mSubject.mName;
-            bool b3 = mItem.mSubject.mRoom == ob.mItem.mSubject.mRoom;
-            bool b4 = mItem.mSubject.mOmitted == ob.mItem.mSubject.mOmitted;
+            bool b1 = mItem.mSubject.mName == obj.mItem.mSubject.mName;
+            bool b3 = mItem.mSubject.mRoom == obj.mItem.mSubject.mRoom;
+            bool b4 = mItem.mSubject.mOmitted == obj.mItem.mSubject.mOmitted;
             return a && b2 && b1 && b3 && b4;
         }
     }
