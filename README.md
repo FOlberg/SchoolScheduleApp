@@ -8,6 +8,4 @@ However, for other WebUntis based substitution plans, it is possible to enter a 
 The prerequisite for this is that the URL and thus the data is public.
 
 # Screenshots from ±2018
-![](Screenshot0.png)
-![](Screenshot1.png)
-![](Screenshot2.png)
+![](Screenshot0.png) ![](Screenshot1.png) ![](Screenshot2.png)
